@@ -9,16 +9,13 @@
 <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-:root{
-  --bg:#0a0a0a;--card:rgba(255,255,255,0.08);--glass:rgba(255,255,255,0.12);
-  --name:#fff;--bio:#a0a0a0;--link:#fff;--r:18px;--bg-blur:0px;
-}
+:root{--bg:#0a0a0a;--card:rgba(255,255,255,0.08);--glass:rgba(255,255,255,0.12);--name:#fff;--bio:#a0a0a0;--link:#fff;--r:18px;--bg-blur:0px;}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;font-family:'Inter',sans-serif;margin:0;padding:0;}
 body{min-height:100vh;background:var(--bg);background-size:cover;background-position:center;background-attachment:fixed;color:#fff;position:relative;}
 body::before{content:'';position:fixed;inset:0;z-index:0;background-image:inherit;background-size:cover;background-position:center;filter:blur(var(--bg-blur));transform:scale(1.08);pointer-events:none;transition:filter .3s;}
 body.no-bgimg::before{display:none;}
-#app,#auth,#qrs,.moverlay,#crop-modal,#lightbox,#ls,#toast,#exprev,#confirm-box,#ctx-menu,#pw-modal{position:relative;z-index:1;}
-#ls{z-index:9999;}#crop-modal{z-index:7000;}#lightbox{z-index:7000;}#pw-modal{z-index:8000;}
+#app,#auth,#qrs,.moverlay,#crop-modal,#lightbox,#ls,#toast,#exprev,#confirm-box,#ctx-menu,#pw-modal,#loc-modal,#map-picker{position:relative;z-index:1;}
+#ls{z-index:9999;}#crop-modal,#lightbox,#pw-modal{z-index:7000;}#map-picker{z-index:8000;}#loc-modal{z-index:6000;}
 .moverlay{z-index:3000;}#ctx-menu{z-index:4000;}#confirm-box{z-index:9998;}#toast{z-index:9999;}#exprev{z-index:5000;}
 .hidden{display:none!important;}
 .gc{background:var(--card);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--glass);border-radius:var(--r);}
@@ -59,63 +56,66 @@ body.no-bgimg::before{display:none;}
 .avwrap img{width:100%;height:100%;object-fit:cover;display:block;}
 .av-ov{position:absolute;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s;}
 .avwrap:hover .av-ov,.avwrap:active .av-ov{opacity:1;}
-.pname{font-family:'Bebas Neue',sans-serif;font-size:2.3rem;letter-spacing:3px;color:var(--name);outline:none;text-align:center;min-width:60px;text-shadow:0 2px 14px rgba(0,0,0,.8),0 1px 0 rgba(255,255,255,.06);}
+.pname{font-family:'Bebas Neue',sans-serif;font-size:2.3rem;letter-spacing:3px;color:var(--name);outline:none;text-align:center;min-width:60px;text-shadow:0 2px 14px rgba(0,0,0,.8);}
 .pname[contenteditable=true]:focus,.pbio[contenteditable=true]:focus{border-bottom:1px dashed rgba(255,255,255,.25);}
 .pbio{color:var(--bio);margin:7px 0 26px;font-size:.9rem;text-align:center;max-width:85%;outline:none;line-height:1.55;}
 .pbio:empty:not(:focus)::before{content:attr(data-ph);color:rgba(255,255,255,.15);font-style:italic;font-size:.8rem;}
 
 /* LINKS */
 .lsec{width:100%;display:flex;flex-direction:column;gap:10px;}
-.grp-wrap{width:100%;display:flex;flex-direction:column;gap:0;}
-.grp-header{display:flex;align-items:center;gap:10px;padding:8px 14px;border-radius:14px 14px 0 0;margin-bottom:0;}
+.grp-wrap{width:100%;display:flex;flex-direction:column;}
+.grp-header{display:flex;align-items:center;gap:10px;padding:8px 14px;border-radius:14px 14px 0 0;}
 .grp-title-left{font-size:.7rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;opacity:.7;}
 .grp-inner{display:flex;flex-direction:column;gap:8px;padding:10px;border-radius:0 0 14px 14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-top:none;}
 .lcard{display:flex;align-items:center;justify-content:center;padding:16px 50px;text-decoration:none;color:var(--link);font-weight:600;font-size:.95rem;text-align:center;transition:transform .15s,box-shadow .15s;word-break:break-word;border-radius:16px;box-shadow:0 4px 16px rgba(0,0,0,.45),0 1px 0 rgba(255,255,255,.08) inset,0 -2px 0 rgba(0,0,0,.3) inset;}
-.lcard:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.55),0 1px 0 rgba(255,255,255,.1) inset;}
-.lcard:active{transform:translateY(1px);box-shadow:0 2px 8px rgba(0,0,0,.4);}
+.lcard:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.55);}
+.lcard:active{transform:translateY(1px);}
 .mcard{width:100%;border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,.1);position:relative;box-shadow:0 4px 18px rgba(0,0,0,.5);}
 .mcard img,.mcard video{width:100%;display:block;max-height:300px;object-fit:cover;}
-.item-actions{position:absolute;right:10px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:4px;}
-.mcard .item-actions{top:10px;right:10px;transform:none;}
-.dotsbtn{background:rgba(255,255,255,.12);border:none;color:#aaa;border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;cursor:pointer;}
-.dotsbtn:hover{background:rgba(255,255,255,.2);color:#fff;}
-.ctx-menu{position:fixed;z-index:4000;background:#1a1a1a;border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:6px;min-width:160px;box-shadow:0 8px 32px rgba(0,0,0,.7);animation:ctxin .15s ease;}
-@keyframes ctxin{from{opacity:0;transform:scale(.95);}to{opacity:1;transform:scale(1);}}
-.ctx-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:9px;cursor:pointer;font-size:.85rem;color:#ccc;transition:background .15s;}
+.item-actions{position:absolute;right:8px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:4px;z-index:2;}
+.mcard .item-actions{top:8px;right:8px;transform:none;}
+.dotsbtn{background:rgba(20,20,20,.75);border:1px solid rgba(255,255,255,.12);color:#ccc;border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;line-height:1;}
+.dotsbtn:hover{background:rgba(40,40,40,.9);color:#fff;}
+
+/* CTX MENU */
+.ctx-menu{position:fixed;z-index:4000;background:#1c1c1c;border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:5px;min-width:155px;box-shadow:0 10px 36px rgba(0,0,0,.8);animation:ctxin .12s ease;}
+@keyframes ctxin{from{opacity:0;transform:scale(.93);}to{opacity:1;transform:scale(1);}}
+.ctx-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:9px;cursor:pointer;font-size:.84rem;color:#ccc;transition:background .12s;}
 .ctx-item:hover{background:rgba(255,255,255,.08);color:#fff;}
 .ctx-item.danger{color:#f66;}
 .ctx-item.danger:hover{background:rgba(255,40,40,.15);}
 
 /* LOCK BADGE */
-.lock-badge{position:absolute;top:8px;left:10px;background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:3px 9px;font-size:.62rem;color:#aaa;display:flex;align-items:center;gap:4px;pointer-events:none;}
+.lock-badge{position:absolute;top:8px;left:10px;background:rgba(0,0,0,.6);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:3px 9px;font-size:.62rem;color:#aaa;display:flex;align-items:center;gap:4px;pointer-events:none;}
 
 /* LOCATION CARD */
 .loc-card{width:100%;border-radius:16px;background:var(--card);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--glass);overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,.45);}
-.loc-header{display:flex;align-items:center;gap:10px;padding:14px 16px;cursor:pointer;transition:background .15s;}
-.loc-header:hover{background:rgba(255,255,255,.06);}
-.loc-icon{width:36px;height:36px;border-radius:50%;background:rgba(255,80,80,.15);border:1px solid rgba(255,80,80,.25);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.loc-header{display:flex;align-items:center;gap:10px;padding:14px 16px;cursor:pointer;user-select:none;}
+.loc-header:active{background:rgba(255,255,255,.04);}
+.loc-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.loc-icon.static{background:rgba(80,180,255,.12);border:1px solid rgba(80,180,255,.25);}
+.loc-icon.live{background:rgba(255,80,80,.12);border:1px solid rgba(255,80,80,.25);}
 .loc-label{flex:1;font-weight:600;font-size:.92rem;color:var(--link);}
-.loc-sublbl{font-size:.7rem;color:#555;margin-top:2px;}
-.loc-chevron{color:#444;font-size:14px;transition:transform .2s;}
-.loc-map{width:100%;height:200px;border-top:1px solid rgba(255,255,255,.07);display:none;overflow:hidden;}
+.loc-sublbl{font-size:.7rem;color:#555;margin-top:2px;display:flex;align-items:center;gap:5px;}
+.loc-map{width:100%;height:220px;border-top:1px solid rgba(255,255,255,.07);display:none;overflow:hidden;}
 .loc-map iframe{width:100%;height:100%;border:none;display:block;}
-.loc-live-dot{width:8px;height:8px;border-radius:50%;background:#f44;animation:livepulse 1.4s infinite;flex-shrink:0;}
-@keyframes livepulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.5;transform:scale(.7);}}
+.loc-live-dot{width:7px;height:7px;border-radius:50%;background:#f44;animation:livepulse 1.4s infinite;flex-shrink:0;}
+@keyframes livepulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.4;transform:scale(.65);}}
 
 /* VEXA BRAND */
-.vbrand{display:inline-flex;align-items:center;justify-content:center;margin-top:34px;padding:9px 30px;background:#fff;border-radius:10px;text-decoration:none;box-shadow:4px 4px 0 rgba(255,255,255,.15),6px 6px 20px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.9);transition:transform .15s,box-shadow .15s;border:1px solid rgba(255,255,255,.4);}
+.vbrand{display:inline-flex;align-items:center;justify-content:center;margin-top:34px;padding:9px 30px;background:#fff;border-radius:10px;text-decoration:none;box-shadow:4px 4px 0 rgba(255,255,255,.15),6px 6px 20px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.9);transition:transform .15s;border:1px solid rgba(255,255,255,.4);}
 .vbrand:hover{transform:translate(-1px,-1px);}
 .vbrand:active{transform:translate(2px,2px);}
 .vbrandtxt{font-family:'Bebas Neue',sans-serif;font-size:1.35rem;letter-spacing:6px;color:#000;line-height:1;}
 
 /* NAV */
-.bnav{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);width:92%;max-width:400px;height:66px;display:flex;justify-content:space-around;align-items:center;z-index:1000;padding:0 8px;background:linear-gradient(135deg,rgba(255,255,255,0.18) 0%,rgba(255,255,255,0.06) 50%,rgba(255,255,255,0.12) 100%);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);border:1px solid rgba(255,255,255,0.22);border-top:1px solid rgba(255,255,255,0.35);border-bottom:1px solid rgba(255,255,255,0.06);border-radius:22px;box-shadow:0 8px 32px rgba(0,0,0,0.55),0 2px 0 rgba(255,255,255,0.1) inset,0 -1px 0 rgba(0,0,0,0.3) inset;}
+.bnav{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);width:92%;max-width:400px;height:66px;display:flex;justify-content:space-around;align-items:center;z-index:1000;padding:0 8px;background:linear-gradient(135deg,rgba(255,255,255,.18) 0%,rgba(255,255,255,.06) 50%,rgba(255,255,255,.12) 100%);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);border:1px solid rgba(255,255,255,.22);border-top:1px solid rgba(255,255,255,.35);border-bottom:1px solid rgba(255,255,255,.06);border-radius:22px;box-shadow:0 8px 32px rgba(0,0,0,.55);}
 .ni{color:rgba(255,255,255,.55);background:none;border:none;font-size:9px;display:flex;flex-direction:column;align-items:center;gap:4px;flex:1;cursor:pointer;transition:color .2s;text-transform:uppercase;letter-spacing:.3px;}
 .ni:hover{color:#fff;}
-#fab{background:linear-gradient(145deg,#ffffff,#d0d0d0);color:#000;width:50px;height:50px;border-radius:50%;border:none;display:flex;align-items:center;justify-content:center;margin-top:-28px;cursor:pointer;box-shadow:0 6px 24px rgba(0,0,0,.6),0 2px 0 rgba(255,255,255,.4) inset,0 -2px 0 rgba(0,0,0,.2) inset;transition:transform .15s,box-shadow .15s;}
+#fab{background:linear-gradient(145deg,#fff,#d0d0d0);color:#000;width:50px;height:50px;border-radius:50%;border:none;display:flex;align-items:center;justify-content:center;margin-top:-28px;cursor:pointer;box-shadow:0 6px 24px rgba(0,0,0,.6),0 2px 0 rgba(255,255,255,.4) inset;transition:transform .15s;}
 #fab:hover{transform:scale(1.08) translateY(-1px);}
 #fab:active{transform:scale(.96) translateY(1px);}
-#exprev{position:fixed;top:16px;right:16px;background:linear-gradient(145deg,#fff,#ddd);color:#000;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 15px rgba(0,0,0,.5),0 1px 0 rgba(255,255,255,.6) inset;}
+#exprev{position:fixed;top:16px;right:16px;background:linear-gradient(145deg,#fff,#ddd);color:#000;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 15px rgba(0,0,0,.5);}
 
 /* QR */
 #qrs{position:fixed;inset:0;background:#000;z-index:2000;display:flex;flex-direction:column;align-items:center;padding:50px 24px 36px;transform:translateY(100%);transition:transform .38s cubic-bezier(.25,.8,.25,1);overflow-y:auto;}
@@ -142,8 +142,8 @@ body.no-bgimg::before{display:none;}
 .ci input[type=color]{width:100%;height:38px;border:1px solid rgba(255,255,255,.1);border-radius:10px;cursor:pointer;background:none;padding:2px;}
 .upbox{width:100%;background:rgba(255,255,255,.05);border:1px dashed rgba(255,255,255,.2);border-radius:13px;padding:18px;text-align:center;cursor:pointer;color:#555;font-size:.83rem;display:flex;flex-direction:column;align-items:center;gap:7px;}
 .upbox:hover{border-color:rgba(255,255,255,.4);color:#999;}
-.ttabs{display:flex;gap:8px;margin-bottom:13px;flex-wrap:wrap;}
-.ttab{flex:1;min-width:60px;padding:9px 6px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:11px;color:#555;font-size:.75rem;cursor:pointer;text-align:center;transition:all .2s;}
+.ttabs{display:flex;gap:7px;margin-bottom:13px;flex-wrap:wrap;}
+.ttab{flex:1;min-width:55px;padding:8px 4px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:11px;color:#555;font-size:.72rem;cursor:pointer;text-align:center;transition:all .2s;}
 .ttab.on{background:#fff;color:#000;border-color:#fff;font-weight:700;}
 .clabel{font-size:.73rem;color:#444;letter-spacing:1px;text-transform:uppercase;margin:14px 0 8px;}
 .url-hint{font-size:.71rem;color:#555;padding:0 3px;margin-top:-6px;margin-bottom:4px;min-height:16px;}
@@ -156,7 +156,7 @@ body.no-bgimg::before{display:none;}
 .blur-slider-row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.5);}
 .blur-lbl{font-size:.72rem;color:#444;min-width:30px;text-align:right;}
 
-/* PW PROTECT UI */
+/* PW PROTECT */
 .pw-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
 .pw-toggle{position:relative;width:38px;height:22px;flex-shrink:0;}
 .pw-toggle input{opacity:0;width:0;height:0;position:absolute;}
@@ -164,10 +164,10 @@ body.no-bgimg::before{display:none;}
 .pw-toggle input:checked+.pw-track{background:rgba(255,255,255,.3);}
 .pw-thumb{position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform .2s;box-shadow:0 1px 4px rgba(0,0,0,.4);}
 .pw-toggle input:checked~.pw-thumb{transform:translateX(16px);}
-.pw-lbl{font-size:.78rem;color:#555;letter-spacing:.5px;}
+.pw-lbl{font-size:.78rem;color:#555;}
 
-/* PASSWORD MODAL (for viewing locked items) */
-#pw-modal{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:8000;display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;pointer-events:none;transition:opacity .2s;backdrop-filter:blur(8px);}
+/* PW MODAL */
+#pw-modal{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:7000;display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;pointer-events:none;transition:opacity .2s;backdrop-filter:blur(8px);}
 #pw-modal.on{opacity:1;pointer-events:all;}
 .pw-box{background:#161616;border:1px solid rgba(255,255,255,.12);border-radius:22px;padding:28px 24px;width:100%;max-width:320px;display:flex;flex-direction:column;gap:14px;}
 .pw-box-title{font-size:1rem;font-weight:700;text-align:center;}
@@ -176,17 +176,26 @@ body.no-bgimg::before{display:none;}
 .pw-err{font-size:.74rem;color:#f55;text-align:center;display:none;}
 .pw-cancel-txt{background:none;border:none;color:#333;font-size:.8rem;cursor:pointer;padding:6px;align-self:center;}
 
-/* LOCATION MODAL */
-#loc-modal{position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:6000;display:flex;align-items:flex-end;justify-content:center;padding:16px;backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:opacity .2s;}
-#loc-modal.on{opacity:1;pointer-events:all;}
+/* LOCATION MODALS */
+#loc-modal,#map-picker{position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:6000;display:flex;align-items:flex-end;justify-content:center;padding:16px;backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:opacity .2s;}
+#loc-modal.on,#map-picker.on{opacity:1;pointer-events:all;}
+#map-picker{z-index:8000;flex-direction:column;align-items:center;justify-content:center;padding:0;}
 .loc-mbox{background:#141414;border:1px solid rgba(255,255,255,.1);border-radius:22px;width:100%;max-width:400px;padding:24px;display:flex;flex-direction:column;gap:12px;}
 .loc-opt{display:flex;align-items:center;gap:14px;padding:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:14px;cursor:pointer;transition:background .15s;}
-.loc-opt:hover{background:rgba(255,255,255,.08);}
+.loc-opt:hover,.loc-opt:active{background:rgba(255,255,255,.08);}
 .loc-opt-icon{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .loc-opt-icon.static{background:rgba(80,180,255,.12);border:1px solid rgba(80,180,255,.2);}
 .loc-opt-icon.live{background:rgba(255,80,80,.12);border:1px solid rgba(255,80,80,.2);}
 .loc-opt-title{font-size:.9rem;font-weight:700;margin-bottom:3px;}
 .loc-opt-sub{font-size:.74rem;color:#555;}
+.map-wrap{width:100%;height:100%;position:relative;background:#111;}
+.map-wrap iframe{width:100%;height:100%;border:none;display:block;}
+.map-pin-overlay{position:absolute;top:50%;left:50%;transform:translate(-50%,-100%);pointer-events:none;z-index:2;font-size:32px;line-height:1;}
+.map-bar{position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.85);padding:16px;display:flex;flex-direction:column;gap:10px;border-top:1px solid rgba(255,255,255,.1);}
+.map-coords{font-size:.72rem;color:#555;text-align:center;}
+.map-actions{display:flex;gap:10px;}
+.map-confirm{flex:1;background:#fff;color:#000;border:none;padding:13px;border-radius:100px;font-weight:800;font-size:.88rem;cursor:pointer;}
+.map-cancel-btn{flex:1;background:rgba(255,255,255,.07);color:#777;border:1px solid rgba(255,255,255,.1);padding:13px;border-radius:100px;font-weight:700;font-size:.88rem;cursor:pointer;}
 
 /* TOAST */
 #toast{position:fixed;bottom:106px;left:50%;transform:translateX(-50%);padding:9px 20px;border-radius:50px;font-weight:700;z-index:9999;display:none;font-size:.83rem;white-space:nowrap;pointer-events:none;animation:toastin .2s ease;}
@@ -198,7 +207,7 @@ body.no-bgimg::before{display:none;}
 .analytics-wrap{width:100%;max-width:360px;margin-top:22px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:18px;display:flex;flex-direction:column;gap:14px;}
 .an-header{display:flex;align-items:center;justify-content:space-between;}
 .an-title{font-size:.68rem;letter-spacing:3px;text-transform:uppercase;color:#444;font-weight:700;}
-.an-reset-btn{background:none;border:1px solid rgba(255,60,60,.3);color:#f66;border-radius:8px;padding:4px 10px;font-size:.65rem;cursor:pointer;letter-spacing:.5px;transition:background .2s;}
+.an-reset-btn{background:none;border:1px solid rgba(255,60,60,.3);color:#f66;border-radius:8px;padding:4px 10px;font-size:.65rem;cursor:pointer;transition:background .2s;}
 .an-reset-btn:hover{background:rgba(255,40,40,.12);}
 .an-top-row{display:flex;gap:10px;}
 .an-stat{flex:1;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07);border-radius:13px;padding:13px 10px;text-align:center;}
@@ -213,7 +222,7 @@ body.no-bgimg::before{display:none;}
 .an-click-bar{height:100%;background:#fff;border-radius:10px;transition:width .5s ease;}
 .an-click-count{font-size:.78rem;color:#666;min-width:24px;text-align:right;}
 .an-empty{font-size:.8rem;color:#333;text-align:center;padding:10px 0;}
-.an-loading{font-size:.75rem;color:#333;text-align:center;padding:6px;letter-spacing:1px;}
+.an-loading{font-size:.75rem;color:#333;text-align:center;padding:6px;}
 
 /* AVATAR CROP */
 #crop-modal{position:fixed;inset:0;background:rgba(0,0,0,.96);z-index:7000;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;gap:16px;opacity:0;pointer-events:none;transition:opacity .22s;}
@@ -226,7 +235,7 @@ body.no-bgimg::before{display:none;}
 .crop-zoom-row{display:flex;align-items:center;gap:12px;width:100%;max-width:280px;}
 .crop-zoom-row input[type=range]{flex:1;height:3px;border-radius:10px;-webkit-appearance:none;background:rgba(255,255,255,.12);cursor:pointer;outline:none;}
 .crop-zoom-row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.5);}
-.crop-zoom-lbl{font-size:.7rem;color:#444;white-space:nowrap;}
+.crop-zoom-lbl{font-size:.7rem;color:#444;}
 .crop-actions{display:flex;gap:10px;width:100%;max-width:280px;}
 .crop-save{flex:1;background:#fff;color:#000;border:none;padding:13px;border-radius:100px;font-weight:800;font-size:.88rem;cursor:pointer;}
 .crop-cancel{flex:1;background:rgba(255,255,255,.07);color:#666;border:1px solid rgba(255,255,255,.1);padding:13px;border-radius:100px;font-weight:700;font-size:.88rem;cursor:pointer;}
@@ -249,16 +258,14 @@ body.no-bgimg::before{display:none;}
 </head>
 <body class="no-bgimg">
 
+<!-- Auth timer — only if NO public ?id= in URL -->
 <script>
 (function(){
-  var hasPubId=new URLSearchParams(location.search).get('id');
-  if(!hasPubId){
+  if(!new URLSearchParams(location.search).get('id')){
     window._authTimer=setTimeout(function(){
-      var ls=document.getElementById('ls');
-      var au=document.getElementById('auth');
+      var ls=document.getElementById('ls'),au=document.getElementById('auth');
       if(ls&&au&&!ls.classList.contains('hidden')&&au.classList.contains('hidden')){
-        ls.classList.add('out');
-        setTimeout(function(){ls.classList.add('hidden');},350);
+        ls.classList.add('out');setTimeout(function(){ls.classList.add('hidden');},350);
         au.classList.remove('hidden');
       }
     },2000);
@@ -271,7 +278,6 @@ body.no-bgimg::before{display:none;}
 <div id="exprev" class="hidden" onclick="togglePreview()">
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
 </div>
-
 <div id="confirm-box">
   <div id="confirm-msg">Are you sure?</div>
   <div id="confirm-btns">
@@ -280,12 +286,12 @@ body.no-bgimg::before{display:none;}
   </div>
 </div>
 
-<!-- PASSWORD UNLOCK MODAL -->
+<!-- PW MODAL -->
 <div id="pw-modal">
   <div class="pw-box">
     <div class="pw-box-title">🔒 Protected</div>
-    <div class="pw-box-sub" id="pw-modal-sub">This item is password protected</div>
-    <input type="password" id="pw-modal-input" class="mi" placeholder="Enter password…">
+    <div class="pw-box-sub" id="pw-modal-sub">Enter password to unlock</div>
+    <input type="password" id="pw-modal-input" class="mi" placeholder="Password…">
     <div class="pw-err" id="pw-err">Wrong password. Try again.</div>
     <button class="abtn" onclick="submitPwModal()">Unlock</button>
     <button class="pw-cancel-txt" onclick="closePwModal()">Cancel</button>
@@ -295,27 +301,41 @@ body.no-bgimg::before{display:none;}
 <!-- LOCATION TYPE MODAL -->
 <div id="loc-modal">
   <div class="loc-mbox">
-    <p class="mtitle" style="margin-bottom:4px;">Add Location</p>
-    <p style="font-size:.78rem;color:#444;margin-bottom:4px;">Choose location type</p>
-    <div class="loc-opt" onclick="addStaticLocation()">
+    <p class="mtitle" style="margin-bottom:2px;">Add Location</p>
+    <div class="loc-opt" onclick="doAddLive()">
+      <div class="loc-opt-icon live">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f44" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+      </div>
+      <div>
+        <div class="loc-opt-title" style="display:flex;align-items:center;gap:7px;">Live Location <span class="loc-live-dot"></span></div>
+        <div class="loc-opt-sub">Share your real-time GPS position</div>
+      </div>
+    </div>
+    <div class="loc-opt" onclick="doAddStatic()">
       <div class="loc-opt-icon static">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#50b4ff" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
       </div>
       <div>
-        <div class="loc-opt-title">Location</div>
-        <div class="loc-opt-sub">Pick a fixed place on the map</div>
-      </div>
-    </div>
-    <div class="loc-opt" onclick="addLiveLocation()">
-      <div class="loc-opt-icon live">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f44" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/><path d="M4.93 4.93l2.12 2.12M16.95 16.95l2.12 2.12M4.93 19.07l2.12-2.12M16.95 7.05l2.12-2.12"/></svg>
-      </div>
-      <div>
-        <div class="loc-opt-title" style="display:flex;align-items:center;gap:6px;">Live Location <span class="loc-live-dot"></span></div>
-        <div class="loc-opt-sub">Share your real-time position</div>
+        <div class="loc-opt-title">Fixed Location</div>
+        <div class="loc-opt-sub">Open map, drag pin to your place</div>
       </div>
     </div>
     <button class="mcan" onclick="closeLocModal()">Cancel</button>
+  </div>
+</div>
+
+<!-- MAP PICKER (for static location) -->
+<div id="map-picker">
+  <div class="map-wrap">
+    <div class="map-pin-overlay">📍</div>
+    <iframe id="map-iframe" src="" allowfullscreen></iframe>
+    <div class="map-bar">
+      <div class="map-coords" id="map-coords-display">Move the map to position the pin</div>
+      <div class="map-actions">
+        <button class="map-cancel-btn" onclick="closeMapPicker()">Cancel</button>
+        <button class="map-confirm" onclick="confirmMapLocation()">Use This Location</button>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -329,7 +349,7 @@ body.no-bgimg::before{display:none;}
     <div class="iw">
       <input type="password" id="apass" class="ai" placeholder="Password" autocomplete="current-password">
       <button class="eyebtn" type="button" onclick="togglePass()">
-        <svg id="eyeicon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
       </button>
     </div>
     <div class="perr" id="perr">Incorrect password. Please try again.</div>
@@ -342,17 +362,15 @@ body.no-bgimg::before{display:none;}
 <div id="app" class="hidden">
   <div class="avwrap" id="avwrap">
     <img id="avimg" src="https://api.dicebear.com/7.x/avataaars/svg?seed=V" alt="">
-    <div class="av-ov">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
-    </div>
+    <div class="av-ov"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg></div>
   </div>
   <h1 class="pname" id="pname">VEXA USER</h1>
   <p class="pbio" id="pbio" data-ph="Bio"></p>
   <div class="lsec" id="lsec"></div>
-  <a id="vlink" href="#" class="vbrand" target="_blank"><span class="vbrandtxt">VEXA</span></a>
+  <a id="vlink" href="https://sllr.co/vexa-eg" class="vbrand" target="_blank"><span class="vbrandtxt">VEXA</span></a>
   <nav class="bnav edit-only">
     <button class="ni" onclick="openDesign()">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="13.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="10.5" r="2.5"/><circle cx="8.5" cy="7.5" r="2.5"/><circle cx="6.5" cy="12.5" r="2.5"/><path d="M12 20v-8"/><path d="M12 12c-2.5-1-4-2-4-4"/><path d="M12 12c2.5-1 4-2 4-4"/></svg>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="13.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="10.5" r="2.5"/><circle cx="8.5" cy="7.5" r="2.5"/><circle cx="6.5" cy="12.5" r="2.5"/><path d="M12 20v-8M12 12c-2.5-1-4-2-4-4M12 12c2.5-1 4-2 4-4"/></svg>
       Design
     </button>
     <button class="ni" onclick="togglePreview()">
@@ -385,7 +403,7 @@ body.no-bgimg::before{display:none;}
     <span class="qlinktext" id="qlink"></span>
     <button class="cpbtn" onclick="copyLink()">Copy</button>
   </div>
-  <button onclick="downloadQR()" style="background:linear-gradient(135deg,#1a1a1a,#2a2a2a);color:#ccc;border:1px solid rgba(255,255,255,.12);padding:10px 22px;border-radius:100px;font-size:.82rem;font-weight:700;cursor:pointer;letter-spacing:.5px;display:flex;align-items:center;gap:7px;margin-bottom:6px;box-shadow:0 4px 14px rgba(0,0,0,.5);transition:color .2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#ccc'">
+  <button onclick="downloadQR()" style="background:linear-gradient(135deg,#1a1a1a,#2a2a2a);color:#ccc;border:1px solid rgba(255,255,255,.12);padding:10px 22px;border-radius:100px;font-size:.82rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:7px;margin-bottom:6px;box-shadow:0 4px 14px rgba(0,0,0,.5);transition:color .2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#ccc'">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
     Download QR (High Res)
   </button>
@@ -446,63 +464,55 @@ body.no-bgimg::before{display:none;}
       <div class="ttab" id="tab-location" onclick="setTab('location')">📍 Location</div>
       <div class="ttab" id="tab-group" onclick="setTab('group')">📁 Group</div>
     </div>
-
-    <!-- LINK TAB -->
+    <!-- LINK -->
     <div id="tp-link">
       <input type="text" id="ltitle" class="mi" placeholder="Name (e.g. Instagram)" oninput="updateUrlHint()">
       <input type="text" id="lurl" class="mi" placeholder="Number, email, or URL…" oninput="updateUrlHint()">
       <div class="url-hint" id="url-hint"></div>
-      <p class="clabel">Password Protection (optional)</p>
+      <p class="clabel">Password (optional)</p>
       <div class="pw-row">
         <label class="pw-toggle"><input type="checkbox" id="link-pw-on" onchange="togglePwInput('link-pw-field',this.checked)"><span class="pw-track"></span><span class="pw-thumb"></span></label>
         <span class="pw-lbl">Protect with password</span>
       </div>
       <div id="link-pw-field" style="display:none;"><input type="text" id="link-pw" class="mi" placeholder="Set password…"></div>
     </div>
-
-    <!-- IMAGE TAB -->
+    <!-- IMAGE -->
     <div id="tp-image" class="hidden">
       <div class="upbox" id="imgbox" onclick="triggerUpload('imginput')">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
-        Select image
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>Select image
       </div>
       <img id="imgprev" src="" style="display:none;width:100%;border-radius:12px;margin-top:10px;max-height:220px;object-fit:cover;">
-      <p class="clabel">Password Protection (optional)</p>
+      <p class="clabel">Password (optional)</p>
       <div class="pw-row">
         <label class="pw-toggle"><input type="checkbox" id="img-pw-on" onchange="togglePwInput('img-pw-field',this.checked)"><span class="pw-track"></span><span class="pw-thumb"></span></label>
         <span class="pw-lbl">Protect with password</span>
       </div>
       <div id="img-pw-field" style="display:none;"><input type="text" id="img-pw" class="mi" placeholder="Set password…"></div>
     </div>
-
-    <!-- VIDEO TAB -->
+    <!-- VIDEO -->
     <div id="tp-video" class="hidden">
       <div class="upbox" id="vidbox" onclick="triggerUpload('vidinput')">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
-        Select video
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>Select video
       </div>
       <video id="vidprev" style="display:none;width:100%;border-radius:12px;margin-top:10px;max-height:220px;" controls playsinline></video>
-      <p class="clabel">Password Protection (optional)</p>
+      <p class="clabel">Password (optional)</p>
       <div class="pw-row">
         <label class="pw-toggle"><input type="checkbox" id="vid-pw-on" onchange="togglePwInput('vid-pw-field',this.checked)"><span class="pw-track"></span><span class="pw-thumb"></span></label>
         <span class="pw-lbl">Protect with password</span>
       </div>
       <div id="vid-pw-field" style="display:none;"><input type="text" id="vid-pw" class="mi" placeholder="Set password…"></div>
     </div>
-
-    <!-- LOCATION TAB -->
+    <!-- LOCATION -->
     <div id="tp-location" class="hidden">
-      <p style="font-size:.82rem;color:#555;line-height:1.6;margin-bottom:12px;">After adding, you can choose between a fixed location or your live GPS position.</p>
-      <input type="text" id="loc-label-input" class="mi" placeholder="Label (e.g. Our Shop, Home)">
-      <p class="clabel">Password Protection (optional)</p>
+      <input type="text" id="loc-label-input" class="mi" placeholder="Label (e.g. Our Shop)">
+      <p class="clabel">Password (optional)</p>
       <div class="pw-row">
         <label class="pw-toggle"><input type="checkbox" id="loc-pw-on" onchange="togglePwInput('loc-pw-field',this.checked)"><span class="pw-track"></span><span class="pw-thumb"></span></label>
         <span class="pw-lbl">Protect with password</span>
       </div>
       <div id="loc-pw-field" style="display:none;"><input type="text" id="loc-pw" class="mi" placeholder="Set password…"></div>
     </div>
-
-    <!-- GROUP TAB -->
+    <!-- GROUP -->
     <div id="tp-group" class="hidden">
       <input type="text" id="grp-name" class="mi" placeholder="Group name (e.g. Social Media)">
       <p class="clabel">Group Colors</p>
@@ -510,11 +520,10 @@ body.no-bgimg::before{display:none;}
         <div class="ci">Header BG<input type="color" id="grp-hbg" value="#1a1a1a"></div>
         <div class="ci">Header Text<input type="color" id="grp-htxt" value="#ffffff"></div>
         <div class="ci">Cards BG<input type="color" id="grp-cbg" value="#111111"></div>
-        <div class="ci">Link Card BG<input type="color" id="grp-lbg" value="#1e1e1e"></div>
+        <div class="ci">Link BG<input type="color" id="grp-lbg" value="#1e1e1e"></div>
         <div class="ci">Link Text<input type="color" id="grp-ltxt" value="#ffffff"></div>
       </div>
     </div>
-
     <button class="abtn msbtn" onclick="addItem()">Add to Profile</button>
     <button class="mcan" onclick="closeModals()">Cancel</button>
   </div>
@@ -525,14 +534,14 @@ body.no-bgimg::before{display:none;}
   <div class="mbox">
     <p class="mtitle">Edit Item</p>
     <input type="text" id="edit-title" class="mi" placeholder="Name">
-    <input type="text" id="edit-url" class="mi" placeholder="URL / number / email">
+    <input type="text" id="edit-url" class="mi" placeholder="URL / number / email" style="display:none;" id="edit-url">
     <div class="url-hint" id="edit-hint"></div>
-    <p class="clabel">Password Protection (optional)</p>
+    <p class="clabel">Password (optional)</p>
     <div class="pw-row">
       <label class="pw-toggle"><input type="checkbox" id="edit-pw-on" onchange="togglePwInput('edit-pw-field',this.checked)"><span class="pw-track"></span><span class="pw-thumb"></span></label>
       <span class="pw-lbl">Protect with password</span>
     </div>
-    <div id="edit-pw-field" style="display:none;"><input type="text" id="edit-pw" class="mi" placeholder="Password (leave blank to remove)…"></div>
+    <div id="edit-pw-field" style="display:none;"><input type="text" id="edit-pw" class="mi" placeholder="Password (blank = remove)…"></div>
     <button class="abtn msbtn" onclick="saveEdit()">Save Changes</button>
     <button class="mcan" onclick="closeModals()">Cancel</button>
   </div>
@@ -548,7 +557,7 @@ body.no-bgimg::before{display:none;}
       <div class="ci">Header BG<input type="color" id="eg-hbg"></div>
       <div class="ci">Header Text<input type="color" id="eg-htxt"></div>
       <div class="ci">Cards BG<input type="color" id="eg-cbg"></div>
-      <div class="ci">Link Card BG<input type="color" id="eg-lbg"></div>
+      <div class="ci">Link BG<input type="color" id="eg-lbg"></div>
       <div class="ci">Link Text<input type="color" id="eg-ltxt"></div>
     </div>
     <button class="abtn msbtn" onclick="saveGroupEdit()">Save Changes</button>
@@ -556,7 +565,7 @@ body.no-bgimg::before{display:none;}
   </div>
 </div>
 
-<!-- AVATAR CROP -->
+<!-- CROP -->
 <div id="crop-modal">
   <div class="crop-title">Adjust Profile Photo</div>
   <div class="crop-stage" id="crop-stage"><img id="crop-img" src="" draggable="false"></div>
@@ -578,12 +587,10 @@ body.no-bgimg::before{display:none;}
   <img id="lb-img" src="" alt="">
 </div>
 
-<!-- Hidden inputs -->
 <input type="file" id="avinput" class="hidden" accept="image/*" onchange="onAvatarPick(this)">
 <input type="file" id="bginput" class="hidden" accept="image/*" onchange="onBgPick(this)">
 <input type="file" id="imginput" class="hidden" accept="image/*" onchange="onImgPick(this)">
 <input type="file" id="vidinput" class="hidden" accept="video/*" onchange="onVidPick(this)">
-
 <div id="ctx-menu" class="ctx-menu hidden"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
@@ -591,56 +598,45 @@ body.no-bgimg::before{display:none;}
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
 <script>
-const _cfg={
+/* ===== FIREBASE ===== */
+firebase.initializeApp({
   apiKey:"AIzaSyBDM5mBSTW8g3VlGusFWFdgN14hpqi3-zs",
   authDomain:"vexa-1234.firebaseapp.com",
   databaseURL:"https://vexa-1234-default-rtdb.firebaseio.com",
   projectId:"vexa-1234",storageBucket:"vexa-1234.firebasestorage.app",
   messagingSenderId:"362188399240",appId:"1:362188399240:web:fd6c50ae6ed3647bc8753d"
-};
-firebase.initializeApp(_cfg);
-const _auth=firebase.auth();
-const _db=firebase.database();
+});
+const _auth=firebase.auth(),_db=firebase.database();
 
-window._fbSignUp=(e,p)=>_auth.createUserWithEmailAndPassword(e,p);
-window._fbLogin=(e,p)=>_auth.signInWithEmailAndPassword(e,p);
-window._fbSignOut=()=>_auth.signOut();
+/* Stripped-state save: remove _unlocked flags before writing */
 window._fbSave=async(uid,state)=>{
-  const s=JSON.parse(JSON.stringify(state));
-  await _db.ref('users/'+uid).set(s);
-  await _db.ref('pub/'+s.publicId).set(s);
+  function strip(links){return(links||[]).map(l=>{const c={...l};delete c._unlocked;if(c.items)c.items=strip(c.items);return c;});}
+  const s={...JSON.parse(JSON.stringify(state)),links:strip(state.links)};
+  return Promise.all([_db.ref('users/'+uid).set(s),_db.ref('pub/'+s.publicId).set(s)]);
 };
-window._fbLoad=async(uid)=>{const snap=await _db.ref('users/'+uid).once('value');return snap.exists()?snap.val():null;};
-window._fbLoadPub=async(pid)=>{const snap=await _db.ref('pub/'+pid).once('value');return snap.exists()?snap.val():null;};
-window._fbRecordVisit=async(pid)=>{
+window._fbLoad=async uid=>{const s=await _db.ref('users/'+uid).once('value');return s.exists()?s.val():null;};
+window._fbLoadPub=async pid=>{const s=await _db.ref('pub/'+pid).once('value');return s.exists()?s.val():null;};
+window._fbRecordVisit=async pid=>{
   const today=new Date().toISOString().slice(0,10).replace(/-/g,'');
-  const tr=_db.ref('analytics/'+pid+'/visits/total');
-  const dr=_db.ref('analytics/'+pid+'/visits/'+today);
-  const [ts,td]=await Promise.all([tr.once('value'),dr.once('value')]);
-  await Promise.all([tr.set((ts.exists()?ts.val():0)+1),dr.set((td.exists()?td.val():0)+1)]);
+  const tr=_db.ref('analytics/'+pid+'/visits/total'),dr=_db.ref('analytics/'+pid+'/visits/'+today);
+  const[ts,td]=await Promise.all([tr.once('value'),dr.once('value')]);
+  await Promise.all([tr.set((ts.val()||0)+1),dr.set((td.val()||0)+1)]);
 };
 window._fbRecordClick=async(pid,title)=>{
   const key=title.replace(/[.#$[\]/]/g,'_').slice(0,60);
-  const r=_db.ref('analytics/'+pid+'/clicks/'+key);
-  const snap=await r.once('value');
-  await r.set({title,count:(snap.exists()?snap.val().count:0)+1});
+  const r=_db.ref('analytics/'+pid+'/clicks/'+key),s=await r.once('value');
+  await r.set({title,count:(s.exists()?s.val().count:0)+1});
 };
-window._fbLoadAnalytics=async(pid)=>{const snap=await _db.ref('analytics/'+pid).once('value');return snap.exists()?snap.val():null;};
-window._fbResetAnalytics=async(pid)=>{await _db.ref('analytics/'+pid).set(null);};
+window._fbLoadAnalytics=async pid=>{const s=await _db.ref('analytics/'+pid).once('value');return s.exists()?s.val():null;};
+window._fbResetAnalytics=async pid=>{await _db.ref('analytics/'+pid).set(null);};
 
-_auth.onAuthStateChanged(async(user)=>{
+_auth.onAuthStateChanged(async user=>{
   clearTimeout(window._authTimer);
   const pid=new URLSearchParams(location.search).get('id');
   if(pid){
     const data=await window._fbLoadPub(pid);
-    if(data){
-      window.S=data;if(!window.S.links)window.S.links=[];
-      window._pub=true;window._edit=false;bootApp();
-      window._fbRecordVisit(pid).catch(()=>{});
-    } else {
-      hideLs();
-      document.body.innerHTML='<div style="height:100vh;display:flex;align-items:center;justify-content:center;flex-direction:column;background:#000;gap:14px;font-family:Inter,sans-serif;"><div style="font-family:Bebas Neue,sans-serif;font-size:3.5rem;letter-spacing:8px;background:linear-gradient(180deg,#fff,#888);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">VEXA</div><p style="color:#444;font-size:.9rem;">Profile not found</p></div>';
-    }
+    if(data){window.S=data;if(!window.S.links)window.S.links=[];window._pub=true;window._edit=false;bootApp();window._fbRecordVisit(pid).catch(()=>{});}
+    else{hideLs();document.body.innerHTML='<div style="height:100vh;display:flex;align-items:center;justify-content:center;flex-direction:column;background:#000;gap:14px;font-family:Inter,sans-serif;"><div style="font-family:Bebas Neue,sans-serif;font-size:3.5rem;letter-spacing:8px;background:linear-gradient(180deg,#fff,#888);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">VEXA</div><p style="color:#444;font-size:.9rem;">Profile not found</p></div>';}
     return;
   }
   if(user){
@@ -648,48 +644,43 @@ _auth.onAuthStateChanged(async(user)=>{
     const data=await window._fbLoad(user.uid);
     if(data){window.S=data;if(!window.S.links)window.S.links=[];}
     window._pub=false;window._edit=true;bootApp();
-  } else {
-    hideLs();
-    document.getElementById('auth').classList.remove('hidden');
-  }
+  }else{hideLs();document.getElementById('auth').classList.remove('hidden');}
 });
 </script>
 
 <script>
-/* ============================================================ CONFIG */
-const VEXA_STORE_URL="https://sllr.co/vexa-eg";
+/* ===== GLOBALS ===== */
 window.S=null;window._uid=null;window._pub=false;window._edit=true;
+const STORE_URL='https://sllr.co/vexa-eg';
 let passVis=false,curTab='link',pendMedia=null,qrInst=null,isSignUp=false;
 let editGrpIdx=null,addToGrpIdx=-1,ctxGi=-1,ctxIi=-1;
-let _lpTimer=null,_confirmCb=null,_saveTimer=null;
-let _pwCb=null,_liveWatchId=null;
-
-/* CROP STATE */
+let _confirmCb=null,_saveTimer=null,_pwCb=null,_liveWatchId=null;
+let _mapPickerLat=null,_mapPickerLng=null,_mapPickerCb=null;
 let _crop={scale:1,minScale:1,maxScale:4,ox:0,oy:0,dragging:false,lastX:0,lastY:0,stageSize:280};
 let _pinchStart=null;
 
-function hideLs(){const ls=document.getElementById('ls');ls.classList.add('out');setTimeout(()=>ls.classList.add('hidden'),360);}
+function hideLs(){const l=document.getElementById('ls');l.classList.add('out');setTimeout(()=>l.classList.add('hidden'),360);}
 
-/* ============================================================ SOCIAL MAP */
-const SOCIAL_MAP=[
-  {k:['instagram','insta','ig'],url:'https://instagram.com/'},
-  {k:['tiktok','tik tok'],url:'https://tiktok.com/@'},
-  {k:['twitter','x.com','tweet'],url:'https://x.com/'},
-  {k:['facebook','fb'],url:'https://facebook.com/'},
-  {k:['snapchat','snap'],url:'https://snapchat.com/add/'},
-  {k:['youtube','yt'],url:'https://youtube.com/@'},
-  {k:['linkedin'],url:'https://linkedin.com/in/'},
-  {k:['paypal'],url:'https://paypal.me/'},
-  {k:['cash app','cashapp'],url:'https://cash.app/$'},
-  {k:['whatsapp','واتساب','wts'],url:'https://wa.me/'},
-  {k:['telegram','تيليجرام'],url:'https://t.me/'},
-  {k:['bereal'],url:'https://bere.al/'},
-  {k:['pinterest','pin'],url:'https://pinterest.com/'},
-  {k:['threads'],url:'https://threads.net/@'},
-  {k:['github'],url:'https://github.com/'},
-  {k:['behance'],url:'https://behance.net/'},
-  {k:['dribbble'],url:'https://dribbble.com/'},
-  {k:['spotify'],url:'https://open.spotify.com/user/'},
+/* ===== SOCIAL MAP ===== */
+const SM=[
+  {k:['instagram','insta','ig'],u:'https://instagram.com/'},
+  {k:['tiktok'],u:'https://tiktok.com/@'},
+  {k:['twitter','x.com','tweet'],u:'https://x.com/'},
+  {k:['facebook','fb'],u:'https://facebook.com/'},
+  {k:['snapchat','snap'],u:'https://snapchat.com/add/'},
+  {k:['youtube','yt'],u:'https://youtube.com/@'},
+  {k:['linkedin'],u:'https://linkedin.com/in/'},
+  {k:['paypal'],u:'https://paypal.me/'},
+  {k:['cashapp','cash app'],u:'https://cash.app/$'},
+  {k:['whatsapp','واتساب','wts'],u:'https://wa.me/'},
+  {k:['telegram','تيليجرام'],u:'https://t.me/'},
+  {k:['bereal'],u:'https://bere.al/'},
+  {k:['pinterest','pin'],u:'https://pinterest.com/'},
+  {k:['threads'],u:'https://threads.net/@'},
+  {k:['github'],u:'https://github.com/'},
+  {k:['behance'],u:'https://behance.net/'},
+  {k:['dribbble'],u:'https://dribbble.com/'},
+  {k:['spotify'],u:'https://open.spotify.com/user/'},
 ];
 function smartPrefix(title,raw){
   const t=title.toLowerCase().trim(),r=raw.trim();
@@ -697,44 +688,41 @@ function smartPrefix(title,raw){
   if(/^[\+\d\s\-\(\)]{7,}$/.test(r)&&/\d{5,}/.test(r))return 'tel:'+r.replace(/[\s\-\(\)]/g,'');
   if(/^(https?:|mailto:|tel:|sms:)/i.test(r))return r;
   if(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(r))return 'mailto:'+r;
-  for(const s of SOCIAL_MAP)if(s.k.some(k=>t.includes(k))){if(r.startsWith('http'))return r;return s.url+r.replace(/^[@$]/,'');}
+  for(const s of SM)if(s.k.some(k=>t.includes(k))){if(r.startsWith('http'))return r;return s.u+r.replace(/^[@$]/,'');}
   if(r.includes('.'))return 'https://'+r.replace(/^\/\//,'');
   return r;
 }
 function urlHintText(t,r){if(!r.trim())return '';const p=smartPrefix(t,r);return p===r.trim()?'':'→ '+p;}
-window.updateUrlHint=function(){document.getElementById('url-hint').innerText=urlHintText(document.getElementById('ltitle').value,document.getElementById('lurl').value);};
-window.updateEditHint=function(){document.getElementById('edit-hint').innerText=urlHintText(document.getElementById('edit-title').value,document.getElementById('edit-url').value);};
+window.updateUrlHint=()=>document.getElementById('url-hint').innerText=urlHintText(document.getElementById('ltitle').value,document.getElementById('lurl').value);
+window.updateEditHint=()=>{const eu=document.getElementById('edit-url');if(eu&&eu.style.display!=='none')document.getElementById('edit-hint').innerText=urlHintText(document.getElementById('edit-title').value,eu.value);};
 
-/* ============================================================ BOOT */
+/* ===== BOOT ===== */
 window.bootApp=function(){
   hideLs();
   document.getElementById('auth').classList.add('hidden');
-  document.getElementById('vlink').href=VEXA_STORE_URL;
-  const bio=document.getElementById('pbio');
+  document.getElementById('vlink').href=STORE_URL;
+  const bio=document.getElementById('pbio'),nm=document.getElementById('pname');
   if(!window._pub){
     document.querySelectorAll('.edit-only').forEach(e=>e.classList.remove('hidden'));
     document.getElementById('avwrap').style.cursor='pointer';
     document.getElementById('avwrap').onclick=()=>triggerUpload('avinput');
-    const nm=document.getElementById('pname');
     nm.contentEditable=true;bio.contentEditable=true;
     nm.onblur=()=>{S.name=nm.innerText.trim();save();};
     bio.onblur=()=>{S.bio=bio.innerText.trim();save();};
-    // Show placeholder hint only for owner
     bio.setAttribute('data-ph','Bio');
-  } else {
+  }else{
     document.querySelectorAll('.edit-only').forEach(e=>e.classList.add('hidden'));
     document.getElementById('avwrap').style.cursor='default';
     document.getElementById('avwrap').onclick=null;
-    document.getElementById('pname').contentEditable=false;
-    bio.contentEditable=false;
-    // No placeholder for public viewers
+    nm.contentEditable=false;bio.contentEditable=false;
     bio.removeAttribute('data-ph');
   }
   render();
   document.getElementById('app').classList.remove('hidden');
+  if(!window._pub&&window.S)resumeLiveTracking();
 };
 
-/* ============================================================ AUTH */
+/* ===== AUTH ===== */
 window.toggleMode=function(){isSignUp=!isSignUp;document.getElementById('atitle').innerText=isSignUp?'Sign Up':'Login';document.getElementById('atog').innerText=isSignUp?'Already have an account? Login':'New here? Sign Up';document.getElementById('perr').style.display='none';};
 window.togglePass=function(){passVis=!passVis;document.getElementById('apass').type=passVis?'text':'password';};
 window.doAuth=async function(){
@@ -744,397 +732,309 @@ window.doAuth=async function(){
   document.getElementById('perr').style.display='none';
   try{
     if(isSignUp){
-      const cred=await window._fbSignUp(email,pass);
+      const cred=await _auth.createUserWithEmailAndPassword(email,pass);
       window._uid=cred.user.uid;
       window.S={publicId:cred.user.uid.slice(0,14),name:email.split('@')[0],bio:'',avatar:'',bgImage:'',bgBlur:0,colors:{bg:'#0a0a0a',card:'#1a1a1a',name:'#ffffff',bio:'#a0a0a0',link:'#ffffff'},links:[]};
       await window._fbSave(window._uid,window.S);
       window._pub=false;window._edit=true;bootApp();
-    } else {await window._fbLogin(email,pass);}
-  } catch(e){
+    }else{await _auth.signInWithEmailAndPassword(email,pass);}
+  }catch(e){
     btn.disabled=false;btn.innerText='Continue';
-    const code=e.code||'';
-    if(code==='auth/email-already-in-use')toast('Email already registered!','e');
-    else if(code.includes('wrong-password')||code.includes('invalid-credential')||code.includes('invalid-login'))authError();
-    else if(code.includes('user-not-found'))toast('No account found — please Sign Up','e');
+    const c=e.code||'';
+    if(c==='auth/email-already-in-use')toast('Email already registered!','e');
+    else if(c.includes('wrong-password')||c.includes('invalid-credential')||c.includes('invalid-login')){if(navigator.vibrate)navigator.vibrate([100,50,100]);const b=document.getElementById('abox');b.classList.add('error-shake','error-flash');setTimeout(()=>b.classList.remove('error-shake'),500);setTimeout(()=>b.classList.remove('error-flash'),800);document.getElementById('perr').style.display='block';}
+    else if(c.includes('user-not-found'))toast('No account found — Sign Up','e');
     else toast(e.message||'Error','e');
   }
 };
-function authError(){if(navigator.vibrate)navigator.vibrate([100,50,100,50,100]);const b=document.getElementById('abox');b.classList.add('error-shake','error-flash');setTimeout(()=>b.classList.remove('error-shake'),500);setTimeout(()=>b.classList.remove('error-flash'),800);document.getElementById('perr').style.display='block';}
-window.doLogout=async function(){
-  stopLiveLocation();
-  await window._fbSignOut();location.reload();
-};
+window.doLogout=async()=>{stopLiveLocation();await _auth.signOut();location.reload();};
 
-/* ============================================================ RENDER */
+/* ===== RENDER ===== */
 function render(){
   if(!window.S)return;
   const c=window.S.colors||{};
-  document.documentElement.style.setProperty('--name',c.name||'#ffffff');
+  document.documentElement.style.setProperty('--name',c.name||'#fff');
   document.documentElement.style.setProperty('--bio',c.bio||'#a0a0a0');
-  document.documentElement.style.setProperty('--link',c.link||'#ffffff');
+  document.documentElement.style.setProperty('--link',c.link||'#fff');
   document.body.style.backgroundColor=c.bg||'#0a0a0a';
   if(window.S.bgImage){
     document.body.classList.remove('no-bgimg');
     document.body.style.backgroundImage='url('+window.S.bgImage+')';
-    const blurVal=window.S.bgBlur||0;
-    document.documentElement.style.setProperty('--bg-blur',blurVal+'px');
-    if(!window._pub){
-      document.getElementById('blur-section').style.display='block';
-      document.getElementById('rmbg').style.display='block';
-      document.getElementById('bgblur').value=blurVal;
-      document.getElementById('blur-val').innerText=blurVal+'px';
-    }
-  } else {
-    document.body.classList.add('no-bgimg');
-    document.body.style.backgroundImage='none';
+    const bv=window.S.bgBlur||0;
+    document.documentElement.style.setProperty('--bg-blur',bv+'px');
+    if(!window._pub){document.getElementById('blur-section').style.display='block';document.getElementById('rmbg').style.display='block';document.getElementById('bgblur').value=bv;document.getElementById('blur-val').innerText=bv+'px';}
+  }else{
+    document.body.classList.add('no-bgimg');document.body.style.backgroundImage='none';
     document.documentElement.style.setProperty('--bg-blur','0px');
-    if(!window._pub){
-      document.getElementById('blur-section').style.display='none';
-      document.getElementById('rmbg').style.display='none';
-    }
+    if(!window._pub){document.getElementById('blur-section').style.display='none';document.getElementById('rmbg').style.display='none';}
   }
-  try{const h=c.card||'#1a1a1a',r=parseInt(h.slice(1,3),16),g=parseInt(h.slice(3,5),16),b=parseInt(h.slice(5,7),16);document.documentElement.style.setProperty('--card','rgba('+r+','+g+','+b+',0.82)');document.documentElement.style.setProperty('--glass','rgba('+(r+40)+','+(g+40)+','+(b+40)+',0.22)');}catch(e){}
+  try{const h=c.card||'#1a1a1a',r=parseInt(h.slice(1,3),16),g=parseInt(h.slice(3,5),16),b=parseInt(h.slice(5,7),16);document.documentElement.style.setProperty('--card','rgba('+r+','+g+','+b+',0.82)');document.documentElement.style.setProperty('--glass','rgba('+(r+40)+','+(g+40)+','+(b+40)+',0.22)');}catch(_){}
   document.getElementById('pname').innerText=window.S.name||'VEXA USER';
-  // Bio: show text if exists, otherwise empty (placeholder via CSS for owner, nothing for visitors)
-  const bioEl=document.getElementById('pbio');
-  bioEl.innerText=window.S.bio||'';
+  document.getElementById('pbio').innerText=window.S.bio||'';
   document.getElementById('avimg').src=window.S.avatar||'https://api.dicebear.com/7.x/avataaars/svg?seed=V';
   if(!window._pub){
-    document.getElementById('cbg').value=c.bg||'#0a0a0a';
-    document.getElementById('ccard').value=c.card||'#1a1a1a';
-    document.getElementById('cname').value=c.name||'#ffffff';
-    document.getElementById('cbio').value=c.bio||'#a0a0a0';
-    document.getElementById('clink').value=c.link||'#ffffff';
+    document.getElementById('cbg').value=c.bg||'#0a0a0a';document.getElementById('ccard').value=c.card||'#1a1a1a';
+    document.getElementById('cname').value=c.name||'#fff';document.getElementById('cbio').value=c.bio||'#a0a0a0';
+    document.getElementById('clink').value=c.link||'#fff';
   }
   renderLinks();
 }
 
-/* ============================================================ RENDER LINKS */
-function escHtml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+/* ===== RENDER LINKS ===== */
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+function buildItem(l,gi,ii){
+  const editBtns=window._edit?`<div class="item-actions"><button class="dotsbtn" onclick="openCtx(event,${gi},${ii})">⋮</button></div>`:'';
+  const locked=l.password&&window._pub&&!l._unlocked;
+  const lockBadge=l.password?`<div class="lock-badge"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Protected</div>`:'';
+
+  if(l.type==='image'){
+    const click=locked?`onPwItem(${gi},${ii},'image')`:`openLightbox(${gi},${ii})`;
+    return `<div style="position:relative;"><div class="mcard"><img src="${l.url}" loading="lazy" alt="" onclick="${click}" style="cursor:zoom-in;">${lockBadge}</div>${editBtns}</div>`;
+  }
+  if(l.type==='video'){
+    if(locked)return `<div style="position:relative;"><div class="mcard" onclick="onPwItem(${gi},${ii},'video')" style="cursor:pointer;padding:20px;text-align:center;color:#555;font-size:.85rem;">🔒 Protected Video</div>${editBtns}</div>`;
+    return `<div style="position:relative;"><div class="mcard"><video src="${l.url}" controls playsinline></video>${lockBadge}</div>${editBtns}</div>`;
+  }
+  if(l.type==='location')return buildLocCard(l,gi,ii)+editBtns;
+
+  // link
+  if(locked)return `<div style="position:relative;"><div class="lcard gc" style="cursor:pointer;" onclick="onPwItem(${gi},${ii},'link')">🔒 ${esc(l.title)}</div>${editBtns}</div>`;
+  const trk=window._pub&&window.S?`onclick="window._fbRecordClick('${window.S.publicId}','${l.title.replace(/'/g,"\\'")}')"`:'';
+  return `<div style="position:relative;"><a href="${l.url}" target="_blank" rel="noopener" class="lcard gc" ${trk}>${esc(l.title)}</a>${editBtns}</div>`;
+}
+
+function buildLocCard(l,gi,ii){
+  const isLive=l.locType==='live';
+  const id=`lm${gi}x${ii}`;
+  const locked=l.password&&window._pub&&!l._unlocked;
+  const click=locked?`onPwItem(${gi},${ii},'location')`:`toggleLocMap('${id}',${gi},${ii})`;
+  const sublbl=isLive?`<span class="loc-live-dot"></span> Live`:(l.lat?'Tap to view map':'No location');
+  const iconColor=isLive?'#f44':'#50b4ff';
+  return `<div style="position:relative;"><div class="loc-card"><div class="loc-header" onclick="${click}"><div class="loc-icon ${isLive?'live':'static'}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="${iconColor}" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div><div style="flex:1"><div class="loc-label">${esc(l.title||'Location')}</div><div class="loc-sublbl">${sublbl}</div></div><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div><div class="loc-map" id="${id}-map"></div></div>`;
+}
+
+function toggleLocMap(id,gi,ii){
+  const m=document.getElementById(id+'-map');if(!m)return;
+  if(m.style.display==='block'){m.style.display='none';return;}
+  const l=ii<0?window.S.links[gi]:(window.S.links[gi].items||[])[ii];
+  if(!l||!l.lat){toast('No location set','e');return;}
+  m.innerHTML=`<iframe src="https://maps.google.com/maps?q=${l.lat},${l.lng}&z=15&output=embed" allowfullscreen loading="lazy"></iframe>`;
+  m.style.display='block';
+  if(window._pub&&window.S)window._fbRecordClick(window.S.publicId,l.title||'Location').catch(()=>{});
+}
 
 function renderLinks(){
   const sec=document.getElementById('lsec');sec.innerHTML='';
   (window.S.links||[]).forEach((l,i)=>{
-    const w=document.createElement('div');w.style.cssText='width:100%;position:relative;';
-    if(l.type==='group'){w.innerHTML=buildGroup(l,i);}
-    else{w.innerHTML=buildItem(l,i,-1);}
+    const w=document.createElement('div');w.style.cssText='width:100%;';
+    if(l.type==='group'){
+      const hbg=l.hbg||'#1a1a1a',htxt=l.htxt||'#fff',gcbg=l.gcbg||'#111';
+      let inner=(l.items||[]).map((it,ii)=>`<div style="width:100%;">${buildItem(it,i,ii)}</div>`).join('');
+      const addBtn=window._edit?`<button onclick="openAddToGroup(${i})" style="width:100%;background:rgba(255,255,255,.06);border:1px dashed rgba(255,255,255,.15);border-radius:12px;color:#555;padding:11px;cursor:pointer;font-size:.82rem;margin-top:4px;">+ Add to &quot;${esc(l.name||'Group')}&quot;</button>`:'';
+      const editBtn=window._edit?`<button class="dotsbtn" onclick="openCtx(event,${i},-2)" style="margin-left:auto;">⋮</button>`:'';
+      w.innerHTML=`<div class="grp-wrap"><div class="grp-header" style="background:${hbg};"><span class="grp-title-left" style="color:${htxt};">${esc(l.name||'Group')}</span>${editBtn}</div><div class="grp-inner" style="background:${gcbg}aa;">${inner}${addBtn}</div></div>`;
+    }else{w.innerHTML=buildItem(l,i,-1);}
     sec.appendChild(w);
   });
 }
 
-function buildItem(l,gi,ii){
-  // ii=-1 means top-level, ii>=0 means inside group gi
-  const isTop=(ii<0);
-  const editBtn=window._edit?`<div class="item-actions"><button class="dotsbtn" onmousedown="startLP(event,${gi},${ii})" ontouchstart="startLP(event,${gi},${ii})" onmouseup="cancelLP()" ontouchend="cancelLP()" onclick="openCtx(event,${gi},${ii})">⋮</button></div>`:'';
-  const lockBadge=l.password?'<div class="lock-badge"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Protected</div>':'';
-
-  if(l.type==='image'){
-    const click=l.password&&window._pub?`onPwItem(${gi},${ii},'image')`:`openLightbox(${gi},${ii})`;
-    return `<div class="mcard" style="position:relative;"><img src="${l.url}" loading="lazy" alt="" onclick="${click}" style="cursor:zoom-in;">${lockBadge}${editBtn}</div>`;
-  }
-  if(l.type==='video'){
-    if(l.password&&window._pub){
-      return `<div class="mcard" style="position:relative;cursor:pointer;" onclick="onPwItem(${gi},${ii},'video')"><div style="height:80px;display:flex;align-items:center;justify-content:center;gap:10px;color:#555;font-size:.85rem;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Protected Video</div>${editBtn}</div>`;
-    }
-    return `<div class="mcard" style="position:relative;"><video src="${l.url}" controls playsinline></video>${lockBadge}${editBtn}</div>`;
-  }
-  if(l.type==='location'){
-    return buildLocationCard(l,gi,ii,editBtn);
-  }
-  // link
-  const trk=(window._pub&&window.S&&!l.password)?`onclick="window._fbRecordClick&&window._fbRecordClick('${window.S.publicId}','${l.title.replace(/'/g,"\\'")}')"`:'';
-  if(l.password&&window._pub){
-    return `<div style="position:relative;"><div class="lcard gc" style="cursor:pointer;" onclick="onPwItem(${gi},${ii},'link')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="opacity:.5;margin-right:6px;flex-shrink:0;"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>${escHtml(l.title)}</div>${editBtn}</div>`;
-  }
-  return `<div style="position:relative;"><a href="${l.url}" target="_blank" rel="noopener" class="lcard gc" ${trk}>${escHtml(l.title)}</a>${editBtn}</div>`;
-}
-
-function buildLocationCard(l,gi,ii,editBtn){
-  const isLive=l.locType==='live';
-  const id=`loc-${gi}-${ii}`;
-  const lockCheck=l.password&&window._pub?`onclick="onPwItem(${gi},${ii},'location')" style="cursor:pointer;"`:`onclick="toggleLocMap('${id}',${gi},${ii})"`;
-  const liveTag=isLive?`<span class="loc-live-dot"></span>`:'';
-  const sublbl=isLive?'Live Location':(l.lat?'Tap to view map':'No location set');
-  return `<div class="loc-card"><div class="loc-header" ${lockCheck}><div class="loc-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="${isLive?'#f44':'#50b4ff'}" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div><div style="flex:1"><div class="loc-label">${escHtml(l.title||'Location')}</div><div class="loc-sublbl" style="display:flex;align-items:center;gap:5px;">${liveTag}${sublbl}</div></div>${l.password&&window._pub?'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>':'<svg class="loc-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>'}</div><div class="loc-map" id="${id}-map"></div></div>${editBtn}`;
-}
-
-function toggleLocMap(id,gi,ii){
-  const mapDiv=document.getElementById(id+'-map');
-  if(!mapDiv)return;
-  const isOpen=mapDiv.style.display==='block';
-  if(isOpen){mapDiv.style.display='none';return;}
-  const l=ii<0?window.S.links[gi]:window.S.links[gi].items[ii];
-  if(!l.lat&&!l.locType){toast('No location set yet','e');return;}
-  if(l.locType==='live'){
-    // Re-read live coords from state (updated by watcher)
-    const lat=l.lat||0,lng=l.lng||0;
-    mapDiv.innerHTML=`<iframe src="https://maps.google.com/maps?q=${lat},${lng}&z=15&output=embed" allowfullscreen loading="lazy"></iframe>`;
-  } else {
-    mapDiv.innerHTML=`<iframe src="https://maps.google.com/maps?q=${l.lat},${l.lng}&z=15&output=embed" allowfullscreen loading="lazy"></iframe>`;
-  }
-  mapDiv.style.display='block';
-  if(window._pub&&window.S)window._fbRecordClick(window.S.publicId,l.title||'Location').catch(()=>{});
-}
-
-function buildGroup(grp,gi){
-  const hbg=grp.hbg||'#1a1a1a',htxt=grp.htxt||'#ffffff',gcbg=grp.gcbg||'#111111';
-  let inner='';
-  (grp.items||[]).forEach((l,ii)=>{inner+=`<div style="width:100%;">${buildItem(l,gi,ii)}</div>`;});
-  const addBtn=window._edit?`<button onclick="openAddToGroup(${gi})" style="width:100%;background:rgba(255,255,255,.06);border:1px dashed rgba(255,255,255,.15);border-radius:12px;color:#555;padding:11px;cursor:pointer;font-size:.82rem;margin-top:4px;">+ Add to &quot;${escHtml(grp.name||'Group')}&quot;</button>`:'';
-  const editBtn=window._edit?`<button class="dotsbtn" onmousedown="startLP(event,${gi},-2)" ontouchstart="startLP(event,${gi},-2)" onmouseup="cancelLP()" ontouchend="cancelLP()" onclick="openCtx(event,${gi},-2)" style="margin-left:auto;">⋮</button>`:'';
-  return `<div class="grp-wrap"><div class="grp-header" style="background:${hbg};"><span class="grp-title-left" style="color:${htxt};">${escHtml(grp.name||'Group')}</span>${editBtn}</div><div class="grp-inner" style="background:${gcbg}aa;">${inner}${addBtn}</div></div>`;
-}
-
-/* ============================================================ PASSWORD MODAL */
-window.onPwItem=function(gi,ii,type){
-  const item=ii<0?window.S.links[gi]:window.S.links[gi].items[ii];
-  document.getElementById('pw-modal-sub').innerText=`"${item.title||'Item'}" is password protected`;
-  document.getElementById('pw-modal-input').value='';
-  document.getElementById('pw-err').style.display='none';
-  document.getElementById('pw-modal').classList.add('on');
-  _pwCb=function(entered){
-    if(entered===item.password){
-      closePwModal();
-      if(type==='link'){window.open(item.url,'_blank');}
-      else if(type==='image'){openLightbox(gi,ii);}
-      else if(type==='video'){
-        // Show video inline after unlock
-        const mapEl=ii<0?document.getElementById('lsec').children[gi]:null;
-        toast('Video unlocked — scroll to watch','s');
-        if(window._pub&&window.S)window._fbRecordClick(window.S.publicId,item.title||'Video').catch(()=>{});
-        // Re-render that item without pw check
-        renderLinks();
-        // Temporarily mark as unlocked for session
-        item._unlocked=true;renderLinks();
-      }
-      else if(type==='location'){
-        item._unlocked=true;
-        renderLinks();
-        const id=`loc-${gi}-${ii}`;
-        setTimeout(()=>toggleLocMap(id,gi,ii),100);
-      }
-    } else {
-      document.getElementById('pw-err').style.display='block';
-      document.getElementById('pw-modal-input').value='';
-      document.getElementById('pw-modal-input').focus();
-    }
-  };
-};
-
-// Re-check pw but skip if unlocked this session
-function itemLocked(l){return l.password&&window._pub&&!l._unlocked;}
-
-window.submitPwModal=function(){
-  const v=document.getElementById('pw-modal-input').value;
-  if(_pwCb)_pwCb(v);
-};
-document.addEventListener('keydown',function(e){if(e.key==='Enter'&&document.getElementById('pw-modal').classList.contains('on'))submitPwModal();});
-window.closePwModal=function(){document.getElementById('pw-modal').classList.remove('on');_pwCb=null;};
-
-window.togglePwInput=function(fieldId,on){document.getElementById(fieldId).style.display=on?'block':'none';};
-
-/* ============================================================ LOCATION */
-window.openLocModal=function(){document.getElementById('loc-modal').classList.add('on');};
-window.closeLocModal=function(){document.getElementById('loc-modal').classList.remove('on');};
-
-function getLocItem(){
-  const label=document.getElementById('loc-label-input').value.trim()||'Location';
-  const pwOn=document.getElementById('loc-pw-on').checked;
-  const pw=pwOn?document.getElementById('loc-pw').value.trim():'';
-  return {type:'location',title:label,locType:'static',lat:null,lng:null,password:pw||null};
-}
-
-window.addStaticLocation=function(){
-  closeLocModal();
-  if(!navigator.geolocation){toast('Geolocation not supported','e');return;}
-  toast('Getting location…','s');
-  navigator.geolocation.getCurrentPosition(pos=>{
-    const item=getLocItem();
-    item.lat=pos.coords.latitude;item.lng=pos.coords.longitude;item.locType='static';
-    pushItem(item);
-  },()=>{
-    // Let user add without coords if denied
-    const item=getLocItem();item.locType='static';
-    pushItem(item);
-    toast('Location permission denied — added without GPS','e');
-  },{enableHighAccuracy:true,timeout:8000});
-};
-
-window.addLiveLocation=function(){
-  closeLocModal();
-  if(!navigator.geolocation){toast('Geolocation not supported','e');return;}
-  toast('Getting live location…','s');
-  navigator.geolocation.getCurrentPosition(pos=>{
-    const item=getLocItem();
-    item.lat=pos.coords.latitude;item.lng=pos.coords.longitude;item.locType='live';
-    pushItem(item);
-    startLiveTracking(item.title);
-  },()=>{toast('Location permission denied','e');},{enableHighAccuracy:true,timeout:8000});
-};
-
-function pushItem(item){
-  if(addToGrpIdx>=0){
-    if(!window.S.links[addToGrpIdx].items)window.S.links[addToGrpIdx].items=[];
-    window.S.links[addToGrpIdx].items.push(item);
-  } else {window.S.links.push(item);}
-  save();renderLinks();closeModals();toast('Added! ✓','s');
-}
-
-function startLiveTracking(title){
-  if(_liveWatchId!==null)navigator.geolocation.clearWatch(_liveWatchId);
-  _liveWatchId=navigator.geolocation.watchPosition(pos=>{
-    // Update all live location items in links
-    function updateLive(arr){arr.forEach(l=>{if(l.type==='location'&&l.locType==='live'&&l.title===title){l.lat=pos.coords.latitude;l.lng=pos.coords.longitude;}if(l.type==='group')updateLive(l.items||[]);});}
-    updateLive(window.S.links);
-    save();
-  },null,{enableHighAccuracy:true,maximumAge:10000});
-}
-
-function stopLiveLocation(){if(_liveWatchId!==null){navigator.geolocation.clearWatch(_liveWatchId);_liveWatchId=null;}}
-
-// Re-start live tracking on boot if any live location exists
-function resumeLiveTracking(){
-  function hasLive(arr){return arr.some(l=>l.type==='location'&&l.locType==='live'||(l.type==='group'&&hasLive(l.items||[])));}
-  if(!window._pub&&window.S&&hasLive(window.S.links))startLiveTracking(null);
-}
-
-/* ============================================================ CONTEXT MENU */
+/* ===== CONTEXT MENU — positioned near the button ===== */
 window.openCtx=function(e,gi,ii){
   e.stopPropagation();ctxGi=gi;ctxIi=ii;
   let html='';
   if(ii===-2){
-    html='<div class="ctx-item" onclick="openEditGroup('+gi+');closeCtx()"><span>✏️</span> Edit Group</div><div class="ctx-item" onclick="moveItem(-1)"><span>⬆️</span> Move Up</div><div class="ctx-item" onclick="moveItem(1)"><span>⬇️</span> Move Down</div><div class="ctx-item danger" onclick="closeCtx();askDeleteGroup('+gi+')"><span>🗑</span> Delete Group</div>';
-  } else {
-    const item=ii>=0?window.S.links[gi].items[ii]:window.S.links[gi];
-    if(item.type==='link'||item.type==='location')html+='<div class="ctx-item" onclick="startEdit()"><span>✏️</span> Edit</div>';
-    html+='<div class="ctx-item" onclick="moveItem(-1)"><span>⬆️</span> Move Up</div><div class="ctx-item" onclick="moveItem(1)"><span>⬇️</span> Move Down</div><div class="ctx-item danger" onclick="closeCtx();ctxDelete()"><span>🗑</span> Delete</div>';
+    html=`<div class="ctx-item" onclick="openEditGroup(${gi});closeCtx()">✏️ Edit Group</div><div class="ctx-item" onclick="moveItem(-1)">⬆️ Move Up</div><div class="ctx-item" onclick="moveItem(1)">⬇️ Move Down</div><div class="ctx-item danger" onclick="closeCtx();askDeleteGroup(${gi})">🗑 Delete Group</div>`;
+  }else{
+    const item=ii>=0?(window.S.links[gi].items||[])[ii]:window.S.links[gi];
+    if(item&&(item.type==='link'||item.type==='location'))html+=`<div class="ctx-item" onclick="startEdit()">✏️ Edit</div>`;
+    html+=`<div class="ctx-item" onclick="moveItem(-1)">⬆️ Move Up</div><div class="ctx-item" onclick="moveItem(1)">⬇️ Move Down</div><div class="ctx-item danger" onclick="closeCtx();ctxDelete()">🗑 Delete</div>`;
   }
-  const menu=document.getElementById('ctx-menu');menu.innerHTML=html;menu.classList.remove('hidden');
+  const menu=document.getElementById('ctx-menu');
+  menu.innerHTML=html;menu.classList.remove('hidden');
+  /* Position near the button that was tapped */
   const bx=e.currentTarget.getBoundingClientRect();
-  let top=bx.bottom+8,left=bx.left-130;if(left<8)left=8;if(top+200>window.innerHeight)top=bx.top-200;
+  const mW=165,mH=menu.children.length*44;
+  let left=bx.right-mW;if(left<8)left=8;
+  let top=bx.bottom+6;
+  if(top+mH>window.innerHeight-10)top=bx.top-mH-6;
   menu.style.top=top+'px';menu.style.left=left+'px';
 };
 function closeCtx(){document.getElementById('ctx-menu').classList.add('hidden');}
-document.addEventListener('click',function(e){if(!document.getElementById('ctx-menu').contains(e.target))closeCtx();});
+document.addEventListener('click',e=>{if(!document.getElementById('ctx-menu').contains(e.target))closeCtx();});
 
 window.startEdit=function(){
   closeCtx();
-  const item=ctxIi>=0?window.S.links[ctxGi].items[ctxIi]:window.S.links[ctxGi];
+  const item=ctxIi>=0?(window.S.links[ctxGi].items||[])[ctxIi]:window.S.links[ctxGi];
+  if(!item)return;
   document.getElementById('edit-title').value=item.title||'';
-  document.getElementById('edit-url').value=item.url||'';
+  const urlEl=document.getElementById('edit-url');
+  if(item.type==='link'){urlEl.style.display='';urlEl.value=item.url||'';}
+  else{urlEl.style.display='none';urlEl.value='';}
   document.getElementById('edit-hint').innerText='';
   const hasPw=!!item.password;
   document.getElementById('edit-pw-on').checked=hasPw;
   document.getElementById('edit-pw-field').style.display=hasPw?'block':'none';
   document.getElementById('edit-pw').value=item.password||'';
-  document.getElementById('edit-title').oninput=updateEditHint;
-  document.getElementById('edit-url').oninput=updateEditHint;
+  if(item.type==='link'){document.getElementById('edit-title').oninput=updateEditHint;urlEl.oninput=updateEditHint;}
   document.getElementById('emod').classList.remove('hidden');
 };
-
 window.saveEdit=function(){
-  const t=document.getElementById('edit-title').value.trim();
-  if(!t){toast('Name required','e');return;}
-  const item=ctxIi>=0?window.S.links[ctxGi].items[ctxIi]:window.S.links[ctxGi];
+  const t=document.getElementById('edit-title').value.trim();if(!t){toast('Name required','e');return;}
+  const item=ctxIi>=0?(window.S.links[ctxGi].items||[])[ctxIi]:window.S.links[ctxGi];if(!item)return;
   item.title=t;
-  const r=document.getElementById('edit-url').value.trim();
-  if(r)item.url=smartPrefix(t,r);
-  const pwOn=document.getElementById('edit-pw-on').checked;
-  const pw=document.getElementById('edit-pw').value.trim();
+  const urlEl=document.getElementById('edit-url');
+  if(item.type==='link'&&urlEl.value.trim())item.url=smartPrefix(t,urlEl.value.trim());
+  const pwOn=document.getElementById('edit-pw-on').checked,pw=document.getElementById('edit-pw').value.trim();
   item.password=pwOn&&pw?pw:null;
   save();renderLinks();closeModals();toast('Updated ✓','s');
 };
-
 window.moveItem=function(dir){
   closeCtx();
-  if(ctxIi>=0){const arr=window.S.links[ctxGi].items,ni=ctxIi+dir;if(ni<0||ni>=arr.length)return;[arr[ctxIi],arr[ni]]=[arr[ni],arr[ctxIi]];}
+  if(ctxIi>=0){const arr=(window.S.links[ctxGi].items||[]),ni=ctxIi+dir;if(ni<0||ni>=arr.length)return;[arr[ctxIi],arr[ni]]=[arr[ni],arr[ctxIi]];}
   else{const arr=window.S.links,ni=ctxGi+dir;if(ni<0||ni>=arr.length)return;[arr[ctxGi],arr[ni]]=[arr[ni],arr[ctxGi]];}
   save();renderLinks();
 };
-window.ctxDelete=function(){if(ctxIi>=0)delItemInGrp(ctxGi,ctxIi);else delItem(ctxGi);};
+window.ctxDelete=function(){ctxIi>=0?delItemInGrp(ctxGi,ctxIi):delItem(ctxGi);};
 
-/* ============================================================ CONFIRM */
-window.askConfirm=function(msg,cb){_confirmCb=cb;document.getElementById('confirm-msg').innerText=msg;document.getElementById('confirm-box').classList.add('on');};
-window.doConfirmYes=function(){var cb=_confirmCb;closeConfirm();if(typeof cb==='function')cb();};
-window.closeConfirm=function(){document.getElementById('confirm-box').classList.remove('on');_confirmCb=null;};
+/* ===== CONFIRM ===== */
+window.askConfirm=(msg,cb)=>{_confirmCb=cb;document.getElementById('confirm-msg').innerText=msg;document.getElementById('confirm-box').classList.add('on');};
+window.doConfirmYes=()=>{const cb=_confirmCb;closeConfirm();if(typeof cb==='function')cb();};
+window.closeConfirm=()=>{document.getElementById('confirm-box').classList.remove('on');_confirmCb=null;};
 
-/* ============================================================ LONG PRESS */
-window.startLP=function(e,gi,ii){e.stopPropagation();_lpTimer=setTimeout(()=>{_lpTimer=null;if(navigator.vibrate)navigator.vibrate(40);ctxGi=gi;ctxIi=ii;const menu=document.getElementById('ctx-menu');menu.innerHTML='<div class="ctx-item" onclick="moveItem(-1)"><span>⬆️</span> Move Up</div><div class="ctx-item" onclick="moveItem(1)"><span>⬇️</span> Move Down</div>';menu.classList.remove('hidden');const bx=e.currentTarget.getBoundingClientRect();let top=bx.bottom+8,left=bx.left-80;if(left<8)left=8;if(top+90>window.innerHeight)top=bx.top-90;menu.style.top=top+'px';menu.style.left=left+'px';},500);};
-window.cancelLP=function(){if(_lpTimer){clearTimeout(_lpTimer);_lpTimer=null;}};
-
-/* ============================================================ SAVE */
+/* ===== SAVE (debounced) ===== */
 function save(){
   if(!window._uid||window._pub)return;
   clearTimeout(_saveTimer);
-  _saveTimer=setTimeout(()=>{window._fbSave(window._uid,window.S).catch(e=>console.warn('Save:',e));},800);
+  _saveTimer=setTimeout(()=>window._fbSave(window._uid,window.S).catch(e=>console.warn(e)),800);
 }
-window.delItem=function(i){window.S.links.splice(i,1);save();renderLinks();};
-window.delItemInGrp=function(gi,ii){window.S.links[gi].items.splice(ii,1);save();renderLinks();};
+window.delItem=i=>{window.S.links.splice(i,1);save();renderLinks();};
+window.delItemInGrp=(gi,ii)=>{window.S.links[gi].items.splice(ii,1);save();renderLinks();};
 
-/* ============================================================ PREVIEW */
-window.togglePreview=function(){window._edit=!window._edit;document.getElementById('exprev').classList.toggle('hidden',window._edit);document.querySelectorAll('.edit-only').forEach(e=>e.classList.toggle('hidden',!window._edit));document.getElementById('pname').contentEditable=window._edit;document.getElementById('pbio').contentEditable=window._edit;renderLinks();};
+/* ===== PREVIEW ===== */
+window.togglePreview=function(){
+  window._edit=!window._edit;
+  document.getElementById('exprev').classList.toggle('hidden',window._edit);
+  document.querySelectorAll('.edit-only').forEach(e=>e.classList.toggle('hidden',!window._edit));
+  document.getElementById('pname').contentEditable=window._edit;
+  document.getElementById('pbio').contentEditable=window._edit;
+  renderLinks();
+};
 
-/* ============================================================ BG BLUR */
-window.applyBlur=function(v){v=parseInt(v);document.documentElement.style.setProperty('--bg-blur',v+'px');document.getElementById('blur-val').innerText=v+'px';window.S.bgBlur=v;save();};
-
-/* ============================================================ CROP */
-window.onAvatarPick=function(inp){const f=inp.files[0];inp.value='';if(!f)return;const r=new FileReader();r.onload=ev=>openCrop(ev.target.result);r.readAsDataURL(f);};
-window.openCrop=function(src){
-  const maxStage=Math.min(300,Math.floor(Math.min(window.innerWidth,window.innerHeight)*0.72));
-  _crop.stageSize=maxStage;
-  const stage=document.getElementById('crop-stage');stage.style.width=maxStage+'px';stage.style.height=maxStage+'px';
-  _crop={..._crop,scale:1,minScale:1,maxScale:4,ox:0,oy:0,dragging:false,lastX:0,lastY:0};
-  const img=document.getElementById('crop-img');
-  img.onload=()=>{
-    const shorter=Math.min(img.naturalWidth,img.naturalHeight);
-    _crop.minScale=maxStage/shorter;_crop.maxScale=_crop.minScale*4;_crop.scale=_crop.minScale;
-    const z=document.getElementById('crop-zoom');z.min=_crop.minScale;z.max=_crop.maxScale;z.step=(_crop.maxScale-_crop.minScale)/200;z.value=_crop.minScale;
-    applyCropTransform();
+/* ===== PW MODAL ===== */
+window.onPwItem=function(gi,ii,type){
+  const item=ii<0?window.S.links[gi]:(window.S.links[gi].items||[])[ii];
+  document.getElementById('pw-modal-sub').innerText=`"${item.title||'Item'}" is password protected`;
+  document.getElementById('pw-modal-input').value='';
+  document.getElementById('pw-err').style.display='none';
+  document.getElementById('pw-modal').classList.add('on');
+  _pwCb=entered=>{
+    if(entered===item.password){
+      closePwModal();item._unlocked=true;renderLinks();
+      if(type==='image')setTimeout(()=>openLightbox(gi,ii),50);
+      else if(type==='location')setTimeout(()=>{const id=`lm${gi}x${ii}`;toggleLocMap(id,gi,ii);},80);
+      if(window._pub&&window.S)window._fbRecordClick(window.S.publicId,item.title||type).catch(()=>{});
+    }else{document.getElementById('pw-err').style.display='block';document.getElementById('pw-modal-input').value='';document.getElementById('pw-modal-input').focus();}
   };
-  img.src=src;document.getElementById('crop-modal').classList.add('on');setupCropEvents();
 };
-window.closeCrop=function(){document.getElementById('crop-modal').classList.remove('on');};
-function applyCropTransform(){const img=document.getElementById('crop-img');img.style.left='50%';img.style.top='50%';img.style.transform='translate(calc(-50% + '+_crop.ox+'px), calc(-50% + '+_crop.oy+'px)) scale('+_crop.scale+')';}
-function clampCrop(){const img=document.getElementById('crop-img');const halfW=(img.naturalWidth*_crop.scale)/2,halfH=(img.naturalHeight*_crop.scale)/2,hs=_crop.stageSize/2;const mox=Math.max(0,halfW-hs),moy=Math.max(0,halfH-hs);_crop.ox=Math.max(-mox,Math.min(mox,_crop.ox));_crop.oy=Math.max(-moy,Math.min(moy,_crop.oy));}
-function setupCropEvents(){
-  const stage=document.getElementById('crop-stage');const z=document.getElementById('crop-zoom');
-  const ns=stage.cloneNode(true);stage.parentNode.replaceChild(ns,stage);const s=document.getElementById('crop-stage');
-  z.oninput=function(){_crop.scale=parseFloat(this.value);clampCrop();applyCropTransform();};
-  s.onmousedown=e=>{_crop.dragging=true;_crop.lastX=e.clientX;_crop.lastY=e.clientY;e.preventDefault();};
-  window.onmousemove=e=>{if(!_crop.dragging)return;_crop.ox+=e.clientX-_crop.lastX;_crop.oy+=e.clientY-_crop.lastY;_crop.lastX=e.clientX;_crop.lastY=e.clientY;clampCrop();applyCropTransform();};
-  window.onmouseup=()=>{_crop.dragging=false;};
-  s.ontouchstart=e=>{if(e.touches.length===1){_crop.dragging=true;_crop.lastX=e.touches[0].clientX;_crop.lastY=e.touches[0].clientY;}else if(e.touches.length===2){_crop.dragging=false;const dx=e.touches[0].clientX-e.touches[1].clientX,dy=e.touches[0].clientY-e.touches[1].clientY;_pinchStart={dist:Math.hypot(dx,dy),scale:_crop.scale};}e.preventDefault();};
-  s.ontouchmove=e=>{if(e.touches.length===1&&_crop.dragging){_crop.ox+=e.touches[0].clientX-_crop.lastX;_crop.oy+=e.touches[0].clientY-_crop.lastY;_crop.lastX=e.touches[0].clientX;_crop.lastY=e.touches[0].clientY;clampCrop();applyCropTransform();}else if(e.touches.length===2&&_pinchStart){const dx=e.touches[0].clientX-e.touches[1].clientX,dy=e.touches[0].clientY-e.touches[1].clientY,dist=Math.hypot(dx,dy);_crop.scale=Math.max(_crop.minScale,Math.min(_crop.maxScale,_pinchStart.scale*(dist/_pinchStart.dist)));z.value=_crop.scale;clampCrop();applyCropTransform();}e.preventDefault();};
-  s.ontouchend=()=>{_crop.dragging=false;_pinchStart=null;};
+window.submitPwModal=()=>{if(_pwCb)_pwCb(document.getElementById('pw-modal-input').value);};
+window.closePwModal=()=>{document.getElementById('pw-modal').classList.remove('on');_pwCb=null;};
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&document.getElementById('pw-modal').classList.contains('on'))submitPwModal();});
+window.togglePwInput=(id,on)=>document.getElementById(id).style.display=on?'block':'none';
+
+/* ===== LOCATION ===== */
+let _pendingLocLabel='',_pendingLocPw=null,_pendingLocGrpIdx=-1;
+
+window.openLocModal=function(){document.getElementById('loc-modal').classList.add('on');};
+window.closeLocModal=function(){document.getElementById('loc-modal').classList.remove('on');};
+
+window.doAddLive=function(){
+  closeLocModal();
+  if(!navigator.geolocation){toast('Geolocation not supported','e');return;}
+  toast('Getting your location…','s');
+  navigator.geolocation.getCurrentPosition(pos=>{
+    const item={type:'location',title:_pendingLocLabel||'Live Location',locType:'live',lat:pos.coords.latitude,lng:pos.coords.longitude,password:_pendingLocPw||null};
+    pushItem(item,_pendingLocGrpIdx);
+    startLiveTracking(item.title);
+  },()=>toast('Location permission denied','e'),{enableHighAccuracy:true,timeout:10000});
+};
+
+window.doAddStatic=function(){
+  closeLocModal();
+  if(!navigator.geolocation){toast('Geolocation not supported','e');return;}
+  toast('Opening map…','s');
+  navigator.geolocation.getCurrentPosition(pos=>{
+    openMapPicker(pos.coords.latitude,pos.coords.longitude,function(lat,lng){
+      const item={type:'location',title:_pendingLocLabel||'Location',locType:'static',lat,lng,password:_pendingLocPw||null};
+      pushItem(item,_pendingLocGrpIdx);
+    });
+  },()=>{
+    // If denied, open map at default (Cairo)
+    openMapPicker(30.0444,31.2357,function(lat,lng){
+      const item={type:'location',title:_pendingLocLabel||'Location',locType:'static',lat,lng,password:_pendingLocPw||null};
+      pushItem(item,_pendingLocGrpIdx);
+    });
+  },{enableHighAccuracy:true,timeout:6000});
+};
+
+/* Map picker using OpenStreetMap embed + manual coord input */
+function openMapPicker(lat,lng,cb){
+  _mapPickerLat=lat;_mapPickerLng=lng;_mapPickerCb=cb;
+  const iframe=document.getElementById('map-iframe');
+  // Use OpenStreetMap with a search box — user can search or use coords
+  iframe.src=`https://www.openstreetmap.org/export/embed.html?bbox=${lng-0.01},${lat-0.01},${lng+0.01},${lat+0.01}&layer=mapnik&marker=${lat},${lng}`;
+  document.getElementById('map-coords-display').innerText=`Lat: ${lat.toFixed(5)}, Lng: ${lng.toFixed(5)}`;
+  // Add manual input fields
+  const bar=document.querySelector('.map-bar');
+  if(!document.getElementById('map-lat-inp')){
+    const row=document.createElement('div');
+    row.style.cssText='display:flex;gap:8px;';
+    row.innerHTML=`<input id="map-lat-inp" placeholder="Latitude" style="flex:1;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);padding:9px 12px;border-radius:10px;color:#fff;font-size:.82rem;outline:none;" type="number" step="any"><input id="map-lng-inp" placeholder="Longitude" style="flex:1;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);padding:9px 12px;border-radius:10px;color:#fff;font-size:.82rem;outline:none;" type="number" step="any"><button onclick="applyMapCoords()" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.15);color:#fff;padding:9px 14px;border-radius:10px;font-size:.8rem;cursor:pointer;white-space:nowrap;">Update</button>`;
+    bar.insertBefore(row,bar.firstChild);
+  }
+  document.getElementById('map-lat-inp').value=lat.toFixed(6);
+  document.getElementById('map-lng-inp').value=lng.toFixed(6);
+  document.getElementById('map-picker').classList.add('on');
 }
-window.saveCrop=function(){
-  const size=400,cv=document.createElement('canvas');cv.width=size;cv.height=size;
-  const ctx=cv.getContext('2d');ctx.beginPath();ctx.arc(size/2,size/2,size/2,0,Math.PI*2);ctx.clip();
-  const img=document.getElementById('crop-img');const ratio=size/_crop.stageSize;
-  const drawW=img.naturalWidth*_crop.scale*ratio,drawH=img.naturalHeight*_crop.scale*ratio;
-  ctx.drawImage(img,size/2+_crop.ox*ratio-drawW/2,size/2+_crop.oy*ratio-drawH/2,drawW,drawH);
-  window.S.avatar=cv.toDataURL('image/jpeg',.9);document.getElementById('avimg').src=window.S.avatar;
-  save();closeCrop();toast('Profile photo updated ✓','s');
+
+window.applyMapCoords=function(){
+  const lat=parseFloat(document.getElementById('map-lat-inp').value);
+  const lng=parseFloat(document.getElementById('map-lng-inp').value);
+  if(isNaN(lat)||isNaN(lng)){toast('Invalid coordinates','e');return;}
+  _mapPickerLat=lat;_mapPickerLng=lng;
+  document.getElementById('map-coords-display').innerText=`Lat: ${lat.toFixed(5)}, Lng: ${lng.toFixed(5)}`;
+  document.getElementById('map-iframe').src=`https://www.openstreetmap.org/export/embed.html?bbox=${lng-0.01},${lat-0.01},${lng+0.01},${lat+0.01}&layer=mapnik&marker=${lat},${lng}`;
 };
 
-/* ============================================================ LIGHTBOX */
-window.openLightbox=function(gi,ii){
-  let src='';
-  if(ii<0)src=(window.S.links[gi]||{}).url||'';
-  else src=(((window.S.links[gi]||{}).items||[])[ii]||{}).url||'';
-  if(!src)return;
-  document.getElementById('lb-img').src=src;document.getElementById('lightbox').classList.add('on');document.body.style.overflow='hidden';
+window.confirmMapLocation=function(){
+  if(_mapPickerLat===null){toast('No location selected','e');return;}
+  closeMapPicker();
+  if(_mapPickerCb)_mapPickerCb(_mapPickerLat,_mapPickerLng);
+  _mapPickerCb=null;
 };
-window.closeLightbox=function(){document.getElementById('lightbox').classList.remove('on');document.body.style.overflow='';setTimeout(()=>document.getElementById('lb-img').src='',300);};
+window.closeMapPicker=function(){document.getElementById('map-picker').classList.remove('on');_mapPickerCb=null;};
 
-/* ============================================================ BG IMAGE */
-window.onBgPick=function(inp){const f=inp.files[0];inp.value='';if(!f)return;resizeImg(f,1200,.78,d64=>{window.S.bgImage=d64;window.S.bgBlur=window.S.bgBlur||0;document.body.classList.remove('no-bgimg');document.body.style.backgroundImage='url('+d64+')';document.getElementById('rmbg').style.display='block';document.getElementById('blur-section').style.display='block';document.getElementById('bgblur').value=window.S.bgBlur;document.getElementById('blur-val').innerText=window.S.bgBlur+'px';document.documentElement.style.setProperty('--bg-blur',window.S.bgBlur+'px');save();toast('Background updated ✓','s');});};
-window.removeBg=function(){window.S.bgImage='';window.S.bgBlur=0;document.body.classList.add('no-bgimg');document.body.style.backgroundImage='none';document.documentElement.style.setProperty('--bg-blur','0px');document.getElementById('rmbg').style.display='none';document.getElementById('blur-section').style.display='none';document.getElementById('bgblur').value=0;document.getElementById('blur-val').innerText='0px';save();toast('Background removed','s');};
+function pushItem(item,grpIdx){
+  const gi=grpIdx!=null?grpIdx:addToGrpIdx;
+  if(gi>=0){if(!window.S.links[gi].items)window.S.links[gi].items=[];window.S.links[gi].items.push(item);}
+  else window.S.links.push(item);
+  save();renderLinks();closeModals();toast('Added ✓','s');
+}
 
-/* ============================================================ COLORS */
-window.applyColors=function(){window.S.colors={bg:document.getElementById('cbg').value,card:document.getElementById('ccard').value,name:document.getElementById('cname').value,bio:document.getElementById('cbio').value,link:document.getElementById('clink').value};render();save();};
+function startLiveTracking(title){
+  if(_liveWatchId!==null)navigator.geolocation.clearWatch(_liveWatchId);
+  _liveWatchId=navigator.geolocation.watchPosition(pos=>{
+    function upd(arr){arr.forEach(l=>{if(l.type==='location'&&l.locType==='live'&&(!title||l.title===title)){l.lat=pos.coords.latitude;l.lng=pos.coords.longitude;}if(l.type==='group')upd(l.items||[]);});}
+    upd(window.S.links);save();
+  },null,{enableHighAccuracy:true,maximumAge:8000});
+}
+function stopLiveLocation(){if(_liveWatchId!==null){navigator.geolocation.clearWatch(_liveWatchId);_liveWatchId=null;}}
+function resumeLiveTracking(){
+  function hasLive(arr){return arr.some(l=>(l.type==='location'&&l.locType==='live')||(l.type==='group'&&hasLive(l.items||[])));}
+  if(window.S&&hasLive(window.S.links))startLiveTracking(null);
+}
 
-/* ============================================================ TABS */
+/* ===== TABS ===== */
 window.setTab=function(t){
   curTab=t;pendMedia=null;
   ['link','image','video','location','group'].forEach(x=>{
@@ -1144,92 +1044,139 @@ window.setTab=function(t){
   document.getElementById('imgprev').style.display='none';document.getElementById('vidprev').style.display='none';
   document.getElementById('imgbox').style.display='flex';document.getElementById('vidbox').style.display='flex';
 };
-window.openAddToGroup=function(gi){addToGrpIdx=gi;document.getElementById('lmod-title').innerText='Add to Group';document.getElementById('tab-group').classList.add('hidden');document.getElementById('tab-location').classList.remove('hidden');setTab('link');document.getElementById('ltitle').value='';document.getElementById('lurl').value='';document.getElementById('url-hint').innerText='';document.getElementById('lmod').classList.remove('hidden');};
-window.openAddLink=function(){addToGrpIdx=-1;document.getElementById('lmod-title').innerText='Add to Profile';document.getElementById('tab-group').classList.remove('hidden');setTab('link');document.getElementById('ltitle').value='';document.getElementById('lurl').value='';document.getElementById('url-hint').innerText='';document.getElementById('lmod').classList.remove('hidden');};
+window.openAddToGroup=gi=>{addToGrpIdx=gi;document.getElementById('lmod-title').innerText='Add to Group';document.getElementById('tab-group').classList.add('hidden');setTab('link');document.getElementById('ltitle').value='';document.getElementById('lurl').value='';document.getElementById('url-hint').innerText='';document.getElementById('lmod').classList.remove('hidden');};
+window.openAddLink=()=>{addToGrpIdx=-1;document.getElementById('lmod-title').innerText='Add to Profile';document.getElementById('tab-group').classList.remove('hidden');setTab('link');document.getElementById('ltitle').value='';document.getElementById('lurl').value='';document.getElementById('url-hint').innerText='';document.getElementById('lmod').classList.remove('hidden');};
 
-/* ============================================================ MEDIA */
-window.onImgPick=function(inp){const f=inp.files[0];inp.value='';if(!f)return;resizeImg(f,900,.82,d64=>{pendMedia={type:'image',url:d64};document.getElementById('imgprev').src=d64;document.getElementById('imgprev').style.display='block';document.getElementById('imgbox').style.display='none';});};
-window.onVidPick=function(inp){const f=inp.files[0];inp.value='';if(!f)return;toast('Reading video…','s');const r=new FileReader();r.onload=e=>{pendMedia={type:'video',url:e.target.result};document.getElementById('vidprev').src=e.target.result;document.getElementById('vidprev').style.display='block';document.getElementById('vidbox').style.display='none';toast('Video ready — tap Add ✓','s');};r.readAsDataURL(f);};
+/* ===== MEDIA ===== */
+window.onImgPick=inp=>{const f=inp.files[0];inp.value='';if(!f)return;resizeImg(f,900,.82,d64=>{pendMedia={type:'image',url:d64};document.getElementById('imgprev').src=d64;document.getElementById('imgprev').style.display='block';document.getElementById('imgbox').style.display='none';});};
+window.onVidPick=inp=>{const f=inp.files[0];inp.value='';if(!f)return;toast('Reading video…','s');const r=new FileReader();r.onload=e=>{pendMedia={type:'video',url:e.target.result};document.getElementById('vidprev').src=e.target.result;document.getElementById('vidprev').style.display='block';document.getElementById('vidbox').style.display='none';toast('Video ready ✓','s');};r.readAsDataURL(f);};
 
-/* ============================================================ ADD ITEM */
+/* ===== ADD ITEM ===== */
 window.addItem=function(){
-  if(curTab==='location'){openLocModal();return;}
-  let newItem=null;
+  if(curTab==='location'){
+    _pendingLocLabel=document.getElementById('loc-label-input').value.trim()||'Location';
+    const pwOn=document.getElementById('loc-pw-on').checked;
+    _pendingLocPw=pwOn?document.getElementById('loc-pw').value.trim()||null:null;
+    _pendingLocGrpIdx=addToGrpIdx;
+    closeModals();openLocModal();return;
+  }
+  let item=null;
   if(curTab==='link'){
     const t=document.getElementById('ltitle').value.trim(),r=document.getElementById('lurl').value.trim();
     if(!t||!r){toast('Fill in name and URL','e');return;}
-    const pwOn=document.getElementById('link-pw-on').checked;
-    const pw=pwOn?document.getElementById('link-pw').value.trim():'';
-    newItem={type:'link',title:t,url:smartPrefix(t,r),password:pw||null};
-  } else if(curTab==='group'){
-    const name=document.getElementById('grp-name').value.trim();
-    if(!name){toast('Enter a group name','e');return;}
-    newItem={type:'group',name,hbg:document.getElementById('grp-hbg').value,htxt:document.getElementById('grp-htxt').value,gcbg:document.getElementById('grp-cbg').value,lbg:document.getElementById('grp-lbg').value,ltxt:document.getElementById('grp-ltxt').value,items:[]};
-  } else if(pendMedia){
-    const pwMap={image:'img',video:'vid'};const k=pwMap[curTab];
-    const pwOn=k?document.getElementById(k+'-pw-on').checked:false;
-    const pw=pwOn?(document.getElementById(k+'-pw').value.trim()||null):null;
-    newItem={...pendMedia,password:pw};
-  } else {
-    toast(curTab==='image'?'Select an image first':'Select a video first','e');return;
-  }
-  pushItem(newItem);
-  // Reset fields
+    const pwOn=document.getElementById('link-pw-on').checked,pw=pwOn?document.getElementById('link-pw').value.trim():null;
+    item={type:'link',title:t,url:smartPrefix(t,r),password:pw||null};
+  }else if(curTab==='group'){
+    const name=document.getElementById('grp-name').value.trim();if(!name){toast('Enter group name','e');return;}
+    item={type:'group',name,hbg:document.getElementById('grp-hbg').value,htxt:document.getElementById('grp-htxt').value,gcbg:document.getElementById('grp-cbg').value,lbg:document.getElementById('grp-lbg').value,ltxt:document.getElementById('grp-ltxt').value,items:[]};
+  }else if(pendMedia){
+    const k=curTab==='image'?'img':'vid';
+    const pwOn=document.getElementById(k+'-pw-on').checked,pw=pwOn?document.getElementById(k+'-pw').value.trim():null;
+    item={...pendMedia,password:pw||null};
+  }else{toast(curTab==='image'?'Select an image first':'Select a video first','e');return;}
+  pushItem(item,addToGrpIdx);
+  // Reset
   document.getElementById('ltitle').value='';document.getElementById('lurl').value='';document.getElementById('grp-name').value='';
-  ['link-pw-on','img-pw-on','vid-pw-on','loc-pw-on'].forEach(id=>{const el=document.getElementById(id);if(el)el.checked=false;});
-  ['link-pw-field','img-pw-field','vid-pw-field','loc-pw-field'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});
+  ['link','img','vid','loc'].forEach(k=>{const el=document.getElementById(k+'-pw-on');if(el){el.checked=false;togglePwInput(k+'-pw-field',false);}});
   pendMedia=null;document.getElementById('imgprev').style.display='none';document.getElementById('vidprev').style.display='none';document.getElementById('imgbox').style.display='flex';document.getElementById('vidbox').style.display='flex';
 };
 
-/* ============================================================ EDIT GROUP */
-window.openEditGroup=function(gi){editGrpIdx=gi;const g=window.S.links[gi];document.getElementById('eg-name').value=g.name||'';document.getElementById('eg-hbg').value=g.hbg||'#1a1a1a';document.getElementById('eg-htxt').value=g.htxt||'#ffffff';document.getElementById('eg-cbg').value=g.gcbg||'#111111';document.getElementById('eg-lbg').value=g.lbg||'#1e1e1e';document.getElementById('eg-ltxt').value=g.ltxt||'#ffffff';document.getElementById('egmod').classList.remove('hidden');};
+/* ===== EDIT GROUP ===== */
+window.openEditGroup=gi=>{editGrpIdx=gi;const g=window.S.links[gi];document.getElementById('eg-name').value=g.name||'';document.getElementById('eg-hbg').value=g.hbg||'#1a1a1a';document.getElementById('eg-htxt').value=g.htxt||'#fff';document.getElementById('eg-cbg').value=g.gcbg||'#111';document.getElementById('eg-lbg').value=g.lbg||'#1e1e1e';document.getElementById('eg-ltxt').value=g.ltxt||'#fff';document.getElementById('egmod').classList.remove('hidden');};
 window.saveGroupEdit=function(){const g=window.S.links[editGrpIdx];g.name=document.getElementById('eg-name').value.trim()||g.name;g.hbg=document.getElementById('eg-hbg').value;g.htxt=document.getElementById('eg-htxt').value;g.gcbg=document.getElementById('eg-cbg').value;g.lbg=document.getElementById('eg-lbg').value;g.ltxt=document.getElementById('eg-ltxt').value;save();renderLinks();closeModals();toast('Group updated ✓','s');};
 
-/* ============================================================ ANALYTICS */
+/* ===== ANALYTICS ===== */
 function renderAnalytics(data){
-  if(!data){['an-visits','an-today','an-clicks-total'].forEach(id=>document.getElementById(id).innerText='0');document.getElementById('an-clicks-list').innerHTML='<div class="an-empty">No data yet — share your profile!</div>';return;}
-  const visits=data.visits||{},total=visits.total||0,today=new Date().toISOString().slice(0,10).replace(/-/g,''),todayCount=visits[today]||0;
+  if(!data){['an-visits','an-today','an-clicks-total'].forEach(id=>document.getElementById(id).innerText='0');document.getElementById('an-clicks-list').innerHTML='<div class="an-empty">No data yet</div>';return;}
+  const v=data.visits||{},total=v.total||0,today=new Date().toISOString().slice(0,10).replace(/-/g,'');
   document.getElementById('an-visits').innerText=total>999?(total/1000).toFixed(1)+'K':total;
-  document.getElementById('an-today').innerText=todayCount;
-  const clicks=data.clicks||{},clickArr=Object.values(clicks).sort((a,b)=>b.count-a.count),totalClicks=clickArr.reduce((s,c)=>s+c.count,0);
-  document.getElementById('an-clicks-total').innerText=totalClicks>999?(totalClicks/1000).toFixed(1)+'K':totalClicks;
+  document.getElementById('an-today').innerText=v[today]||0;
+  const clicks=data.clicks||{},arr=Object.values(clicks).sort((a,b)=>b.count-a.count),tc=arr.reduce((s,c)=>s+c.count,0);
+  document.getElementById('an-clicks-total').innerText=tc>999?(tc/1000).toFixed(1)+'K':tc;
   const list=document.getElementById('an-clicks-list');
-  if(!clickArr.length){list.innerHTML='<div class="an-empty">No taps yet</div>';return;}
-  const maxC=clickArr[0].count||1;
-  list.innerHTML=clickArr.slice(0,8).map(c=>'<div class="an-click-row"><span class="an-click-name">'+escHtml(c.title)+'</span><div class="an-click-bar-wrap"><div class="an-click-bar" style="width:'+Math.round(c.count/maxC*100)+'%"></div></div><span class="an-click-count">'+c.count+'</span></div>').join('');
+  if(!arr.length){list.innerHTML='<div class="an-empty">No taps yet</div>';return;}
+  const mx=arr[0].count||1;
+  list.innerHTML=arr.slice(0,8).map(c=>`<div class="an-click-row"><span class="an-click-name">${esc(c.title)}</span><div class="an-click-bar-wrap"><div class="an-click-bar" style="width:${Math.round(c.count/mx*100)}%"></div></div><span class="an-click-count">${c.count}</span></div>`).join('');
 }
-window.askDeleteGroup=function(gi){var grpName=(window.S.links[gi]||{}).name||'Group';askConfirm('Delete group "'+grpName+'"?',function(){delItem(gi);});};
-window.askResetAnalytics=function(){askConfirm('Reset all analytics data?',async function(){if(!window.S||!window.S.publicId)return;await window._fbResetAnalytics(window.S.publicId);renderAnalytics(null);toast('Analytics reset ✓','s');});};
+window.askDeleteGroup=gi=>{const n=(window.S.links[gi]||{}).name||'Group';askConfirm(`Delete group "${n}"?`,()=>delItem(gi));};
+window.askResetAnalytics=()=>askConfirm('Reset all analytics?',async()=>{if(!window.S?.publicId)return;await window._fbResetAnalytics(window.S.publicId);renderAnalytics(null);toast('Analytics reset ✓','s');});
 
-/* ============================================================ QR */
+/* ===== QR ===== */
 function profileUrl(){return location.origin+location.pathname+'?id='+window.S.publicId;}
 window.openQR=function(){
   const url=profileUrl();document.getElementById('qlink').innerText=url;document.getElementById('qrs').classList.add('on');
   if(!qrInst){document.getElementById('qrcode').innerHTML='';const tryQR=()=>{if(typeof QRCode!=='undefined'){qrInst=new QRCode(document.getElementById('qrcode'),{text:url,width:200,height:200,correctLevel:QRCode.CorrectLevel.H});}else setTimeout(tryQR,200);};tryQR();}
-  if(window.S&&window.S.publicId)window._fbLoadAnalytics(window.S.publicId).then(renderAnalytics).catch(()=>{});
+  if(window.S?.publicId)window._fbLoadAnalytics(window.S.publicId).then(renderAnalytics).catch(()=>{});
 };
-window.closeQR=function(){document.getElementById('qrs').classList.remove('on');};
+window.closeQR=()=>document.getElementById('qrs').classList.remove('on');
 window.copyLink=function(){const url=profileUrl();if(navigator.clipboard)navigator.clipboard.writeText(url).then(()=>toast('Link copied!','s')).catch(()=>fbCopy(url));else fbCopy(url);};
-function fbCopy(t){const ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);toast('Link copied!','s');}
+function fbCopy(t){const ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);toast('Copied!','s');}
 window.downloadQR=function(){
   const url=profileUrl(),size=1200,tmp=document.createElement('div');tmp.style.cssText='position:fixed;left:-9999px;top:-9999px;';document.body.appendChild(tmp);
   try{new QRCode(tmp,{text:url,width:size,height:size,correctLevel:QRCode.CorrectLevel.H});setTimeout(()=>{const img=tmp.querySelector('img')||tmp.querySelector('canvas');if(!img){toast('QR not ready','e');document.body.removeChild(tmp);return;}let src;if(img.tagName==='CANVAS'){src=img.toDataURL('image/png');}else{const cv=document.createElement('canvas');cv.width=size;cv.height=size;const ctx=cv.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,size,size);ctx.drawImage(img,0,0,size,size);src=cv.toDataURL('image/png');}const a=document.createElement('a');a.href=src;a.download='VEXA-QR.png';a.click();document.body.removeChild(tmp);toast('QR downloaded ✓','s');},300);}catch(e){document.body.removeChild(tmp);toast('Download failed','e');}
 };
 
-/* ============================================================ MODALS */
-window.openDesign=function(){document.getElementById('dmod').classList.remove('hidden');};
+/* ===== MODALS ===== */
+window.openDesign=()=>document.getElementById('dmod').classList.remove('hidden');
 window.closeModals=function(){['dmod','lmod','emod','egmod'].forEach(id=>document.getElementById(id).classList.add('hidden'));addToGrpIdx=-1;};
-window.bgClose=function(e,id){if(e.target.id===id)closeModals();};
+window.bgClose=(e,id)=>{if(e.target.id===id)closeModals();};
 
-/* ============================================================ TOAST */
+/* ===== COLORS ===== */
+window.applyColors=function(){window.S.colors={bg:document.getElementById('cbg').value,card:document.getElementById('ccard').value,name:document.getElementById('cname').value,bio:document.getElementById('cbio').value,link:document.getElementById('clink').value};render();save();};
+window.applyBlur=v=>{v=parseInt(v);document.documentElement.style.setProperty('--bg-blur',v+'px');document.getElementById('blur-val').innerText=v+'px';window.S.bgBlur=v;save();};
+
+/* ===== AVATAR CROP ===== */
+window.onAvatarPick=inp=>{const f=inp.files[0];inp.value='';if(!f)return;const r=new FileReader();r.onload=ev=>openCrop(ev.target.result);r.readAsDataURL(f);};
+window.openCrop=function(src){
+  const ms=Math.min(300,Math.floor(Math.min(window.innerWidth,window.innerHeight)*.72));_crop.stageSize=ms;
+  const st=document.getElementById('crop-stage');st.style.width=ms+'px';st.style.height=ms+'px';
+  _crop={..._crop,scale:1,minScale:1,maxScale:4,ox:0,oy:0,dragging:false};
+  const img=document.getElementById('crop-img');
+  img.onload=()=>{const sh=Math.min(img.naturalWidth,img.naturalHeight);_crop.minScale=ms/sh;_crop.maxScale=_crop.minScale*4;_crop.scale=_crop.minScale;const z=document.getElementById('crop-zoom');z.min=_crop.minScale;z.max=_crop.maxScale;z.step=(_crop.maxScale-_crop.minScale)/200;z.value=_crop.minScale;applyCropTransform();};
+  img.src=src;document.getElementById('crop-modal').classList.add('on');setupCropEvents();
+};
+window.closeCrop=()=>document.getElementById('crop-modal').classList.remove('on');
+function applyCropTransform(){const img=document.getElementById('crop-img');img.style.left='50%';img.style.top='50%';img.style.transform=`translate(calc(-50% + ${_crop.ox}px), calc(-50% + ${_crop.oy}px)) scale(${_crop.scale})`;}
+function clampCrop(){const img=document.getElementById('crop-img');const hW=(img.naturalWidth*_crop.scale)/2,hH=(img.naturalHeight*_crop.scale)/2,hs=_crop.stageSize/2;_crop.ox=Math.max(-(hW-hs),Math.min(hW-hs,_crop.ox));_crop.oy=Math.max(-(hH-hs),Math.min(hH-hs,_crop.oy));}
+function setupCropEvents(){
+  const st=document.getElementById('crop-stage'),z=document.getElementById('crop-zoom');
+  const ns=st.cloneNode(true);st.parentNode.replaceChild(ns,st);const s=document.getElementById('crop-stage');
+  z.oninput=function(){_crop.scale=parseFloat(this.value);clampCrop();applyCropTransform();};
+  s.onmousedown=e=>{_crop.dragging=true;_crop.lastX=e.clientX;_crop.lastY=e.clientY;e.preventDefault();};
+  window.onmousemove=e=>{if(!_crop.dragging)return;_crop.ox+=e.clientX-_crop.lastX;_crop.oy+=e.clientY-_crop.lastY;_crop.lastX=e.clientX;_crop.lastY=e.clientY;clampCrop();applyCropTransform();};
+  window.onmouseup=()=>{_crop.dragging=false;};
+  s.ontouchstart=e=>{if(e.touches.length===1){_crop.dragging=true;_crop.lastX=e.touches[0].clientX;_crop.lastY=e.touches[0].clientY;}else if(e.touches.length===2){_crop.dragging=false;_pinchStart={dist:Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY),scale:_crop.scale};}e.preventDefault();};
+  s.ontouchmove=e=>{if(e.touches.length===1&&_crop.dragging){_crop.ox+=e.touches[0].clientX-_crop.lastX;_crop.oy+=e.touches[0].clientY-_crop.lastY;_crop.lastX=e.touches[0].clientX;_crop.lastY=e.touches[0].clientY;clampCrop();applyCropTransform();}else if(e.touches.length===2&&_pinchStart){const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);_crop.scale=Math.max(_crop.minScale,Math.min(_crop.maxScale,_pinchStart.scale*(d/_pinchStart.dist)));z.value=_crop.scale;clampCrop();applyCropTransform();}e.preventDefault();};
+  s.ontouchend=()=>{_crop.dragging=false;_pinchStart=null;};
+}
+window.saveCrop=function(){
+  const size=400,cv=document.createElement('canvas');cv.width=size;cv.height=size;
+  const ctx=cv.getContext('2d');ctx.beginPath();ctx.arc(size/2,size/2,size/2,0,Math.PI*2);ctx.clip();
+  const img=document.getElementById('crop-img'),ratio=size/_crop.stageSize;
+  const dW=img.naturalWidth*_crop.scale*ratio,dH=img.naturalHeight*_crop.scale*ratio;
+  ctx.drawImage(img,size/2+_crop.ox*ratio-dW/2,size/2+_crop.oy*ratio-dH/2,dW,dH);
+  window.S.avatar=cv.toDataURL('image/jpeg',.9);document.getElementById('avimg').src=window.S.avatar;
+  save();closeCrop();toast('Photo updated ✓','s');
+};
+
+/* ===== LIGHTBOX ===== */
+window.openLightbox=function(gi,ii){
+  const src=ii<0?(window.S.links[gi]||{}).url||'':((window.S.links[gi]?.items||[])[ii]||{}).url||'';
+  if(!src)return;
+  document.getElementById('lb-img').src=src;document.getElementById('lightbox').classList.add('on');document.body.style.overflow='hidden';
+};
+window.closeLightbox=()=>{document.getElementById('lightbox').classList.remove('on');document.body.style.overflow='';setTimeout(()=>document.getElementById('lb-img').src='',300);};
+
+/* ===== BG IMAGE ===== */
+window.onBgPick=inp=>{const f=inp.files[0];inp.value='';if(!f)return;resizeImg(f,1200,.78,d64=>{window.S.bgImage=d64;window.S.bgBlur=window.S.bgBlur||0;document.body.classList.remove('no-bgimg');document.body.style.backgroundImage='url('+d64+')';document.getElementById('rmbg').style.display='block';document.getElementById('blur-section').style.display='block';document.getElementById('bgblur').value=window.S.bgBlur;document.getElementById('blur-val').innerText=window.S.bgBlur+'px';document.documentElement.style.setProperty('--bg-blur',window.S.bgBlur+'px');save();toast('Background updated ✓','s');});};
+window.removeBg=()=>{window.S.bgImage='';window.S.bgBlur=0;document.body.classList.add('no-bgimg');document.body.style.backgroundImage='none';document.documentElement.style.setProperty('--bg-blur','0px');document.getElementById('rmbg').style.display='none';document.getElementById('blur-section').style.display='none';document.getElementById('bgblur').value=0;document.getElementById('blur-val').innerText='0px';save();toast('Background removed','s');};
+
+/* ===== TOAST ===== */
 function toast(msg,type){const t=document.getElementById('toast');t.innerText=msg;t.className=type||'s';t.style.display='block';clearTimeout(t._t);t._t=setTimeout(()=>t.style.display='none',2500);}
 
-/* ============================================================ UTILS */
-window.triggerUpload=function(id){document.getElementById(id).click();};
+/* ===== UTILS ===== */
+window.triggerUpload=id=>document.getElementById(id).click();
 function resizeImg(file,maxW,quality,cb){const r=new FileReader();r.onload=ev=>{const img=new Image();img.onload=()=>{const ratio=Math.min(maxW/img.width,maxW/img.height,1),w=Math.round(img.width*ratio),h=Math.round(img.height*ratio),cv=document.createElement('canvas');cv.width=w;cv.height=h;cv.getContext('2d').drawImage(img,0,0,w,h);cb(cv.toDataURL('image/jpeg',quality));};img.onerror=()=>cb(ev.target.result);img.src=ev.target.result;};r.readAsDataURL(file);}
-
-// Resume live tracking after boot (for owner)
-setTimeout(()=>{if(!window._pub&&window.S)resumeLiveTracking();},1500);
 </script>
 </body>
 </html>
