@@ -194,8 +194,6 @@ body.no-bgimg::before{display:none;}
 .sloc-box{background:#141414;border:1px solid rgba(255,255,255,.1);border-radius:22px;width:100%;max-width:420px;padding:22px;display:flex;flex-direction:column;gap:12px;max-height:90vh;overflow-y:auto;}
 .sloc-map-wrap{width:100%;height:240px;border-radius:14px;overflow:hidden;border:1px solid rgba(255,255,255,.1);position:relative;background:#1a1a1a;}
 .sloc-map-wrap iframe{width:100%;height:100%;border:none;display:block;}
-.sloc-coords-row{display:flex;gap:8px;}
-.sloc-coords-row .mi{flex:1;margin-bottom:0;font-size:.82rem;}
 
 /* TOAST */
 #toast{position:fixed;bottom:106px;left:50%;transform:translateX(-50%);padding:9px 20px;border-radius:50px;font-weight:700;z-index:9999;display:none;font-size:.83rem;white-space:nowrap;pointer-events:none;animation:toastin .2s ease;}
@@ -323,17 +321,13 @@ body.no-bgimg::before{display:none;}
   </div>
 </div>
 
-<!-- STATIC LOCATION PICKER -->
+<!-- STATIC LOCATION PICKER — paste a Google Maps link -->
 <div id="sloc-modal">
   <div class="sloc-box">
-    <p class="mtitle" style="margin-bottom:2px;">&#128205; Pick Fixed Location</p>
-    <p style="font-size:.76rem;color:#555;margin-bottom:4px;">Search, paste a Google Maps link, or type coordinates</p>
-    <!-- Paste Google Maps URL -->
-    <input type="text" id="sloc-url-input" class="mi" placeholder="Paste Google Maps link&#8230;" oninput="parseMapsUrl(this.value)">
-    <!-- Address search -->
-    <input type="text" id="sloc-search" class="mi" placeholder="&#128269; Search address&#8230;">
-    <button onclick="slocSearch()" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:#ccc;padding:10px 16px;border-radius:12px;cursor:pointer;font-size:.82rem;width:100%;margin-top:-6px;margin-bottom:4px;">Search</button>
-    <!-- Map preview -->
+    <p class="mtitle" style="margin-bottom:4px;">&#128205; Fixed Location</p>
+    <p style="font-size:.76rem;color:#555;margin-bottom:10px;">Paste any Google Maps share link and the map will appear automatically</p>
+    <input type="text" id="sloc-url-input" class="mi" placeholder="Paste Google Maps link here&#8230;" oninput="parseMapsUrl(this.value)">
+    <!-- Map preview (hidden until link is pasted) -->
     <div class="sloc-map-wrap" id="sloc-map-wrap">
       <iframe id="sloc-iframe" src="" allowfullscreen loading="lazy" style="display:none;"></iframe>
       <div id="sloc-map-placeholder" style="height:100%;display:flex;align-items:center;justify-content:center;color:#333;font-size:.82rem;flex-direction:column;gap:8px;">
@@ -341,12 +335,10 @@ body.no-bgimg::before{display:none;}
         Map preview will appear here
       </div>
     </div>
-    <!-- Manual lat/lng -->
-    <div class="sloc-coords-row">
-      <input type="number" id="sloc-lat" class="mi" placeholder="Latitude" step="any">
-      <input type="number" id="sloc-lng" class="mi" placeholder="Longitude" step="any">
-    </div>
-    <button onclick="slocUpdateMap()" style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:#aaa;padding:9px 14px;border-radius:11px;cursor:pointer;font-size:.78rem;width:100%;margin-top:-6px;">Update Map Preview</button>
+    <!-- Hidden lat/lng stored after parsing -->
+    <input type="hidden" id="sloc-lat">
+    <input type="hidden" id="sloc-lng">
+    <p style="font-size:.7rem;color:#333;text-align:center;margin-top:4px;">Open Google Maps → tap Share → copy the link → paste above</p>
     <button class="abtn msbtn" onclick="confirmStaticLoc()">Use This Location</button>
     <button class="mcan" onclick="closeStaticLocModal()">Cancel</button>
   </div>
@@ -788,27 +780,26 @@ function renderLinks(){
   });
 }
 
-/* ===== CONTEXT MENU — appears next to the finger (like old code) ===== */
+/* ===== CONTEXT MENU — يفتح جنب الزرار مباشرة ===== */
 window.openCtx=function(e,gi,ii){
   e.stopPropagation();ctxGi=gi;ctxIi=ii;
   let html='';
   if(ii===-2){
-    html=`<div class="ctx-item" onclick="openEditGroup(${gi});closeCtx()"><span>&#9999;&#65039;</span> Edit Group</div><div class="ctx-item" onclick="moveItem(-1)"><span>&#11014;&#65039;</span> Move Up</div><div class="ctx-item" onclick="moveItem(1)"><span>&#11015;&#65039;</span> Move Down</div><div class="ctx-item danger" onclick="closeCtx();askDeleteGroup(${gi})"><span>&#128465;</span> Delete Group</div>`;
+    html='<div class="ctx-item" onclick="openEditGroup('+gi+');closeCtx()"><span>&#9999;&#65039;</span> Edit Group</div><div class="ctx-item" onclick="moveItem(-1)"><span>&#11014;&#65039;</span> Move Up</div><div class="ctx-item" onclick="moveItem(1)"><span>&#11015;&#65039;</span> Move Down</div><div class="ctx-item danger" onclick="closeCtx();askDeleteGroup('+gi+')"><span>&#128465;</span> Delete Group</div>';
   }else{
     const item=ii>=0?(window.S.links[gi].items||[])[ii]:window.S.links[gi];
-    if(item&&(item.type==='link'||item.type==='location'))html+=`<div class="ctx-item" onclick="startEdit()"><span>&#9999;&#65039;</span> Edit</div>`;
-    html+=`<div class="ctx-item" onclick="moveItem(-1)"><span>&#11014;&#65039;</span> Move Up</div><div class="ctx-item" onclick="moveItem(1)"><span>&#11015;&#65039;</span> Move Down</div><div class="ctx-item danger" onclick="closeCtx();ctxDelete()"><span>&#128465;</span> Delete</div>`;
+    if(item&&(item.type==='link'||item.type==='location'))html+='<div class="ctx-item" onclick="startEdit()"><span>&#9999;&#65039;</span> Edit</div>';
+    html+='<div class="ctx-item" onclick="moveItem(-1)"><span>&#11014;&#65039;</span> Move Up</div><div class="ctx-item" onclick="moveItem(1)"><span>&#11015;&#65039;</span> Move Down</div><div class="ctx-item danger" onclick="closeCtx();ctxDelete()"><span>&#128465;</span> Delete</div>';
   }
   const menu=document.getElementById('ctx-menu');
-  menu.innerHTML=html;menu.classList.remove('hidden');
-  /* Position next to the button — same logic as original code */
+  menu.innerHTML=html;
+  menu.classList.remove('hidden');
   const bx=e.currentTarget.getBoundingClientRect();
   let top=bx.bottom+8,left=bx.left-130;
   if(left<8)left=8;
-  if(left+160>window.innerWidth-8)left=window.innerWidth-168;
   if(top+200>window.innerHeight)top=bx.top-200;
-  if(top<8)top=8;
-  menu.style.top=top+'px';menu.style.left=left+'px';
+  menu.style.top=top+'px';
+  menu.style.left=left+'px';
 };
 function closeCtx(){document.getElementById('ctx-menu').classList.add('hidden');}
 document.addEventListener('click',e=>{if(!document.getElementById('ctx-menu').contains(e.target))closeCtx();});
@@ -910,91 +901,54 @@ function resumeLiveTracking(){
   if(window.S&&hasLive(window.S.links))startLiveTracking(null);
 }
 
-/* ===== LOCATION — STATIC (interactive picker) =====
-   User can:
-   1. Paste a Google Maps URL → coordinates parsed automatically
-   2. Search an address (Nominatim geocoder)
-   3. Type lat/lng manually
-   4. Preview on embedded map
+/* ===== LOCATION — STATIC (paste Google Maps link only) =====
+   Parses the link → extracts lat/lng → shows embedded map preview.
+   Supports all common Google Maps URL formats.
 ===== */
-window.addStaticLocation=function(){
-  closeLocModal();
-  openStaticLocModal();
-};
+window.addStaticLocation=function(){closeLocModal();openStaticLocModal();};
 
 function openStaticLocModal(){
   document.getElementById('sloc-modal').classList.add('on');
   document.getElementById('sloc-url-input').value='';
-  document.getElementById('sloc-search').value='';
   document.getElementById('sloc-lat').value='';
   document.getElementById('sloc-lng').value='';
   document.getElementById('sloc-iframe').style.display='none';
   document.getElementById('sloc-map-placeholder').style.display='flex';
-  // Try to center on user's current location
-  if(navigator.geolocation){
-    navigator.geolocation.getCurrentPosition(pos=>{
-      document.getElementById('sloc-lat').value=pos.coords.latitude.toFixed(6);
-      document.getElementById('sloc-lng').value=pos.coords.longitude.toFixed(6);
-      slocShowMap(pos.coords.latitude,pos.coords.longitude);
-    },()=>{},{enableHighAccuracy:true,timeout:6000,maximumAge:30000});
-  }
 }
 window.closeStaticLocModal=function(){document.getElementById('sloc-modal').classList.remove('on');};
 
-/* Parse common Google Maps URL formats to extract lat/lng */
+/* Extract lat/lng from any common Google Maps URL format */
 window.parseMapsUrl=function(url){
   if(!url||!url.trim())return;
-  // Format: maps?q=LAT,LNG or q=LAT%2CLNG
-  let m=url.match(/[?&]q=(-?\d+\.?\d*)[,+%2C]+(-?\d+\.?\d*)/i);
-  if(m){slocSetCoords(parseFloat(m[1]),parseFloat(m[2]));return;}
-  // Format: /@LAT,LNG,ZOOM
+  let m;
+  // /@LAT,LNG,ZOOM  (most common share format)
   m=url.match(/@(-?\d+\.?\d*),(-?\d+\.?\d*)/);
-  if(m){slocSetCoords(parseFloat(m[1]),parseFloat(m[2]));return;}
-  // Format: /place/.../@LAT,LNG or place/LAT,LNG
-  m=url.match(/place\/(-?\d+\.?\d*)%2C(-?\d+\.?\d*)/);
-  if(m){slocSetCoords(parseFloat(m[1]),parseFloat(m[2]));return;}
-  // Format: ll=LAT,LNG
+  if(m){return slocSetCoords(parseFloat(m[1]),parseFloat(m[2]));}
+  // ?q=LAT,LNG
+  m=url.match(/[?&]q=(-?\d+\.?\d*)[,+%2C]+(-?\d+\.?\d*)/i);
+  if(m){return slocSetCoords(parseFloat(m[1]),parseFloat(m[2]));}
+  // ll=LAT,LNG
   m=url.match(/ll=(-?\d+\.?\d*),(-?\d+\.?\d*)/);
-  if(m){slocSetCoords(parseFloat(m[1]),parseFloat(m[2]));}
+  if(m){return slocSetCoords(parseFloat(m[1]),parseFloat(m[2]));}
+  // /place/LAT%2CLNG or place/LAT,LNG
+  m=url.match(/place\/(-?\d+\.?\d*)[%2C,]+(-?\d+\.?\d*)/i);
+  if(m){return slocSetCoords(parseFloat(m[1]),parseFloat(m[2]));}
 };
 
 function slocSetCoords(lat,lng){
   document.getElementById('sloc-lat').value=lat.toFixed(6);
   document.getElementById('sloc-lng').value=lng.toFixed(6);
-  slocShowMap(lat,lng);
-  toast('Location extracted \u2713','s');
-}
-
-window.slocSearch=async function(){
-  const q=document.getElementById('sloc-search').value.trim();
-  if(!q){toast('Enter an address first','e');return;}
-  toast('Searching\u2026','s');
-  try{
-    const res=await fetch('https://nominatim.openstreetmap.org/search?format=json&limit=1&q='+encodeURIComponent(q));
-    const data=await res.json();
-    if(!data||!data.length){toast('Place not found','e');return;}
-    slocSetCoords(parseFloat(data[0].lat),parseFloat(data[0].lon));
-  }catch(_){toast('Search failed','e');}
-};
-
-window.slocUpdateMap=function(){
-  const lat=parseFloat(document.getElementById('sloc-lat').value);
-  const lng=parseFloat(document.getElementById('sloc-lng').value);
-  if(isNaN(lat)||isNaN(lng)){toast('Enter valid coordinates','e');return;}
-  slocShowMap(lat,lng);
-};
-
-function slocShowMap(lat,lng){
   const iframe=document.getElementById('sloc-iframe');
   iframe.src=`https://maps.google.com/maps?q=${lat},${lng}&z=15&output=embed`;
   iframe.style.display='block';
   document.getElementById('sloc-map-placeholder').style.display='none';
+  toast('Location found \u2713','s');
 }
 
 window.confirmStaticLoc=function(){
   const lat=parseFloat(document.getElementById('sloc-lat').value);
   const lng=parseFloat(document.getElementById('sloc-lng').value);
-  if(isNaN(lat)||isNaN(lng)){toast('Pick or enter a location first','e');return;}
+  if(isNaN(lat)||isNaN(lng)){toast('Paste a valid Google Maps link first','e');return;}
   const item=getLocDraft();item.lat=lat;item.lng=lng;item.locType='static';
   closeStaticLocModal();
   pushItem(item);
