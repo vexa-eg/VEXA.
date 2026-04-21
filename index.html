@@ -14,9 +14,11 @@
 body{min-height:100vh;background:var(--bg);background-size:cover;background-position:center;background-attachment:fixed;color:#fff;position:relative;}
 body::before{content:'';position:fixed;inset:0;z-index:0;background-image:inherit;background-size:cover;background-position:center;filter:blur(var(--bg-blur));transform:scale(1.08);pointer-events:none;transition:filter .3s;}
 body.no-bgimg::before{display:none;}
-#app,#auth,#qrs,.moverlay,#crop-modal,#lightbox,#ls,#toast,#exprev,#confirm-box,#ctx-menu,#pw-modal,#loc-modal,#sloc-modal{position:relative;z-index:1;}
+#app,#auth,#qrs,.moverlay,#crop-modal,#lightbox,#ls,#toast,#exprev,#confirm-box,#pw-modal,#loc-modal,#sloc-modal{position:relative;z-index:1;}
+/* ctx-menu must stay position:fixed — do NOT include it in the relative group */
+#ctx-menu{z-index:4000;}
 #ls{z-index:9999;}#crop-modal{z-index:7000;}#lightbox{z-index:7000;}#pw-modal{z-index:8000;}#sloc-modal{z-index:6500;}#loc-modal{z-index:6000;}
-.moverlay{z-index:3000;}#ctx-menu{z-index:4000;}#confirm-box{z-index:9998;}#toast{z-index:9999;}#exprev{z-index:5000;}
+.moverlay{z-index:3000;}#confirm-box{z-index:9998;}#toast{z-index:9999;}#exprev{z-index:5000;}
 .hidden{display:none!important;}
 .gc{background:var(--card);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--glass);border-radius:var(--r);}
 
@@ -265,7 +267,7 @@ body.no-bgimg::before{display:none;}
         ls.classList.add('out');setTimeout(function(){ls.classList.add('hidden');},350);
         au.classList.remove('hidden');
       }
-    },2000);
+    },800);
   }
 })();
 </script>
