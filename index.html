@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>VEXA - Smart NFC Profile</title>
 
+<!-- ═══ SPEED: Preconnect to all external hosts ═══ -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
@@ -13,10 +14,12 @@
 <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
 <link rel="dns-prefetch" href="https://api.dicebear.com">
 
+<!-- ═══ SPEED: Preload Firebase scripts so they download in parallel ═══ -->
 <link rel="preload" href="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js" as="script">
 <link rel="preload" href="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js" as="script">
 <link rel="preload" href="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js" as="script">
 
+<!-- ═══ SPEED: Load font display=swap so text renders immediately ═══ -->
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
 <style>
@@ -33,7 +36,7 @@ body.no-bgimg::before{display:none;}
 .gc{background:var(--card);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--glass);border-radius:var(--r);}
 
 /* LOADING */
-#ls{position:fixed;inset:0;background:#000;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;transition:opacity .25s;}
+#ls{position:fixed;inset:0;background:#000;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;transition:opacity .3s;}
 #ls.out{opacity:0;pointer-events:none;}
 .ll{font-family:'Bebas Neue',sans-serif;font-size:4.5rem;letter-spacing:10px;background:linear-gradient(180deg,#fff 0%,#aaa 40%,#fff 60%,#666 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
 .ld{display:flex;gap:7px;}
@@ -113,14 +116,38 @@ body.no-bgimg::before{display:none;}
 .loc-live-dot{width:8px;height:8px;border-radius:50%;background:#f44;animation:livepulse 1.4s infinite;flex-shrink:0;display:inline-block;}
 @keyframes livepulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.5;transform:scale(.7);}}
 
-/* VIDEO SIZE WARNING */
-.vid-size-info{font-size:.72rem;color:#666;text-align:center;margin-top:4px;padding:6px 10px;background:rgba(255,200,0,.06);border:1px solid rgba(255,200,0,.12);border-radius:8px;}
-
-/* VEXA BRAND */
-@keyframes vexabounce{0%{transform:translate(0px,0px) scale(1);}20%{transform:translate(-4px,-7px) scale(1.03) rotate(-0.8deg);}40%{transform:translate(5px,-5px) scale(1.02) rotate(0.6deg);}60%{transform:translate(3px,4px) scale(0.98) rotate(0.4deg);}80%{transform:translate(-3px,2px) scale(1.01) rotate(-0.4deg);}100%{transform:translate(0px,0px) scale(1);}}
-.vbrand{display:inline-flex;align-items:center;justify-content:center;margin-top:34px;padding:9px 30px;background:#fff;border-radius:10px;text-decoration:none;box-shadow:4px 4px 0 rgba(255,255,255,.15),6px 6px 20px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.9);border:1px solid rgba(255,255,255,.4);animation:vexabounce 3s cubic-bezier(0.45,0.05,0.55,0.95) infinite;will-change:transform;}
-.vbrand:hover{animation:none;transform:translateY(-3px) scale(1.06);box-shadow:4px 6px 0 rgba(255,255,255,.2),6px 10px 28px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.9);transition:transform .15s,box-shadow .15s;}
-.vbrand:active{animation:none;transform:translate(2px,2px) scale(0.97);transition:transform .08s,box-shadow .08s;}
+/* ══════════════════════════════════════════
+   VEXA BRAND BUTTON — floating bounce animation
+   يتنطط بشكل مثلث: فوق يسار → فوق يمين → تحت
+   ══════════════════════════════════════════ */
+@keyframes vexabounce {
+  0%   { transform: translate(0px, 0px) scale(1); }
+  20%  { transform: translate(-4px, -7px) scale(1.03) rotate(-0.8deg); }
+  40%  { transform: translate(5px, -5px) scale(1.02) rotate(0.6deg); }
+  60%  { transform: translate(3px, 4px) scale(0.98) rotate(0.4deg); }
+  80%  { transform: translate(-3px, 2px) scale(1.01) rotate(-0.4deg); }
+  100% { transform: translate(0px, 0px) scale(1); }
+}
+.vbrand{
+  display:inline-flex;align-items:center;justify-content:center;
+  margin-top:34px;padding:9px 30px;
+  background:#fff;border-radius:10px;text-decoration:none;
+  box-shadow:4px 4px 0 rgba(255,255,255,.15),6px 6px 20px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.9);
+  border:1px solid rgba(255,255,255,.4);
+  animation: vexabounce 3s cubic-bezier(0.45,0.05,0.55,0.95) infinite;
+  will-change: transform;
+}
+.vbrand:hover{
+  animation: none;
+  transform: translateY(-3px) scale(1.06);
+  box-shadow:4px 6px 0 rgba(255,255,255,.2),6px 10px 28px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.9);
+  transition: transform .15s, box-shadow .15s;
+}
+.vbrand:active{
+  animation: none;
+  transform: translate(2px,2px) scale(0.97);
+  transition: transform .08s, box-shadow .08s;
+}
 .vbrandtxt{font-family:'Bebas Neue',sans-serif;font-size:1.35rem;letter-spacing:6px;color:#000;line-height:1;}
 
 /* NAV */
@@ -270,14 +297,14 @@ body.no-bgimg::before{display:none;}
 </head>
 <body class="no-bgimg">
 
-<!-- ══ SPEED: Auth timer 150ms ══ -->
+<!-- ═══ SPEED: تقليل وقت الانتظار من 800ms إلى 150ms ═══ -->
 <script>
 (function(){
   if(!new URLSearchParams(location.search).get('id')){
     window._authTimer=setTimeout(function(){
       var ls=document.getElementById('ls'),au=document.getElementById('auth');
       if(ls&&au&&!ls.classList.contains('hidden')&&au.classList.contains('hidden')){
-        ls.classList.add('out');setTimeout(function(){ls.classList.add('hidden');},250);
+        ls.classList.add('out');setTimeout(function(){ls.classList.add('hidden');},300);
         au.classList.remove('hidden');
       }
     },150);
@@ -351,7 +378,7 @@ body.no-bgimg::before{display:none;}
     </div>
     <input type="hidden" id="sloc-lat">
     <input type="hidden" id="sloc-lng">
-    <p style="font-size:.7rem;color:#333;text-align:center;margin-top:4px;">Open Google Maps &#8594; tap Share &#8594; copy the link &#8594; paste above</p>
+    <p style="font-size:.7rem;color:#333;text-align:center;margin-top:4px;">Open Google Maps → tap Share → copy the link → paste above</p>
     <button class="abtn msbtn" onclick="confirmStaticLoc()">Use This Location</button>
     <button class="mcan" onclick="closeStaticLocModal()">Cancel</button>
   </div>
@@ -490,9 +517,9 @@ body.no-bgimg::before{display:none;}
       <div id="link-pw-field" style="display:none;"><input type="text" id="link-pw" class="mi" placeholder="Set password&#8230;"></div>
     </div>
 
-    <!-- IMAGE TAB -->
+    <!-- IMAGE TAB — ★ أضفنا حقل الاسم هنا -->
     <div id="tp-image" class="hidden">
-      <input type="text" id="img-title" class="mi" placeholder="Button label (e.g. My Photos, Portfolio&#8230;)">
+      <input type="text" id="img-title" class="mi" placeholder="Button label (e.g. My Photos, Portfolio…)">
       <div class="upbox" id="imgbox" onclick="triggerUpload('imginput')">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>Select image
       </div>
@@ -502,11 +529,9 @@ body.no-bgimg::before{display:none;}
       <div id="img-pw-field" style="display:none;"><input type="text" id="img-pw" class="mi" placeholder="Set password&#8230;"></div>
     </div>
 
-    <!-- VIDEO TAB -->
+    <!-- VIDEO TAB — ★ أضفنا حقل الاسم هنا -->
     <div id="tp-video" class="hidden">
-      <input type="text" id="vid-title" class="mi" placeholder="Button label (e.g. Promo Video, Reel&#8230;)">
-      <!-- ★ FIX: حد حجم الفيديو واضح للمستخدم -->
-      <div class="vid-size-info">&#9888;&#65039; Max video size: <strong>8 MB</strong> — Videos bigger than this can't be saved to Firebase</div>
+      <input type="text" id="vid-title" class="mi" placeholder="Button label (e.g. Promo Video, Reel…)">
       <div class="upbox" id="vidbox" onclick="triggerUpload('vidinput')">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>Select video
       </div>
@@ -600,7 +625,10 @@ body.no-bgimg::before{display:none;}
 <input type="file" id="vidinput" class="hidden" accept="video/*" onchange="onVidPick(this)">
 <div id="ctx-menu" class="ctx-menu hidden"></div>
 
+<!-- ═══ SPEED: QRCode loaded async (only needed when user opens QR) ═══ -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
+
+<!-- Firebase SDK (preloaded in <head>, execute in order) -->
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
@@ -615,33 +643,13 @@ firebase.initializeApp({
   messagingSenderId:"362188399240",appId:"1:362188399240:web:fd6c50ae6ed3647bc8753d"
 });
 const _auth=firebase.auth(),_db=firebase.database();
-
-/* ★ FIX: حجم البيانات قبل ما نبعتها لـ Firebase */
-const FB_MAX_BYTES = 9 * 1024 * 1024; // 9MB safety limit
-function checkSize(obj){
-  const str=JSON.stringify(obj);
-  return new Blob([str]).size;
-}
-
 window._fbSignUp=(e,p)=>_auth.createUserWithEmailAndPassword(e,p);
 window._fbLogin=(e,p)=>_auth.signInWithEmailAndPassword(e,p);
 window._fbSignOut=()=>_auth.signOut();
 window._fbSave=async(uid,state)=>{
   function strip(links){return(links||[]).map(l=>{const c={...l};delete c._unlocked;if(c.items)c.items=strip(c.items);return c;});}
   const s={...JSON.parse(JSON.stringify(state)),links:strip(state.links)};
-  /* ★ FIX: تحقق من الحجم قبل الحفظ */
-  const sz=checkSize(s);
-  if(sz>FB_MAX_BYTES){
-    toast('Data too large to save ('+Math.round(sz/1024/1024*10)/10+'MB). Remove large videos/images.','e');
-    return;
-  }
-  return Promise.all([
-    _db.ref('users/'+uid).set(s),
-    _db.ref('pub/'+s.publicId).set(s)
-  ]).catch(e=>{
-    console.warn('Firebase save error:',e);
-    toast('Save failed – check connection','e');
-  });
+  return Promise.all([_db.ref('users/'+uid).set(s),_db.ref('pub/'+s.publicId).set(s)]);
 };
 window._fbLoad=async uid=>{const s=await _db.ref('users/'+uid).once('value');return s.exists()?s.val():null;};
 window._fbLoadPub=async pid=>{const s=await _db.ref('pub/'+pid).once('value');return s.exists()?s.val():null;};
@@ -663,20 +671,10 @@ _auth.onAuthStateChanged(async user=>{
   clearTimeout(window._authTimer);
   const pid=new URLSearchParams(location.search).get('id');
   if(pid){
-    if(window._pubDataReady){return;}
+    if(window._pubDataReady){return;} /* eager fetch عمل bootApp بالفعل */
     const data=await window._fbLoadPub(pid);
-    if(data){
-      window.S=data;if(!window.S.links)window.S.links=[];
-      window._pub=true;window._edit=false;
-      /* ★ FIX: حدّث الكاش */
-      try{localStorage.setItem('vexa_'+pid,JSON.stringify(data));}catch(_){}
-      if(!window._pubDataReady){window._pubDataReady=true;bootApp();}
-      else{render();} /* تحديث صامت لو الكاش شغّل بالفعل */
-      window._fbRecordVisit(pid).catch(()=>{});
-    }else{
-      hideLs();
-      document.body.innerHTML='<div style="height:100vh;display:flex;align-items:center;justify-content:center;flex-direction:column;background:#000;gap:14px;font-family:Inter,sans-serif;"><div style="font-family:Bebas Neue,sans-serif;font-size:3.5rem;letter-spacing:8px;background:linear-gradient(180deg,#fff,#888);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">VEXA</div><p style="color:#444;font-size:.9rem;">Profile not found</p></div>';
-    }
+    if(data){window.S=data;if(!window.S.links)window.S.links=[];window._pub=true;window._edit=false;bootApp();window._fbRecordVisit(pid).catch(()=>{});}
+    else{hideLs();document.body.innerHTML='<div style="height:100vh;display:flex;align-items:center;justify-content:center;flex-direction:column;background:#000;gap:14px;font-family:Inter,sans-serif;"><div style="font-family:Bebas Neue,sans-serif;font-size:3.5rem;letter-spacing:8px;background:linear-gradient(180deg,#fff,#888);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">VEXA</div><p style="color:#444;font-size:.9rem;">Profile not found</p></div>';}
     return;
   }
   if(user){
@@ -687,40 +685,20 @@ _auth.onAuthStateChanged(async user=>{
   }else{hideLs();document.getElementById('auth').classList.remove('hidden');}
 });
 
-/* ★ FIX: Eager fetch مع localStorage كاش للتحميل الفوري */
+/* ─── Eager fetch for public profiles ─── */
 (async()=>{
   const pid=new URLSearchParams(location.search).get('id');
   if(!pid)return;
-
-  /* 1. حاول تعرض الكاش فوراً */
-  try{
-    const cached=localStorage.getItem('vexa_'+pid);
-    if(cached){
-      const data=JSON.parse(cached);
-      window.S=data;if(!window.S.links)window.S.links=[];
-      window._pub=true;window._edit=false;window._pubDataReady=true;
-      bootApp(); /* فوري - من الكاش */
-    }
-  }catch(_){}
-
-  /* 2. حمّل من Firebase في الخلفية */
   try{
     const data=await window._fbLoadPub(pid);
     if(data){
-      /* حدّث الكاش */
-      try{localStorage.setItem('vexa_'+pid,JSON.stringify(data));}catch(_){}
-      if(!window._pubDataReady){
-        /* أول زيارة (مفيش كاش) */
-        window.S=data;if(!window.S.links)window.S.links=[];
-        window._pub=true;window._edit=false;window._pubDataReady=true;
-        bootApp();
-      }else{
-        /* كان في كاش → حدّث الداتا وأعد الرسم بصمت */
-        window.S=data;if(!window.S.links)window.S.links=[];
-        render();
-      }
+      window.S=data;if(!window.S.links)window.S.links=[];
+      window._pub=true;window._edit=false;
+      window._pubDataReady=true;
+      /* ═══ SPEED: بنبوت مباشرة بدون ما ننتظر Firebase Auth ═══ */
+      bootApp();
       window._fbRecordVisit(pid).catch(()=>{});
-    }else if(!window._pubDataReady){
+    }else{
       hideLs();
       document.body.innerHTML='<div style="height:100vh;display:flex;align-items:center;justify-content:center;flex-direction:column;background:#000;gap:14px;font-family:Inter,sans-serif;"><div style="font-family:Bebas Neue,sans-serif;font-size:3.5rem;letter-spacing:8px;background:linear-gradient(180deg,#fff,#888);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">VEXA</div><p style="color:#444;font-size:.9rem;">Profile not found</p></div>';
     }
@@ -731,8 +709,6 @@ _auth.onAuthStateChanged(async user=>{
 <script>
 /* ===== STATE ===== */
 const STORE_URL='https://sllr.co/vexa-eg';
-/* ★ FIX: حد أقصى لحجم الفيديو 8MB (قبل base64 encoding) */
-const VID_MAX_MB=8;
 window.S=null;window._uid=null;window._pub=false;window._edit=true;
 let passVis=false,curTab='link',pendMedia=null,qrInst=null,isSignUp=false;
 let editGrpIdx=null,addToGrpIdx=-1,ctxGi=-1,ctxIi=-1;
@@ -741,15 +717,12 @@ let _pendingLocLabel='',_pendingLocPw=null,_pendingLocGrpIdx=-1;
 let _crop={scale:1,minScale:1,maxScale:4,ox:0,oy:0,dragging:false,lastX:0,lastY:0,stageSize:280};
 let _pinchStart=null;
 
-function hideLs(){const l=document.getElementById('ls');l.classList.add('out');setTimeout(()=>l.classList.add('hidden'),250);}
+function hideLs(){const l=document.getElementById('ls');l.classList.add('out');setTimeout(()=>l.classList.add('hidden'),300);}
 function escHtml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-function save(){if(!window._uid||window._pub)return;clearTimeout(_saveTimer);_saveTimer=setTimeout(()=>window._fbSave(window._uid,window.S),800);}
-function toast(msg,type){const t=document.getElementById('toast');t.innerText=msg;t.className=type||'s';t.style.display='block';clearTimeout(t._t);t._t=setTimeout(()=>t.style.display='none',2800);}
+function save(){if(!window._uid||window._pub)return;clearTimeout(_saveTimer);_saveTimer=setTimeout(()=>window._fbSave(window._uid,window.S).catch(e=>console.warn(e)),800);}
+function toast(msg,type){const t=document.getElementById('toast');t.innerText=msg;t.className=type||'s';t.style.display='block';clearTimeout(t._t);t._t=setTimeout(()=>t.style.display='none',2500);}
 window.triggerUpload=id=>document.getElementById(id).click();
-function resizeImg(file,maxW,quality,cb){
-  toast('Processing image\u2026','s');
-  const r=new FileReader();r.onload=ev=>{const img=new Image();img.onload=()=>{const ratio=Math.min(maxW/img.width,maxW/img.height,1),w=Math.round(img.width*ratio),h=Math.round(img.height*ratio),cv=document.createElement('canvas');cv.width=w;cv.height=h;cv.getContext('2d').drawImage(img,0,0,w,h);cb(cv.toDataURL('image/jpeg',quality));};img.onerror=()=>cb(ev.target.result);img.src=ev.target.result;};r.readAsDataURL(file);
-}
+function resizeImg(file,maxW,quality,cb){const r=new FileReader();r.onload=ev=>{const img=new Image();img.onload=()=>{const ratio=Math.min(maxW/img.width,maxW/img.height,1),w=Math.round(img.width*ratio),h=Math.round(img.height*ratio),cv=document.createElement('canvas');cv.width=w;cv.height=h;cv.getContext('2d').drawImage(img,0,0,w,h);cb(cv.toDataURL('image/jpeg',quality));};img.onerror=()=>cb(ev.target.result);img.src=ev.target.result;};r.readAsDataURL(file);}
 
 /* ===== SOCIAL MAP ===== */
 const SM=[{k:['instagram','insta','ig'],u:'https://instagram.com/'},{k:['tiktok'],u:'https://tiktok.com/@'},{k:['twitter','x.com','tweet'],u:'https://x.com/'},{k:['facebook','fb'],u:'https://facebook.com/'},{k:['snapchat','snap'],u:'https://snapchat.com/add/'},{k:['youtube','yt'],u:'https://youtube.com/@'},{k:['linkedin'],u:'https://linkedin.com/in/'},{k:['paypal'],u:'https://paypal.me/'},{k:['cashapp','cash app'],u:'https://cash.app/$'},{k:['whatsapp','\u0648\u0627\u062a\u0633\u0627\u0628','wts'],u:'https://wa.me/'},{k:['telegram','\u062a\u064a\u0644\u064a\u062c\u0631\u0627\u0645'],u:'https://t.me/'},{k:['bereal'],u:'https://bere.al/'},{k:['pinterest','pin'],u:'https://pinterest.com/'},{k:['threads'],u:'https://threads.net/@'},{k:['github'],u:'https://github.com/'},{k:['behance'],u:'https://behance.net/'},{k:['dribbble'],u:'https://dribbble.com/'},{k:['spotify'],u:'https://open.spotify.com/user/'}];
@@ -837,39 +810,32 @@ function render(){
 }
 
 /* ===== RENDER LINKS ===== */
-/*
- * ★ FIX: buildItem يقبل grpColors لتطبيق ألوان الجروب على اللينكات جوّاه
- */
-function buildItem(l,gi,ii,grpColors){
+function buildItem(l,gi,ii){
   const editBtn=window._edit?`<div class="item-actions"><button class="dotsbtn" onclick="openCtx(event,${gi},${ii})">&#8942;</button></div>`:'';
+  /* locked = يبان كزرار لأي حد (owner أو زائر) لحد ما يكتب الباسورد */
   const locked=l.password&&!l._unlocked;
   const lockBadge=l.password?`<div class="lock-badge"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Protected</div>`:'';
 
+  /* ★ تعديل 1: الصورة بباسورد → بيبان زرار بالاسم اللي كتبه اليوزر */
   if(l.type==='image'){
     if(locked){
-      const bg=grpColors?grpColors.lbg:'';const tc=grpColors?grpColors.ltxt:'';
-      const sty=bg?`style="background:${bg};color:${tc};"`:''
-      return `<div style="position:relative;"><div class="lcard gc" ${sty} style="cursor:pointer;${bg?`background:${bg};color:${tc};`:''}cursor:pointer;" onclick="onPwItem(${gi},${ii},'image')">&#128274; ${escHtml(l.title||'Protected Image')}</div>${editBtn}</div>`;
+      return `<div style="position:relative;"><div class="lcard gc" style="cursor:pointer;" onclick="onPwItem(${gi},${ii},'image')">&#128274; ${escHtml(l.title||'Protected Image')}</div>${editBtn}</div>`;
     }
     return `<div class="mcard" style="position:relative;"><img src="${l.url}" loading="lazy" alt="" onclick="openLightbox(${gi},${ii})" style="cursor:zoom-in;">${lockBadge}${editBtn}</div>`;
   }
 
+  /* ★ تعديل 1: الفيديو بباسورد → بيبان زرار بالاسم اللي كتبه اليوزر */
   if(l.type==='video'){
     if(locked){
-      const bg=grpColors?grpColors.lbg:'';const tc=grpColors?grpColors.ltxt:'';
-      return `<div style="position:relative;"><div class="lcard gc" style="cursor:pointer;${bg?`background:${bg};color:${tc};`:''}" onclick="onPwItem(${gi},${ii},'video')">&#128274; ${escHtml(l.title||'Protected Video')}</div>${editBtn}</div>`;
+      return `<div style="position:relative;"><div class="lcard gc" style="cursor:pointer;" onclick="onPwItem(${gi},${ii},'video')">&#128274; ${escHtml(l.title||'Protected Video')}</div>${editBtn}</div>`;
     }
-    /* ★ FIX: الفيديو يظهر دايماً لو مش محمي — وضيفنا preload=metadata لأداء أسرع */
-    return `<div class="mcard" style="position:relative;"><video src="${l.url}" controls playsinline preload="metadata" style="width:100%;display:block;max-height:300px;"></video>${lockBadge}${editBtn}</div>`;
+    return `<div class="mcard" style="position:relative;"><video src="${l.url}" controls playsinline></video>${lockBadge}${editBtn}</div>`;
   }
 
   if(l.type==='location')return buildLocCard(l,gi,ii)+editBtn;
-
-  /* ★ FIX: طبّق ألوان الجروب على اللينك كارد */
-  const cardStyle=grpColors?`style="background:${grpColors.lbg};color:${grpColors.ltxt};"`:''
-  if(locked)return `<div style="position:relative;"><div class="lcard gc" ${cardStyle} style="cursor:pointer;${grpColors?`background:${grpColors.lbg};color:${grpColors.ltxt};`:''}cursor:pointer;" onclick="onPwItem(${gi},${ii},'link')">&#128274; ${escHtml(l.title)}</div>${editBtn}</div>`;
+  if(locked)return `<div style="position:relative;"><div class="lcard gc" style="cursor:pointer;" onclick="onPwItem(${gi},${ii},'link')">&#128274; ${escHtml(l.title)}</div>${editBtn}</div>`;
   const trk=window._pub&&window.S?`onclick="window._fbRecordClick('${window.S.publicId}','${l.title.replace(/'/g,"\\'")}')"`:'';
-  return `<div style="position:relative;"><a href="${l.url}" target="_blank" rel="noopener" class="lcard gc" ${cardStyle} ${trk}>${escHtml(l.title)}</a>${editBtn}</div>`;
+  return `<div style="position:relative;"><a href="${l.url}" target="_blank" rel="noopener" class="lcard gc" ${trk}>${escHtml(l.title)}</a>${editBtn}</div>`;
 }
 
 function buildLocCard(l,gi,ii){
@@ -897,13 +863,11 @@ function renderLinks(){
     const w=document.createElement('div');w.style.cssText='width:100%;';
     if(l.type==='group'){
       const hbg=l.hbg||'#1a1a1a',htxt=l.htxt||'#fff',gcbg=l.gcbg||'#111';
-      /* ★ FIX: مرّر ألوان الجروب لـ buildItem */
-      const grpColors={lbg:l.lbg||'#1e1e1e',ltxt:l.ltxt||'#fff'};
-      let inner=(l.items||[]).map((it,ii)=>`<div style="width:100%;">${buildItem(it,i,ii,grpColors)}</div>`).join('');
+      let inner=(l.items||[]).map((it,ii)=>`<div style="width:100%;">${buildItem(it,i,ii)}</div>`).join('');
       const addBtn=window._edit?`<button onclick="openAddToGroup(${i})" style="width:100%;background:rgba(255,255,255,.06);border:1px dashed rgba(255,255,255,.15);border-radius:12px;color:#555;padding:11px;cursor:pointer;font-size:.82rem;margin-top:4px;">+ Add to &quot;${escHtml(l.name||'Group')}&quot;</button>`:'';
       const editBtn=window._edit?`<button class="dotsbtn" onclick="openCtx(event,${i},-2)" style="margin-left:auto;">&#8942;</button>`:'';
       w.innerHTML=`<div class="grp-wrap"><div class="grp-header" style="background:${hbg};"><span class="grp-title-left" style="color:${htxt};">${escHtml(l.name||'Group')}</span>${editBtn}</div><div class="grp-inner" style="background:${gcbg}aa;">${inner}${addBtn}</div></div>`;
-    }else{w.innerHTML=buildItem(l,i,-1,null);}
+    }else{w.innerHTML=buildItem(l,i,-1);}
     sec.appendChild(w);
   });
 }
@@ -936,6 +900,7 @@ window.startEdit=function(){
   if(!item)return;
   document.getElementById('edit-title').value=item.title||'';
   const urlEl=document.getElementById('edit-url');
+  // Hide URL field for image/video/location — it's base64 or irrelevant
   urlEl.value=item.url||'';
   urlEl.style.display=(item.type==='location'||item.type==='image'||item.type==='video')?'none':'';
   document.getElementById('edit-hint').innerText='';
@@ -982,7 +947,7 @@ window.onPwItem=function(gi,ii,type){
   document.getElementById('pw-modal-input').value='';document.getElementById('pw-err').style.display='none';
   document.getElementById('pw-modal').classList.add('on');
   _pwCb=entered=>{
-    if(entered===item.password){closePwModal();item._unlocked=true;renderLinks();if(type==='link')window.open(item.url,'_blank');else if(type==='image')setTimeout(()=>openLightbox(gi,ii),60);else if(type==='location'){const id=`lm${gi}x${ii}`;setTimeout(()=>toggleLocMap(id,gi,ii),80);}else if(type==='video'){/* بعد ما تفتح الباسورد، الفيديو هيبقى مرئي في renderLinks */}if(window._pub&&window.S)window._fbRecordClick(window.S.publicId,item.title||type).catch(()=>{});}
+    if(entered===item.password){closePwModal();item._unlocked=true;renderLinks();if(type==='link')window.open(item.url,'_blank');else if(type==='image')setTimeout(()=>openLightbox(gi,ii),60);else if(type==='location'){const id=`lm${gi}x${ii}`;setTimeout(()=>toggleLocMap(id,gi,ii),80);}if(window._pub&&window.S)window._fbRecordClick(window.S.publicId,item.title||type).catch(()=>{});}
     else{document.getElementById('pw-err').style.display='block';document.getElementById('pw-modal-input').value='';document.getElementById('pw-modal-input').focus();}
   };
 };
@@ -1068,36 +1033,8 @@ window.openAddToGroup=gi=>{addToGrpIdx=gi;document.getElementById('lmod-title').
 window.openAddLink=()=>{addToGrpIdx=-1;document.getElementById('lmod-title').innerText='Add to Profile';document.getElementById('tab-group').classList.remove('hidden');setTab('link');document.getElementById('ltitle').value='';document.getElementById('lurl').value='';document.getElementById('url-hint').innerText='';document.getElementById('lmod').classList.remove('hidden');};
 
 /* ===== MEDIA ===== */
-window.onImgPick=inp=>{
-  const f=inp.files[0];inp.value='';if(!f)return;
-  resizeImg(f,900,.82,d64=>{
-    pendMedia={type:'image',url:d64};
-    document.getElementById('imgprev').src=d64;
-    document.getElementById('imgprev').style.display='block';
-    document.getElementById('imgbox').style.display='none';
-    toast('Image ready \u2713','s');
-  });
-};
-
-/* ★ FIX الرئيسي: تحقق من حجم الفيديو قبل قراءته */
-window.onVidPick=inp=>{
-  const f=inp.files[0];inp.value='';if(!f)return;
-  const maxBytes=VID_MAX_MB*1024*1024;
-  if(f.size>maxBytes){
-    toast(`Video too large! Max ${VID_MAX_MB}MB. Please compress first.`,'e');
-    return;
-  }
-  toast('Reading video\u2026','s');
-  const r=new FileReader();
-  r.onload=e=>{
-    pendMedia={type:'video',url:e.target.result};
-    document.getElementById('vidprev').src=e.target.result;
-    document.getElementById('vidprev').style.display='block';
-    document.getElementById('vidbox').style.display='none';
-    toast('Video ready \u2713','s');
-  };
-  r.readAsDataURL(f);
-};
+window.onImgPick=inp=>{const f=inp.files[0];inp.value='';if(!f)return;resizeImg(f,900,.82,d64=>{pendMedia={type:'image',url:d64};document.getElementById('imgprev').src=d64;document.getElementById('imgprev').style.display='block';document.getElementById('imgbox').style.display='none';});};
+window.onVidPick=inp=>{const f=inp.files[0];inp.value='';if(!f)return;toast('Reading video\u2026','s');const r=new FileReader();r.onload=e=>{pendMedia={type:'video',url:e.target.result};document.getElementById('vidprev').src=e.target.result;document.getElementById('vidprev').style.display='block';document.getElementById('vidbox').style.display='none';toast('Video ready \u2713','s');};r.readAsDataURL(f);};
 
 /* ===== ADD ITEM ===== */
 window.addItem=function(){
@@ -1120,6 +1057,7 @@ window.addItem=function(){
     item={type:'group',name,hbg:document.getElementById('grp-hbg').value,htxt:document.getElementById('grp-htxt').value,gcbg:document.getElementById('grp-cbg').value,lbg:document.getElementById('grp-lbg').value,ltxt:document.getElementById('grp-ltxt').value,items:[]};
   }
   else if(pendMedia){
+    /* ★ تعديل 1: احفظ العنوان اللي اليوزر كتبه للصورة/الفيديو */
     const isImg=curTab==='image';
     const titleEl=document.getElementById(isImg?'img-title':'vid-title');
     const userTitle=titleEl?titleEl.value.trim():'';
@@ -1138,26 +1076,8 @@ window.addItem=function(){
 };
 
 /* ===== EDIT GROUP ===== */
-window.openEditGroup=gi=>{
-  editGrpIdx=gi;const g=window.S.links[gi];
-  document.getElementById('eg-name').value=g.name||'';
-  document.getElementById('eg-hbg').value=g.hbg||'#1a1a1a';
-  document.getElementById('eg-htxt').value=g.htxt||'#fff';
-  document.getElementById('eg-cbg').value=g.gcbg||'#111';
-  document.getElementById('eg-lbg').value=g.lbg||'#1e1e1e';
-  document.getElementById('eg-ltxt').value=g.ltxt||'#fff';
-  document.getElementById('egmod').classList.remove('hidden');
-};
-window.saveGroupEdit=function(){
-  const g=window.S.links[editGrpIdx];
-  g.name=document.getElementById('eg-name').value.trim()||g.name;
-  g.hbg=document.getElementById('eg-hbg').value;
-  g.htxt=document.getElementById('eg-htxt').value;
-  g.gcbg=document.getElementById('eg-cbg').value;
-  g.lbg=document.getElementById('eg-lbg').value;
-  g.ltxt=document.getElementById('eg-ltxt').value;
-  save();renderLinks();closeModals();toast('Group updated \u2713','s');
-};
+window.openEditGroup=gi=>{editGrpIdx=gi;const g=window.S.links[gi];document.getElementById('eg-name').value=g.name||'';document.getElementById('eg-hbg').value=g.hbg||'#1a1a1a';document.getElementById('eg-htxt').value=g.htxt||'#fff';document.getElementById('eg-cbg').value=g.gcbg||'#111';document.getElementById('eg-lbg').value=g.lbg||'#1e1e1e';document.getElementById('eg-ltxt').value=g.ltxt||'#fff';document.getElementById('egmod').classList.remove('hidden');};
+window.saveGroupEdit=function(){const g=window.S.links[editGrpIdx];g.name=document.getElementById('eg-name').value.trim()||g.name;g.hbg=document.getElementById('eg-hbg').value;g.htxt=document.getElementById('eg-htxt').value;g.gcbg=document.getElementById('eg-cbg').value;g.lbg=document.getElementById('eg-lbg').value;g.ltxt=document.getElementById('eg-ltxt').value;save();renderLinks();closeModals();toast('Group updated \u2713','s');};
 
 /* ===== ANALYTICS ===== */
 function renderAnalytics(data){
