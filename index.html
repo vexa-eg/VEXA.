@@ -1,11 +1,11 @@
-﻿<!DOCTYPE html>
+﻿
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>VEXA - Smart NFC Profile</title>
 
-<!-- ═══ SPEED: Preconnect to all external hosts ═══ -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
@@ -14,12 +14,10 @@
 <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
 <link rel="dns-prefetch" href="https://api.dicebear.com">
 
-<!-- ═══ SPEED: Preload Firebase scripts so they download in parallel ═══ -->
 <link rel="preload" href="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js" as="script">
 <link rel="preload" href="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js" as="script">
 <link rel="preload" href="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js" as="script">
 
-<!-- ═══ SPEED: Load font display=swap so text renders immediately ═══ -->
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
 <style>
@@ -92,6 +90,13 @@ body.no-bgimg::before{display:none;}
 .dotsbtn{background:rgba(255,255,255,.12);border:none;color:#aaa;border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;line-height:1;}
 .dotsbtn:hover{background:rgba(255,255,255,.2);color:#fff;}
 
+/* [FIX] MEDIA TAP BUTTON - بيبان في public view عشان حد يضغط ويشوف الصورة/الفيديو */
+.media-tap-btn{width:100%;min-height:80px;background:rgba(255,255,255,.04);border:none;border-radius:0;display:flex;align-items:center;justify-content:center;gap:10px;cursor:pointer;padding:20px 16px;color:#555;font-size:.88rem;font-weight:600;font-family:'Inter',sans-serif;transition:background .15s,color .15s;}
+.media-tap-btn:hover,.media-tap-btn:active{background:rgba(255,255,255,.08);color:#999;}
+
+/* [FIX] VIDEO SIZE WARNING في المودال */
+.vid-size-info{font-size:.72rem;color:#666;text-align:center;margin-top:4px;padding:6px 10px;background:rgba(255,200,0,.06);border:1px solid rgba(255,200,0,.12);border-radius:8px;}
+
 /* CTX MENU */
 .ctx-menu{position:fixed;z-index:4000;background:#1a1a1a;border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:6px;min-width:160px;box-shadow:0 8px 32px rgba(0,0,0,.7);animation:ctxin .15s ease;}
 @keyframes ctxin{from{opacity:0;transform:scale(.95);}to{opacity:1;transform:scale(1);}}
@@ -116,10 +121,7 @@ body.no-bgimg::before{display:none;}
 .loc-live-dot{width:8px;height:8px;border-radius:50%;background:#f44;animation:livepulse 1.4s infinite;flex-shrink:0;display:inline-block;}
 @keyframes livepulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.5;transform:scale(.7);}}
 
-/* ══════════════════════════════════════════
-   VEXA BRAND BUTTON — floating bounce animation
-   يتنطط بشكل مثلث: فوق يسار → فوق يمين → تحت
-   ══════════════════════════════════════════ */
+/* VEXA BRAND BUTTON */
 @keyframes vexabounce {
   0%   { transform: translate(0px, 0px) scale(1); }
   20%  { transform: translate(-4px, -7px) scale(1.03) rotate(-0.8deg); }
@@ -297,7 +299,7 @@ body.no-bgimg::before{display:none;}
 </head>
 <body class="no-bgimg">
 
-<!-- ═══ SPEED: تقليل وقت الانتظار من 800ms إلى 150ms ═══ -->
+<!-- تقليل وقت الانتظار من 800ms إلى 150ms -->
 <script>
 (function(){
   if(!new URLSearchParams(location.search).get('id')){
@@ -517,9 +519,9 @@ body.no-bgimg::before{display:none;}
       <div id="link-pw-field" style="display:none;"><input type="text" id="link-pw" class="mi" placeholder="Set password&#8230;"></div>
     </div>
 
-    <!-- IMAGE TAB — ★ أضفنا حقل الاسم هنا -->
+    <!-- IMAGE TAB -->
     <div id="tp-image" class="hidden">
-      <input type="text" id="img-title" class="mi" placeholder="Button label (e.g. My Photos, Portfolio…)">
+      <input type="text" id="img-title" class="mi" placeholder="Button label (e.g. My Photos, Portfolio&#8230;)">
       <div class="upbox" id="imgbox" onclick="triggerUpload('imginput')">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>Select image
       </div>
@@ -529,9 +531,11 @@ body.no-bgimg::before{display:none;}
       <div id="img-pw-field" style="display:none;"><input type="text" id="img-pw" class="mi" placeholder="Set password&#8230;"></div>
     </div>
 
-    <!-- VIDEO TAB — ★ أضفنا حقل الاسم هنا -->
+    <!-- VIDEO TAB -->
     <div id="tp-video" class="hidden">
-      <input type="text" id="vid-title" class="mi" placeholder="Button label (e.g. Promo Video, Reel…)">
+      <input type="text" id="vid-title" class="mi" placeholder="Button label (e.g. Promo Video, Reel&#8230;)">
+      <!-- [FIX] تحذير حجم الفيديو -->
+      <div class="vid-size-info">&#9888;&#65039; Max video size: <strong>5 MB</strong> — Larger videos won&#39;t save to Firebase</div>
       <div class="upbox" id="vidbox" onclick="triggerUpload('vidinput')">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>Select video
       </div>
@@ -625,10 +629,7 @@ body.no-bgimg::before{display:none;}
 <input type="file" id="vidinput" class="hidden" accept="video/*" onchange="onVidPick(this)">
 <div id="ctx-menu" class="ctx-menu hidden"></div>
 
-<!-- ═══ SPEED: QRCode loaded async (only needed when user opens QR) ═══ -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
-
-<!-- Firebase SDK (preloaded in <head>, execute in order) -->
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
@@ -643,14 +644,33 @@ firebase.initializeApp({
   messagingSenderId:"362188399240",appId:"1:362188399240:web:fd6c50ae6ed3647bc8753d"
 });
 const _auth=firebase.auth(),_db=firebase.database();
+
+/* [FIX] حد أقصى للحجم — Firebase يرفض أي node أكبر من 10MB */
+const _MAX_BYTES = 8 * 1024 * 1024; /* 8MB */
+const _MAX_VID_BYTES = 5 * 1024 * 1024; /* 5MB للفيديو قبل التحويل لـ base64 */
+
 window._fbSignUp=(e,p)=>_auth.createUserWithEmailAndPassword(e,p);
 window._fbLogin=(e,p)=>_auth.signInWithEmailAndPassword(e,p);
 window._fbSignOut=()=>_auth.signOut();
+
+/* [FIX] _fbSave — بيتحقق من الحجم ويعمل catch صريح */
 window._fbSave=async(uid,state)=>{
   function strip(links){return(links||[]).map(l=>{const c={...l};delete c._unlocked;if(c.items)c.items=strip(c.items);return c;});}
   const s={...JSON.parse(JSON.stringify(state)),links:strip(state.links)};
-  return Promise.all([_db.ref('users/'+uid).set(s),_db.ref('pub/'+s.publicId).set(s)]);
+  const sz=new Blob([JSON.stringify(s)]).size;
+  if(sz>_MAX_BYTES){
+    toast('Profile too large ('+Math.round(sz/1024/1024*10)/10+'MB). Remove a large video or image.','e');
+    return;
+  }
+  return Promise.all([
+    _db.ref('users/'+uid).set(s),
+    _db.ref('pub/'+s.publicId).set(s)
+  ]).catch(e=>{
+    console.warn('Firebase save error:',e);
+    toast('Save failed \u2014 check connection','e');
+  });
 };
+
 window._fbLoad=async uid=>{const s=await _db.ref('users/'+uid).once('value');return s.exists()?s.val():null;};
 window._fbLoadPub=async pid=>{const s=await _db.ref('pub/'+pid).once('value');return s.exists()?s.val():null;};
 window._fbRecordVisit=async pid=>{
@@ -685,7 +705,7 @@ _auth.onAuthStateChanged(async user=>{
   }else{hideLs();document.getElementById('auth').classList.remove('hidden');}
 });
 
-/* ─── Eager fetch for public profiles ─── */
+/* ─── Eager fetch للبروفايل العام — بيشتغل بدون ما ننتظر Firebase Auth ─── */
 (async()=>{
   const pid=new URLSearchParams(location.search).get('id');
   if(!pid)return;
@@ -695,7 +715,6 @@ _auth.onAuthStateChanged(async user=>{
       window.S=data;if(!window.S.links)window.S.links=[];
       window._pub=true;window._edit=false;
       window._pubDataReady=true;
-      /* ═══ SPEED: بنبوت مباشرة بدون ما ننتظر Firebase Auth ═══ */
       bootApp();
       window._fbRecordVisit(pid).catch(()=>{});
     }else{
@@ -719,7 +738,7 @@ let _pinchStart=null;
 
 function hideLs(){const l=document.getElementById('ls');l.classList.add('out');setTimeout(()=>l.classList.add('hidden'),300);}
 function escHtml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-function save(){if(!window._uid||window._pub)return;clearTimeout(_saveTimer);_saveTimer=setTimeout(()=>window._fbSave(window._uid,window.S).catch(e=>console.warn(e)),800);}
+function save(){if(!window._uid||window._pub)return;clearTimeout(_saveTimer);_saveTimer=setTimeout(async()=>{try{await window._fbSave(window._uid,window.S);}catch(e){console.warn(e);}},800);}
 function toast(msg,type){const t=document.getElementById('toast');t.innerText=msg;t.className=type||'s';t.style.display='block';clearTimeout(t._t);t._t=setTimeout(()=>t.style.display='none',2500);}
 window.triggerUpload=id=>document.getElementById(id).click();
 function resizeImg(file,maxW,quality,cb){const r=new FileReader();r.onload=ev=>{const img=new Image();img.onload=()=>{const ratio=Math.min(maxW/img.width,maxW/img.height,1),w=Math.round(img.width*ratio),h=Math.round(img.height*ratio),cv=document.createElement('canvas');cv.width=w;cv.height=h;cv.getContext('2d').drawImage(img,0,0,w,h);cb(cv.toDataURL('image/jpeg',quality));};img.onerror=()=>cb(ev.target.result);img.src=ev.target.result;};r.readAsDataURL(file);}
@@ -745,6 +764,10 @@ window.bootApp=function(){
     nm.onblur=()=>{S.name=nm.innerText.trim();save();};
     bio.onblur=()=>{S.bio=bio.innerText.trim();save();};
     bio.setAttribute('data-ph','Bio');
+    if(!window.S){
+      const uid=firebase.auth().currentUser?.uid||'new';
+      window.S={name:'',bio:'',avatar:'',links:[],colors:{},publicId:uid.slice(0,14)};
+    }
   }else{
     document.querySelectorAll('.edit-only').forEach(e=>e.classList.add('hidden'));
     document.getElementById('avwrap').style.cursor='default';
@@ -769,17 +792,19 @@ window.doAuth=async function(){
     if(isSignUp){
       const cred=await window._fbSignUp(email,pass);
       window._uid=cred.user.uid;
-      window.S={publicId:cred.user.uid.slice(0,14),name:email.split('@')[0],bio:'',avatar:'',bgImage:'',bgBlur:0,colors:{bg:'#0a0a0a',card:'#1a1a1a',name:'#ffffff',bio:'#a0a0a0',link:'#ffffff'},links:[]};
-      await window._fbSave(window._uid,window.S);
+      window.S={name:'',bio:'',avatar:'',links:[],colors:{},publicId:cred.user.uid.slice(0,14)};
       window._pub=false;window._edit=true;bootApp();
-    }else{await window._fbLogin(email,pass);}
+    }else{
+      await window._fbLogin(email,pass);
+    }
   }catch(e){
     btn.disabled=false;btn.innerText='Continue';
     const c=e.code||'';
-    if(c==='auth/email-already-in-use')toast('Email already registered!','e');
-    else if(c.includes('wrong-password')||c.includes('invalid-credential')||c.includes('invalid-login')){if(navigator.vibrate)navigator.vibrate([100,50,100]);const b=document.getElementById('abox');b.classList.add('error-shake','error-flash');setTimeout(()=>b.classList.remove('error-shake'),500);setTimeout(()=>b.classList.remove('error-flash'),800);document.getElementById('perr').style.display='block';}
-    else if(c.includes('user-not-found'))toast('No account found \u2014 Sign Up','e');
-    else toast(e.message||'Error','e');
+    const box=document.getElementById('abox');box.classList.add('error-shake','error-flash');setTimeout(()=>box.classList.remove('error-shake','error-flash'),500);
+    document.getElementById('perr').style.display='block';
+    if(c.includes('wrong-password')||c.includes('invalid-credential'))document.getElementById('perr').innerText='Wrong password';
+    else if(c.includes('user-not-found'))document.getElementById('perr').innerText='No account found \u2014 Sign Up';
+    else document.getElementById('perr').innerText=e.message||'Error';
   }
 };
 window.doLogout=async()=>{stopLiveLocation();await _auth.signOut();location.reload();};
@@ -809,34 +834,58 @@ function render(){
   renderLinks();
 }
 
-/* ===== RENDER LINKS ===== */
+/* ===== BUILD ITEM ===== */
 function buildItem(l,gi,ii){
   const editBtn=window._edit?`<div class="item-actions"><button class="dotsbtn" onclick="openCtx(event,${gi},${ii})">&#8942;</button></div>`:'';
-  /* locked = يبان كزرار لأي حد (owner أو زائر) لحد ما يكتب الباسورد */
   const locked=l.password&&!l._unlocked;
   const lockBadge=l.password?`<div class="lock-badge"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Protected</div>`:'';
 
-  /* ★ تعديل 1: الصورة بباسورد → بيبان زرار بالاسم اللي كتبه اليوزر */
+  /* ── IMAGE ── */
   if(l.type==='image'){
     if(locked){
       return `<div style="position:relative;"><div class="lcard gc" style="cursor:pointer;" onclick="onPwItem(${gi},${ii},'image')">&#128274; ${escHtml(l.title||'Protected Image')}</div>${editBtn}</div>`;
     }
+    /* [FIX] في public view: زرار "اضغط للعرض" بدل تحميل الصورة مباشرة — أسرع بكتير */
+    if(window._pub){
+      const eid='med_'+gi+'_'+ii;
+      return `<div class="mcard" id="${eid}" style="position:relative;"><button class="media-tap-btn" onclick="revealMedia('${eid}',${gi},${ii},'image')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>${escHtml(l.title||'Tap to view image')}</button>${lockBadge}</div>`;
+    }
     return `<div class="mcard" style="position:relative;"><img src="${l.url}" loading="lazy" alt="" onclick="openLightbox(${gi},${ii})" style="cursor:zoom-in;">${lockBadge}${editBtn}</div>`;
   }
 
-  /* ★ تعديل 1: الفيديو بباسورد → بيبان زرار بالاسم اللي كتبه اليوزر */
+  /* ── VIDEO ── */
   if(l.type==='video'){
     if(locked){
       return `<div style="position:relative;"><div class="lcard gc" style="cursor:pointer;" onclick="onPwItem(${gi},${ii},'video')">&#128274; ${escHtml(l.title||'Protected Video')}</div>${editBtn}</div>`;
     }
-    return `<div class="mcard" style="position:relative;"><video src="${l.url}" controls playsinline></video>${lockBadge}${editBtn}</div>`;
+    /* [FIX] في public view: زرار "اضغط للتشغيل" — أسرع وبيوفر data */
+    if(window._pub){
+      const eid='med_'+gi+'_'+ii;
+      return `<div class="mcard" id="${eid}" style="position:relative;"><button class="media-tap-btn" onclick="revealMedia('${eid}',${gi},${ii},'video')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>${escHtml(l.title||'Tap to play video')}</button>${lockBadge}</div>`;
+    }
+    /* [FIX] preload="none" في edit view — ميحملش الفيديو تلقائياً */
+    return `<div class="mcard" style="position:relative;"><video src="${l.url}" controls playsinline preload="none"></video>${lockBadge}${editBtn}</div>`;
   }
 
   if(l.type==='location')return buildLocCard(l,gi,ii)+editBtn;
   if(locked)return `<div style="position:relative;"><div class="lcard gc" style="cursor:pointer;" onclick="onPwItem(${gi},${ii},'link')">&#128274; ${escHtml(l.title)}</div>${editBtn}</div>`;
-  const trk=window._pub&&window.S?`onclick="window._fbRecordClick('${window.S.publicId}','${l.title.replace(/'/g,"\\'")}')"`:'';
+  const trk=window._pub&&window.S?`onclick="window._fbRecordClick('${window.S.publicId}','${l.title.replace(/'/g,"\\'")}').catch(()=>{})"`:'';
   return `<div style="position:relative;"><a href="${l.url}" target="_blank" rel="noopener" class="lcard gc" ${trk}>${escHtml(l.title)}</a>${editBtn}</div>`;
 }
+
+/* [FIX] revealMedia — بيظهر الصورة أو الفيديو لما حد يضغط عليهم في public view */
+window.revealMedia=function(eid,gi,ii,type){
+  const item=ii>=0?(window.S.links[gi].items||[])[ii]:window.S.links[gi];
+  if(!item||!item.url){toast('Media not available','e');return;}
+  const el=document.getElementById(eid);
+  if(!el)return;
+  if(type==='image'){
+    el.innerHTML=`<img src="${item.url}" style="width:100%;display:block;max-height:300px;object-fit:cover;cursor:zoom-in;" onclick="openLightbox(${gi},${ii})">`;
+  }else{
+    el.innerHTML=`<video src="${item.url}" controls playsinline preload="metadata" style="width:100%;display:block;max-height:300px;"></video>`;
+  }
+  if(window._pub&&window.S)window._fbRecordClick(window.S.publicId,item.title||type).catch(()=>{});
+};
 
 function buildLocCard(l,gi,ii){
   const isLive=l.locType==='live',id=`lm${gi}x${ii}`;
@@ -900,7 +949,6 @@ window.startEdit=function(){
   if(!item)return;
   document.getElementById('edit-title').value=item.title||'';
   const urlEl=document.getElementById('edit-url');
-  // Hide URL field for image/video/location — it's base64 or irrelevant
   urlEl.value=item.url||'';
   urlEl.style.display=(item.type==='location'||item.type==='image'||item.type==='video')?'none':'';
   document.getElementById('edit-hint').innerText='';
@@ -1034,7 +1082,25 @@ window.openAddLink=()=>{addToGrpIdx=-1;document.getElementById('lmod-title').inn
 
 /* ===== MEDIA ===== */
 window.onImgPick=inp=>{const f=inp.files[0];inp.value='';if(!f)return;resizeImg(f,900,.82,d64=>{pendMedia={type:'image',url:d64};document.getElementById('imgprev').src=d64;document.getElementById('imgprev').style.display='block';document.getElementById('imgbox').style.display='none';});};
-window.onVidPick=inp=>{const f=inp.files[0];inp.value='';if(!f)return;toast('Reading video\u2026','s');const r=new FileReader();r.onload=e=>{pendMedia={type:'video',url:e.target.result};document.getElementById('vidprev').src=e.target.result;document.getElementById('vidprev').style.display='block';document.getElementById('vidbox').style.display='none';toast('Video ready \u2713','s');};r.readAsDataURL(f);};
+
+/* [FIX] onVidPick — بيتحقق من الحجم قبل ما يقرأ الفيديو */
+window.onVidPick=inp=>{
+  const f=inp.files[0];inp.value='';if(!f)return;
+  if(f.size>_MAX_VID_BYTES){
+    toast('Video too large! Max 5MB. Compress it first.','e');
+    return;
+  }
+  toast('Reading video\u2026','s');
+  const r=new FileReader();
+  r.onload=e=>{
+    pendMedia={type:'video',url:e.target.result};
+    document.getElementById('vidprev').src=e.target.result;
+    document.getElementById('vidprev').style.display='block';
+    document.getElementById('vidbox').style.display='none';
+    toast('Video ready \u2713','s');
+  };
+  r.readAsDataURL(f);
+};
 
 /* ===== ADD ITEM ===== */
 window.addItem=function(){
@@ -1057,7 +1123,6 @@ window.addItem=function(){
     item={type:'group',name,hbg:document.getElementById('grp-hbg').value,htxt:document.getElementById('grp-htxt').value,gcbg:document.getElementById('grp-cbg').value,lbg:document.getElementById('grp-lbg').value,ltxt:document.getElementById('grp-ltxt').value,items:[]};
   }
   else if(pendMedia){
-    /* ★ تعديل 1: احفظ العنوان اللي اليوزر كتبه للصورة/الفيديو */
     const isImg=curTab==='image';
     const titleEl=document.getElementById(isImg?'img-title':'vid-title');
     const userTitle=titleEl?titleEl.value.trim():'';
