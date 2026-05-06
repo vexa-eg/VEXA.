@@ -45,57 +45,49 @@ body.no-bgimg::before{display:none;}
 .ai:focus{border-color:rgba(255,255,255,.3);}.ai::placeholder{color:#333;}
 .eyebtn{position:absolute;right:13px;top:50%;transform:translateY(-50%);background:none;border:none;color:#444;cursor:pointer;display:flex;align-items:center;}
 .perr{color:#f55;font-size:.76rem;display:none;}
-.abtn{background:#fff;color:#000;border:none;padding:14px;border-radius:100px;font-weight:800;font-size:.93rem;cursor:pointer;transition:opacity .2s;}
+/* abtn defined in 3D section */
 .abtn:disabled{opacity:.4;cursor:not-allowed;}
+.pname[contenteditable=true]:focus,.pbio[contenteditable=true]:focus{border-bottom:1px dashed rgba(255,255,255,.25);}
+.pbio:empty:not(:focus)::before{content:attr(data-ph);color:rgba(255,255,255,.15);font-style:italic;font-size:.8rem;}
+.gli-circle svg{width:30px;height:30px;}
 .atoggle{background:none;border:none;color:#444;font-size:.8rem;cursor:pointer;}
 /* APP */
 #app{max-width:500px;margin:0 auto;min-height:100vh;padding:50px 18px 130px;display:flex;flex-direction:column;align-items:center;}
-.avwrap{position:relative;width:108px;height:108px;border-radius:50%;border:2px solid rgba(255,255,255,.2);overflow:hidden;margin-bottom:16px;box-shadow:0 8px 32px rgba(0,0,0,.5),0 0 0 4px rgba(255,255,255,.06);}
+/* avwrap defined in 3D section below */
 .avwrap img{width:100%;height:100%;object-fit:cover;display:block;}
 .av-ov{position:absolute;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s;}
 .avwrap:hover .av-ov,.avwrap:active .av-ov{opacity:1;}
-.pname{font-family:'Bebas Neue',sans-serif;font-size:2.3rem;letter-spacing:3px;color:var(--name);outline:none;text-align:center;min-width:60px;}
-.pname[contenteditable=true]:focus,.pbio[contenteditable=true]:focus{border-bottom:1px dashed rgba(255,255,255,.25);}
-.pbio{color:var(--bio);margin:7px 0 26px;font-size:.9rem;text-align:center;max-width:85%;outline:none;line-height:1.55;}
-.pbio:empty:not(:focus)::before{content:attr(data-ph);color:rgba(255,255,255,.15);font-style:italic;font-size:.8rem;}
+/* pname/pbio defined in 3D section */
+/* pbio empty defined in 3D section */
 .lsec{width:100%;display:flex;flex-direction:column;gap:10px;}
 /* LINK CARD */
 .gc{background:var(--card);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--glass);border-radius:var(--r);}
-.lcard{display:flex;align-items:center;padding:15px 18px;text-decoration:none;color:var(--link);font-weight:600;font-size:.93rem;transition:transform .15s;border-radius:16px;box-shadow:0 4px 16px rgba(0,0,0,.45);gap:14px;position:relative;}
-.lcard:hover{transform:translateY(-2px);}
-.lcard:active{transform:translateY(1px);}
+/* lcard defined in 3D section */
 .lc-icon{width:26px;height:26px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
 .lc-icon svg{width:22px;height:22px;}
 .lc-text{flex:1;text-align:center;padding-right:22px;}
 /* GRID */
 .links-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;width:100%;}
 .grid-litem{display:flex;flex-direction:column;align-items:center;gap:8px;text-decoration:none;color:var(--link);}
-.gli-circle{width:72px;height:72px;border-radius:50%;background:var(--card);border:1px solid var(--glass);display:flex;align-items:center;justify-content:center;transition:transform .15s,opacity .15s;}
-.gli-circle svg{width:30px;height:30px;}
-.grid-litem:hover .gli-circle{transform:scale(1.08);opacity:.85;}
+/* gli-circle defined in 3D section */
 .gli-label{font-size:.72rem;font-weight:600;text-align:center;max-width:72px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--link);}
-/* TEXT CARD */
-.text-card{width:100%;padding:18px 20px;border-radius:16px;background:var(--card);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--glass);color:var(--link);font-size:.9rem;line-height:1.65;white-space:pre-wrap;word-break:break-word;position:relative;}
-/* MEDIA */
-.mcard{width:100%;border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,.1);position:relative;box-shadow:0 4px 18px rgba(0,0,0,.5);}
+/* text-card defined in 3D section */
+/* mcard defined in 3D section */
 .mcard img,.mcard video{width:100%;display:block;max-height:300px;object-fit:cover;}
 .item-actions{position:absolute;top:8px;right:8px;}
-.dotsbtn{background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.15);color:#ddd;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;line-height:1;backdrop-filter:blur(6px);}
-.dotsbtn:hover{background:rgba(0,0,0,.8);color:#fff;}
+/* dotsbtn defined in 3D section */
 .media-tap-btn{width:100%;min-height:80px;background:rgba(255,255,255,.04);border:none;display:flex;align-items:center;justify-content:center;gap:10px;cursor:pointer;padding:20px;color:#555;font-size:.88rem;font-weight:600;font-family:'Inter',sans-serif;transition:background .15s;}
 .media-tap-btn:hover{background:rgba(255,255,255,.08);color:#999;}
 .vid-size-info{font-size:.72rem;color:#666;text-align:center;padding:6px 10px;background:rgba(255,200,0,.06);border:1px solid rgba(255,200,0,.12);border-radius:8px;margin-bottom:8px;}
-/* GROUP */
-.grp-wrap{width:100%;display:flex;flex-direction:column;}
+/* grp-wrap defined in 3D section */
 .grp-header{display:flex;align-items:center;gap:10px;padding:8px 14px;border-radius:14px 14px 0 0;}
 .grp-title-left{font-size:.7rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;opacity:.7;}
 .grp-inner{display:flex;flex-direction:column;gap:8px;padding:10px;border-radius:0 0 14px 14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-top:none;}
-/* ALBUM CARD */
-.album-card{width:100%;border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);box-shadow:0 4px 18px rgba(0,0,0,.5);}
+/* album-card defined in 3D section */
 .album-cover-wrap{position:relative;width:100%;aspect-ratio:16/9;overflow:hidden;cursor:pointer;}
 .album-cover-img{width:100%;height:100%;object-fit:cover;display:block;filter:blur(6px);transform:scale(1.05);}
 .album-cover-overlay{position:absolute;inset:0;background:rgba(0,0,0,.35);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;}
-.album-tap-badge{background:rgba(255,255,255,.15);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.3);border-radius:30px;padding:9px 22px;color:#fff;font-size:.82rem;font-weight:800;letter-spacing:2px;animation:tapVibe 3s ease-in-out infinite;}
+.album-tap-badge{background:rgba(255,255,255,.15);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.3);border-radius:30px;padding:9px 22px;color:#fff;font-size:.82rem;font-weight:800;letter-spacing:2px;animation:tapVibe 2s ease-in-out infinite;}
 @keyframes tapVibe{0%,40%,100%{transform:scale(1) rotate(0deg);}42%{transform:scale(1.06) rotate(-1.5deg);}44%{transform:scale(1.06) rotate(1.5deg);}46%{transform:scale(1.06) rotate(-1.5deg);}48%{transform:scale(1.06) rotate(1.5deg);}50%{transform:scale(1) rotate(0deg);}}
 .album-no-cover{width:100%;aspect-ratio:16/9;background:rgba(255,255,255,.04);display:flex;align-items:center;justify-content:center;cursor:pointer;}
 .album-card-footer{display:flex;align-items:center;padding:11px 14px;gap:10px;border-top:1px solid rgba(255,255,255,.07);}
@@ -117,7 +109,7 @@ body.no-bgimg::before{display:none;}
 /* CAROUSEL */
 .carousel-wrap{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;overflow:hidden;}
 .carousel-scene{perspective:900px;width:220px;height:280px;position:relative;cursor:pointer;}
-.carousel-rotor{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform .7s cubic-bezier(.25,.8,.25,1);}
+.carousel-rotor{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform .45s cubic-bezier(.25,.8,.25,1);}
 .car-card{position:absolute;width:220px;height:280px;border-radius:18px;overflow:hidden;background:#1a1a1a;box-shadow:0 10px 40px rgba(0,0,0,.7);}
 .car-card img,.car-card video{width:100%;height:100%;object-fit:cover;display:block;}
 .carousel-idx{font-size:.75rem;color:#444;letter-spacing:2px;}
@@ -125,18 +117,18 @@ body.no-bgimg::before{display:none;}
 /* FLOATING DECK */
 .float-deck-wrap{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;}
 .float-deck{position:relative;width:min(280px,78vw);height:min(360px,68vh);cursor:pointer;}
-.float-card-item{position:absolute;inset:0;border-radius:18px;overflow:hidden;background:#1a1a1a;box-shadow:0 10px 40px rgba(0,0,0,.7);transition:transform .5s cubic-bezier(.25,.8,.25,1),opacity .5s;}
+.float-card-item{position:absolute;inset:0;border-radius:18px;overflow:hidden;background:#1a1a1a;box-shadow:0 10px 40px rgba(0,0,0,.7);transition:transform .32s cubic-bezier(.25,.8,.25,1),opacity .32s;}
 .float-card-item img,.float-card-item video{width:100%;height:100%;object-fit:cover;display:block;}
-.float-card-item.fly-out{animation:flyOut .45s ease forwards;}
+.float-card-item.fly-out{animation:flyOut .28s ease forwards;}
 @keyframes flyOut{to{transform:translateX(110%) rotate(20deg);opacity:0;}}
 .float-hint{font-size:.68rem;color:#333;letter-spacing:1px;}
 .float-idx{font-size:.75rem;color:#444;letter-spacing:2px;}
 /* FLIPBOOK */
 .flipbook-wrap{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;}
 .flipbook-scene{perspective:1200px;width:min(260px,78vw);height:min(340px,64vh);position:relative;}
-.flip-page{position:absolute;inset:0;transform-style:preserve-3d;transform-origin:center center;transition:transform .65s cubic-bezier(.645,.045,.355,1);cursor:pointer;}
-.flip-page.go-next{animation:flipNext .65s cubic-bezier(.645,.045,.355,1) forwards;}
-.flip-page.go-prev{animation:flipPrev .65s cubic-bezier(.645,.045,.355,1) forwards;}
+.flip-page{position:absolute;inset:0;transform-style:preserve-3d;transform-origin:center center;transition:transform .42s cubic-bezier(.645,.045,.355,1);cursor:pointer;}
+.flip-page.go-next{animation:flipNext .42s cubic-bezier(.645,.045,.355,1) forwards;}
+.flip-page.go-prev{animation:flipPrev .42s cubic-bezier(.645,.045,.355,1) forwards;}
 @keyframes flipNext{0%{transform:rotateY(0deg);}100%{transform:rotateY(-180deg);}}
 @keyframes flipPrev{0%{transform:rotateY(0deg);}100%{transform:rotateY(180deg);}}
 .flip-face{position:absolute;inset:0;border-radius:16px;overflow:hidden;background:#1a1a1a;backface-visibility:hidden;box-shadow:4px 0 24px rgba(0,0,0,.7);}
@@ -144,8 +136,7 @@ body.no-bgimg::before{display:none;}
 .flip-face img,.flip-face video{width:100%;height:100%;object-fit:cover;display:block;}
 .flip-hint{font-size:.68rem;color:#333;letter-spacing:1px;}
 .flip-idx{font-size:.75rem;color:#444;letter-spacing:2px;}
-/* LOCATION */
-.loc-card{width:100%;border-radius:16px;background:var(--card);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--glass);overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,.45);}
+/* loc-card defined in 3D section */
 .loc-header{display:flex;align-items:center;gap:10px;padding:14px 16px;cursor:pointer;transition:background .15s;}
 .loc-header:hover{background:rgba(255,255,255,.06);}
 .loc-label{flex:1;font-weight:600;font-size:.92rem;color:var(--link);}
@@ -162,8 +153,7 @@ body.no-bgimg::before{display:none;}
 .bnav{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);width:92%;max-width:400px;height:66px;display:flex;justify-content:space-around;align-items:center;z-index:1000;padding:0 8px;background:linear-gradient(135deg,rgba(255,255,255,.18) 0%,rgba(255,255,255,.06) 50%,rgba(255,255,255,.12) 100%);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);border:1px solid rgba(255,255,255,.22);border-top:1px solid rgba(255,255,255,.35);border-radius:22px;box-shadow:0 8px 32px rgba(0,0,0,.55);}
 .ni{color:rgba(255,255,255,.55);background:none;border:none;font-size:9px;display:flex;flex-direction:column;align-items:center;gap:4px;flex:1;cursor:pointer;transition:color .2s;text-transform:uppercase;letter-spacing:.3px;}
 .ni:hover{color:#fff;}
-#fab{background:linear-gradient(145deg,#ffffff,#d0d0d0);color:#000;width:50px;height:50px;border-radius:50%;border:none;display:flex;align-items:center;justify-content:center;margin-top:-28px;cursor:pointer;box-shadow:0 6px 24px rgba(0,0,0,.6);transition:transform .15s;}
-#fab:hover{transform:scale(1.08) translateY(-1px);}
+/* #fab defined in 3D section */
 #exprev{top:16px;right:16px;background:#fff;color:#000;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 15px rgba(0,0,0,.5);}
 /* QR */
 #qrs{position:fixed;inset:0;background:#000;z-index:2000;display:flex;flex-direction:column;align-items:center;padding:50px 24px 36px;transform:translateY(100%);transition:transform .38s cubic-bezier(.25,.8,.25,1);overflow-y:auto;}
@@ -302,6 +292,88 @@ body.no-bgimg::before{display:none;}
 .ctx-item.danger{color:#f66;}
 .ctx-item.danger:hover{background:rgba(255,40,40,.15);}
 .lock-badge{position:absolute;top:8px;left:10px;background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:3px 9px;font-size:.62rem;color:#aaa;display:flex;align-items:center;gap:4px;pointer-events:none;}
+
+/* ====== 3D EFFECTS ====== */
+.avwrap{position:relative;width:108px;height:108px;border-radius:50%;border:2px solid rgba(255,255,255,.2);overflow:hidden;margin-bottom:16px;box-shadow:0 8px 0 rgba(0,0,0,.4),0 12px 40px rgba(0,0,0,.5),0 0 0 4px rgba(255,255,255,.06)!important;}
+.pname{font-family:'Bebas Neue',sans-serif;font-size:2.3rem;letter-spacing:3px;color:var(--name);outline:none;text-align:center;min-width:60px;text-shadow:0 2px 8px rgba(0,0,0,.6),0 1px 0 rgba(255,255,255,.06);}
+.pbio{color:var(--bio);margin:7px 0 26px;font-size:.9rem;text-align:center;max-width:85%;outline:none;line-height:1.55;text-shadow:0 1px 4px rgba(0,0,0,.4);}
+.lcard{display:flex;align-items:center;padding:15px 18px;text-decoration:none;color:var(--link);font-weight:600;font-size:.93rem;transition:transform .15s,box-shadow .15s;border-radius:16px;box-shadow:0 5px 0 rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.07);gap:14px;position:relative;}
+.lcard:hover{transform:translateY(-3px);box-shadow:0 8px 0 rgba(0,0,0,.3),0 12px 32px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.07);}
+.lcard:active{transform:translateY(2px);box-shadow:0 2px 0 rgba(0,0,0,.3),0 4px 12px rgba(0,0,0,.4);}
+.gli-circle{width:72px;height:72px;border-radius:50%;background:var(--card);border:1px solid var(--glass);display:flex;align-items:center;justify-content:center;transition:transform .15s,box-shadow .15s,opacity .15s;box-shadow:0 4px 0 rgba(0,0,0,.3),0 6px 16px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.1);}
+.grid-litem:hover .gli-circle{transform:translateY(-3px) scale(1.06);box-shadow:0 7px 0 rgba(0,0,0,.3),0 10px 24px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.1);opacity:1;}
+.grid-litem:active .gli-circle{transform:translateY(1px) scale(.98);box-shadow:0 2px 0 rgba(0,0,0,.3),0 4px 10px rgba(0,0,0,.3);}
+.text-card{width:100%;padding:18px 20px;border-radius:16px;background:var(--card);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--glass);color:var(--link);font-size:.9rem;line-height:1.65;white-space:pre-wrap;word-break:break-word;position:relative;box-shadow:0 4px 0 rgba(0,0,0,.25),0 6px 20px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.05);}
+.mcard{width:100%;border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,.1);position:relative;box-shadow:0 5px 0 rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.5);}
+.album-card{width:100%;border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);box-shadow:0 5px 0 rgba(0,0,0,.3),0 10px 30px rgba(0,0,0,.5);}
+.loc-card{width:100%;border-radius:16px;background:var(--card);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--glass);overflow:hidden;box-shadow:0 4px 0 rgba(0,0,0,.25),0 6px 18px rgba(0,0,0,.4);}
+.abtn{background:#fff;color:#000;border:none;padding:14px;border-radius:100px;font-weight:800;font-size:.93rem;cursor:pointer;transition:opacity .2s,transform .1s,box-shadow .1s;box-shadow:0 4px 0 rgba(0,0,0,.3),0 8px 20px rgba(0,0,0,.25),inset 0 1px 0 rgba(255,255,255,.5);}
+.abtn:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(0,0,0,.3),0 2px 8px rgba(0,0,0,.2);}
+#fab{background:linear-gradient(145deg,#ffffff,#d0d0d0);color:#000;width:50px;height:50px;border-radius:50%;border:none;display:flex;align-items:center;justify-content:center;margin-top:-28px;cursor:pointer;box-shadow:0 5px 0 rgba(0,0,0,.4),0 8px 28px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.9);transition:transform .15s,box-shadow .15s;}
+#fab:hover{transform:scale(1.08) translateY(-2px);box-shadow:0 8px 0 rgba(0,0,0,.4),0 14px 36px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.9);}
+#fab:active{transform:translateY(2px);box-shadow:0 2px 0 rgba(0,0,0,.4),0 4px 12px rgba(0,0,0,.5);}
+.dotsbtn{background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.15);color:#ddd;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;line-height:1;backdrop-filter:blur(6px);box-shadow:0 2px 0 rgba(0,0,0,.4),0 4px 12px rgba(0,0,0,.4);}
+.dotsbtn:hover{background:rgba(0,0,0,.8);color:#fff;transform:translateY(-1px);}
+.dotsbtn:active{transform:translateY(1px);}
+.grp-wrap{width:100%;display:flex;flex-direction:column;filter:drop-shadow(0 5px 0 rgba(0,0,0,.25)) drop-shadow(0 8px 18px rgba(0,0,0,.4));}
+
+/* ====== GROUP GRID INNER ====== */
+.grp-inner .links-grid{padding:4px 0;}
+
+.photo-btn-card{width:100%;border-radius:16px;overflow:hidden;position:relative;box-shadow:0 5px 0 rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.5);display:block;text-decoration:none;cursor:pointer;transition:transform .15s,box-shadow .15s;}
+.photo-btn-card:hover{transform:translateY(-3px);box-shadow:0 8px 0 rgba(0,0,0,.3),0 14px 32px rgba(0,0,0,.5);}
+.photo-btn-card:active{transform:translateY(2px);box-shadow:0 2px 0 rgba(0,0,0,.3);}
+/* Banner style */
+.photo-btn-card.pbs-banner .photo-btn-img{width:100%;height:180px;object-fit:cover;display:block;transition:transform .3s;}
+.photo-btn-card.pbs-banner:hover .photo-btn-img{transform:scale(1.04);}
+.photo-btn-card.pbs-banner .photo-btn-overlay{position:absolute;inset:0;background:linear-gradient(transparent 35%,rgba(0,0,0,.72));display:flex;align-items:flex-end;padding:16px 18px;}
+/* Circle Grid style */
+.photo-btn-card.pbs-circle{border-radius:20px;display:flex;flex-direction:column;align-items:center;padding:18px 14px 14px;background:var(--card);border:1px solid var(--glass);}
+.photo-btn-card.pbs-circle .photo-btn-img{width:80px;height:80px;border-radius:50%;object-fit:cover;display:block;border:2px solid rgba(255,255,255,.15);box-shadow:0 4px 12px rgba(0,0,0,.4);}
+.photo-btn-card.pbs-circle .photo-btn-overlay{position:static;background:none;display:flex;flex-direction:column;align-items:center;padding:10px 0 0;gap:6px;}
+.photo-btn-card.pbs-circle .photo-btn-title{font-size:.88rem;text-shadow:none;color:var(--link);}
+.photo-btn-card.pbs-circle .photo-btn-arrow{margin-left:0;width:26px;height:26px;}
+/* Full size style */
+.photo-btn-card.pbs-full .photo-btn-img{width:100%;height:auto;max-height:400px;object-fit:contain;display:block;background:#000;}
+.photo-btn-card.pbs-full .photo-btn-overlay{position:absolute;left:0;right:0;bottom:0;background:linear-gradient(transparent,rgba(0,0,0,.8));display:flex;align-items:flex-end;padding:14px 16px;}
+/* Small card style */
+.photo-btn-card.pbs-small{display:flex;align-items:center;gap:14px;padding:12px 16px;background:var(--card);border:1px solid var(--glass);border-radius:16px;}
+.photo-btn-card.pbs-small .photo-btn-img{width:52px;height:52px;border-radius:12px;object-fit:cover;display:block;flex-shrink:0;}
+.photo-btn-card.pbs-small .photo-btn-overlay{position:static;background:none;display:flex;align-items:center;padding:0;flex:1;}
+.photo-btn-card.pbs-small .photo-btn-title{font-size:.9rem;text-shadow:none;color:var(--link);}
+.photo-btn-card.pbs-small .photo-btn-arrow{margin-left:auto;width:26px;height:26px;}
+/* Shared */
+.photo-btn-title{color:#fff;font-weight:700;font-size:.98rem;text-shadow:0 2px 8px rgba(0,0,0,.6);letter-spacing:.3px;}
+.photo-btn-arrow{margin-left:auto;width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.img-hint{font-size:.65rem;color:#2a2a2a;text-align:center;margin-top:-6px;margin-bottom:6px;letter-spacing:.5px;}
+
+/* ====== ENVELOPE (Password Text) ====== */
+@keyframes envShake{0%,85%,100%{transform:rotate(0deg) scale(1);}87%{transform:rotate(-2.5deg) scale(1.025);}89%{transform:rotate(2.5deg) scale(1.025);}91%{transform:rotate(-1.5deg) scale(1.01);}93%{transform:rotate(1.5deg) scale(1.01);}95%{transform:rotate(0deg) scale(1);}}
+@keyframes envFlapOpen{0%{transform:rotateX(0deg);}100%{transform:rotateX(-160deg);}}
+@keyframes paperRise{0%{transform:translateY(60%) scale(.9);opacity:0;}60%{opacity:1;}100%{transform:translateY(-30%) scale(1);opacity:1;}}
+@keyframes envFall{0%{transform:translateY(0);opacity:1;}100%{transform:translateY(120%) scale(.85);opacity:0;}}
+@keyframes textRevealAnim{from{opacity:0;transform:translateY(-20px) scale(.97);}to{opacity:1;transform:translateY(0) scale(1);}}
+.env-outer{position:relative;width:100%;cursor:pointer;}
+.env-card{border-radius:16px;overflow:visible;box-shadow:0 5px 0 rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.5);animation:envShake 7s ease-in-out infinite;position:relative;}
+.env-card.env-opening .env-flap{animation:envFlapOpen .4s cubic-bezier(.3,0,.5,1) forwards;transform-origin:top center;}
+.env-card.env-opening .env-paper{animation:paperRise .5s .25s cubic-bezier(.16,1,.3,1) forwards;}
+.env-card.env-falling{animation:envFall .45s .55s cubic-bezier(.3,0,.5,1) forwards;}
+.env-flap{background:linear-gradient(160deg,#2a1c0e,#1c1424);padding:18px 20px 14px;display:flex;align-items:center;justify-content:center;border-bottom:1px solid rgba(255,200,80,.12);position:relative;border-radius:16px 16px 0 0;}
+.env-seal{width:42px;height:42px;border-radius:50%;background:linear-gradient(145deg,rgba(255,200,50,.18),rgba(255,150,20,.08));border:1px solid rgba(255,200,50,.3);display:flex;align-items:center;justify-content:center;font-size:20px;}
+.env-body{padding:14px 20px 18px;display:flex;flex-direction:column;align-items:center;gap:10px;border-radius:0 0 16px 16px;}
+.env-paper{position:absolute;top:0;left:0;right:0;height:100%;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;}
+.env-title{font-size:.78rem;letter-spacing:1px;text-align:center;}
+.env-tap-badge{border-radius:20px;padding:7px 18px;font-size:.72rem;font-weight:800;letter-spacing:2.5px;}
+.text-card.revealed{animation:textRevealAnim .45s cubic-bezier(.16,1,.3,1) forwards;}
+/* FORGOT PW */
+#forgot-modal{position:fixed;inset:0;background:rgba(0,0,0,.92);display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;pointer-events:none;transition:opacity .22s;backdrop-filter:blur(8px);z-index:7600;}
+#forgot-modal.on{opacity:1;pointer-events:all;}
+.forgot-box{background:#161616;border:1px solid rgba(255,255,255,.12);border-radius:22px;padding:28px 24px;width:100%;max-width:320px;display:flex;flex-direction:column;gap:14px;}
+.forgot-title{font-size:1rem;font-weight:700;text-align:center;}
+.forgot-sub{font-size:.78rem;color:#555;text-align:center;line-height:1.5;}
+.forgot-msg{font-size:.78rem;text-align:center;display:none;padding:8px 12px;border-radius:10px;}
+.forgot-msg.ok{background:rgba(0,200,80,.1);color:#4c8;border:1px solid rgba(0,200,80,.2);}
+.forgot-msg.er{background:rgba(255,60,60,.1);color:#f66;border:1px solid rgba(255,60,60,.2);}
 </style>
 </head>
 <body class="no-bgimg">
@@ -335,7 +407,19 @@ body.no-bgimg::before{display:none;}
 <div id="theme-modal"><div class="theme-box"><p class="mtitle">&#127775; Choose Theme</p><div class="theme-grid"><div class="theme-opt" id="th-dark" onclick="applyThemePreset('dark')"><div class="theme-preview" style="background:#0a0a0a;"><div class="theme-prev-name" style="background:#fff;"></div><div class="theme-prev-card" style="background:#222;"></div><div class="theme-prev-card2" style="background:#222;"></div></div><div class="theme-label" style="background:#0a0a0a;color:#fff;">MIDNIGHT</div></div><div class="theme-opt" id="th-hazel" onclick="applyThemePreset('hazel')"><div class="theme-preview" style="background:#2d1400;"><div class="theme-prev-name" style="background:#fff;"></div><div class="theme-prev-card" style="background:#3d1e00;"></div><div class="theme-prev-card2" style="background:#3d1e00;"></div></div><div class="theme-label" style="background:#2d1400;color:#e8a86a;">HAZEL</div></div><div class="theme-opt" id="th-matrix" onclick="applyThemePreset('matrix')"><div class="theme-preview" style="background:#020f02;"><div class="theme-prev-name" style="background:#00ff41;"></div><div class="theme-prev-card" style="background:#0a1f0a;"></div><div class="theme-prev-card2" style="background:#0a1f0a;"></div></div><div class="theme-label" style="background:#020f02;color:#00ff41;">MATRIX</div></div><div class="theme-opt" id="th-slate" onclick="applyThemePreset('slate')"><div class="theme-preview" style="background:#0f172a;"><div class="theme-prev-name" style="background:#94a3b8;"></div><div class="theme-prev-card" style="background:#1e293b;"></div><div class="theme-prev-card2" style="background:#1e293b;"></div></div><div class="theme-label" style="background:#0f172a;color:#94a3b8;">SLATE</div></div></div><button class="mcan" onclick="closeThemeModal()">Cancel</button></div></div>
 
 <!-- AUTH -->
-<div id="auth" class="hidden"><div class="vlogo">VEXA</div><div class="vslogan">One tap, endless connection</div><div class="abox" id="abox"><p class="atitle" id="atitle">Login</p><div class="iw"><input type="email" id="aemail" class="ai" placeholder="Email" autocomplete="email"></div><div class="iw"><input type="password" id="apass" class="ai" placeholder="Password" autocomplete="current-password"><button class="eyebtn" type="button" onclick="togglePass()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div><div class="perr" id="perr">Incorrect password.</div><button class="abtn" id="abtn" onclick="doAuth()">Continue</button><button class="atoggle" id="atog" onclick="toggleMode()">New here? Sign Up</button></div></div>
+<div id="auth" class="hidden"><div class="vlogo">VEXA</div><div class="vslogan">One tap, endless connection</div><div class="abox" id="abox"><p class="atitle" id="atitle">Login</p><div class="iw"><input type="email" id="aemail" class="ai" placeholder="Email" autocomplete="email"></div><div class="iw"><input type="password" id="apass" class="ai" placeholder="Password" autocomplete="current-password"><button class="eyebtn" type="button" onclick="togglePass()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div><div class="perr" id="perr">Incorrect password.</div><button class="abtn" id="abtn" onclick="doAuth()">Continue</button><button class="atoggle" id="atog" onclick="toggleMode()">New here? Sign Up</button><button class="atoggle" style="color:#2a2a2a;margin-top:-4px;" onclick="openForgotModal()">Forgot password?</button></div></div>
+
+<!-- FORGOT PASSWORD MODAL -->
+<div id="forgot-modal">
+  <div class="forgot-box">
+    <div class="forgot-title">&#128272; Reset Password</div>
+    <div class="forgot-sub">Enter your email and we'll send you a reset link.</div>
+    <input type="email" id="forgot-email" class="mi" placeholder="Your email address&#8230;" style="margin-bottom:0;">
+    <div class="forgot-msg" id="forgot-msg"></div>
+    <button class="abtn" id="forgot-btn" onclick="doForgotPassword()">Send Reset Link</button>
+    <button class="pw-cancel-txt" onclick="closeForgotModal()">Cancel</button>
+  </div>
+</div>
 
 <!-- APP -->
 <div id="app" class="hidden">
@@ -377,8 +461,15 @@ body.no-bgimg::before{display:none;}
     <div class="ci">Bio Color<input type="color" id="cbio" oninput="applyColors()"></div>
     <div class="ci">Links Text<input type="color" id="clink" oninput="applyColors()"></div>
   </div>
+  <p class="clabel" style="margin-top:14px;">Link Icon Colors</p>
+  <div class="cgrid">
+    <div class="ci">Icon Color<input type="color" id="ciconcolor" oninput="applyColors()"></div>
+    <div class="ci">Circle BG<input type="color" id="ciconbg" oninput="applyColors()"></div>
+    <div class="ci">Label Color<input type="color" id="clabelcolor" oninput="applyColors()"></div>
+  </div>
   <p class="clabel" style="margin-top:18px;">Background Image</p>
   <div class="upbox" onclick="triggerUpload('bginput')"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>Tap to upload background image</div>
+  <div class="img-hint">&#9432; Best size: 1200 &times; 800 px</div>
   <button id="rmbg" style="width:100%;background:none;border:none;color:#f66;margin-top:4px;cursor:pointer;font-size:.8rem;display:none;" onclick="removeBg()">Remove background image</button>
   <div id="blur-section" style="display:none;"><p class="clabel" style="margin-top:14px;">Background Blur</p><div class="blur-row"><span style="font-size:.7rem;color:#444;">None</span><input type="range" id="bgblur" min="0" max="20" step="1" value="0" oninput="applyBlur(this.value)"><span style="font-size:.72rem;color:#444;min-width:30px;text-align:right;" id="blur-val">0px</span></div></div>
   <button class="abtn msbtn" onclick="closeModals()">Done</button>
@@ -390,6 +481,7 @@ body.no-bgimg::before{display:none;}
   <div class="ttabs">
     <div class="ttab on" id="tab-link" onclick="setTab('link')">&#128279; Link</div>
     <div class="ttab" id="tab-text" onclick="setTab('text')">&#128221; Text</div>
+    <div class="ttab" id="tab-photobtn" onclick="setTab('photobtn')">&#128247; Photo Btn</div>
     <div class="ttab" id="tab-image" onclick="setTab('image')">&#128444; Image</div>
     <div class="ttab" id="tab-video" onclick="setTab('video')">&#127910; Video</div>
     <div class="ttab" id="tab-location" onclick="setTab('location')">&#128205; Location</div>
@@ -397,15 +489,32 @@ body.no-bgimg::before{display:none;}
     <div class="ttab" id="tab-album" onclick="setTab('album')">&#128193; Album</div>
   </div>
   <div id="tp-link"><input type="text" id="ltitle" class="mi" placeholder="Name (e.g. Instagram)" oninput="updateUrlHint()"><input type="text" id="lurl" class="mi" placeholder="Number, email, or URL&#8230;" oninput="updateUrlHint()"><div class="url-hint" id="url-hint"></div><p class="clabel">Password (optional)</p><div class="pw-row"><label class="pw-toggle"><input type="checkbox" id="link-pw-on" onchange="togglePwInput('link-pw-field',this.checked)"><span class="pw-track"></span><span class="pw-thumb"></span></label><span class="pw-lbl">Protect with password</span></div><div id="link-pw-field" style="display:none;"><input type="text" id="link-pw" class="mi" placeholder="Set password&#8230;"></div></div>
-  <div id="tp-text" class="hidden"><textarea id="text-content" class="mi" rows="5" placeholder="Write your text, note, or message&#8230;"></textarea></div>
-  <div id="tp-image" class="hidden"><input type="text" id="img-title" class="mi" placeholder="Label (e.g. My Photos)"><div class="upbox" id="imgbox" onclick="triggerUpload('imginput')"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>Select image</div><img id="imgprev" src="" style="display:none;width:100%;border-radius:12px;margin-top:10px;max-height:220px;object-fit:cover;"><p class="clabel">Password (optional)</p><div class="pw-row"><label class="pw-toggle"><input type="checkbox" id="img-pw-on" onchange="togglePwInput('img-pw-field',this.checked)"><span class="pw-track"></span><span class="pw-thumb"></span></label><span class="pw-lbl">Protect with password</span></div><div id="img-pw-field" style="display:none;"><input type="text" id="img-pw" class="mi" placeholder="Set password&#8230;"></div></div>
+  <div id="tp-text" class="hidden"><textarea id="text-content" class="mi" rows="5" placeholder="Write your text, note, or message&#8230;"></textarea><p class="clabel">Password (optional)</p><div class="pw-row"><label class="pw-toggle"><input type="checkbox" id="text-pw-on" onchange="togglePwInput('text-pw-field',this.checked)"><span class="pw-track"></span><span class="pw-thumb"></span></label><span class="pw-lbl">Lock in envelope &#128140;</span></div><div id="text-pw-field" style="display:none;"><input type="text" id="text-pw" class="mi" placeholder="Set password&#8230;"></div></div>
+  <div id="tp-photobtn" class="hidden">
+    <input type="text" id="photobtn-title" class="mi" placeholder="Button label (e.g. View Portfolio)">
+    <input type="text" id="photobtn-url" class="mi" placeholder="Destination URL&#8230;">
+    <p class="clabel">Display Style</p>
+    <div class="alb-theme-grid" style="margin-bottom:12px;grid-template-columns:repeat(2,1fr);">
+      <div class="alb-theme-opt selected" id="pbs-full" onclick="setPbStyle('full')"><div class="alb-theme-icon">&#128247;</div><div>Full Size</div></div>
+      <div class="alb-theme-opt" id="pbs-small" onclick="setPbStyle('small')"><div class="alb-theme-icon">&#128272;</div><div>Small Card</div></div>
+    </div>
+    <p class="clabel">Cover Image</p>
+    <div class="upbox" id="photobtnbox" onclick="triggerUpload('photobtn-img-input')"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>Select cover image</div>
+    <div class="img-hint">&#9432; Best size: 900 &times; 600 px</div>
+    <img id="photobtn-prev" src="" style="display:none;width:100%;border-radius:12px;margin-top:6px;max-height:160px;object-fit:cover;">
+    <p class="clabel">Password (optional)</p>
+    <div class="pw-row"><label class="pw-toggle"><input type="checkbox" id="photobtn-pw-on" onchange="togglePwInput('photobtn-pw-field',this.checked)"><span class="pw-track"></span><span class="pw-thumb"></span></label><span class="pw-lbl">Protect with password</span></div>
+    <div id="photobtn-pw-field" style="display:none;"><input type="text" id="photobtn-pw" class="mi" placeholder="Set password&#8230;"></div>
+  </div>
+  <div id="tp-image" class="hidden"><input type="text" id="img-title" class="mi" placeholder="Label (e.g. My Photos)"><div class="upbox" id="imgbox" onclick="triggerUpload('imginput')"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>Select image</div><div class="img-hint">&#9432; Best size: 900 &times; 600 px</div><img id="imgprev" src="" style="display:none;width:100%;border-radius:12px;margin-top:10px;max-height:220px;object-fit:cover;"><p class="clabel">Password (optional)</p><div class="pw-row"><label class="pw-toggle"><input type="checkbox" id="img-pw-on" onchange="togglePwInput('img-pw-field',this.checked)"><span class="pw-track"></span><span class="pw-thumb"></span></label><span class="pw-lbl">Protect with password</span></div><div id="img-pw-field" style="display:none;"><input type="text" id="img-pw" class="mi" placeholder="Set password&#8230;"></div></div>
   <div id="tp-video" class="hidden"><input type="text" id="vid-title" class="mi" placeholder="Label (e.g. Promo Video)"><div class="vid-size-info">&#9888;&#65039; Max video size: <strong>10 MB</strong> &mdash; Compress before uploading</div><div class="upbox" id="vidbox" onclick="triggerUpload('vidinput')"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>Select video</div><video id="vidprev" style="display:none;width:100%;border-radius:12px;margin-top:10px;max-height:220px;" controls playsinline></video><p class="clabel">Password (optional)</p><div class="pw-row"><label class="pw-toggle"><input type="checkbox" id="vid-pw-on" onchange="togglePwInput('vid-pw-field',this.checked)"><span class="pw-track"></span><span class="pw-thumb"></span></label><span class="pw-lbl">Protect with password</span></div><div id="vid-pw-field" style="display:none;"><input type="text" id="vid-pw" class="mi" placeholder="Set password&#8230;"></div></div>
   <div id="tp-location" class="hidden"><input type="text" id="loc-label-input" class="mi" placeholder="Label (e.g. Our Shop)"><p class="clabel">Password (optional)</p><div class="pw-row"><label class="pw-toggle"><input type="checkbox" id="loc-pw-on" onchange="togglePwInput('loc-pw-field',this.checked)"><span class="pw-track"></span><span class="pw-thumb"></span></label><span class="pw-lbl">Protect with password</span></div><div id="loc-pw-field" style="display:none;"><input type="text" id="loc-pw" class="mi" placeholder="Set password&#8230;"></div></div>
-  <div id="tp-group" class="hidden"><input type="text" id="grp-name" class="mi" placeholder="Group name (e.g. Social Media)"><p class="clabel">Group Colors</p><div class="grp-color-row"><div class="ci">Header BG<input type="color" id="grp-hbg" value="#1a1a1a"></div><div class="ci">Header Text<input type="color" id="grp-htxt" value="#ffffff"></div><div class="ci">Cards BG<input type="color" id="grp-cbg" value="#111111"></div><div class="ci">Link BG<input type="color" id="grp-lbg" value="#1e1e1e"></div><div class="ci">Link Text<input type="color" id="grp-ltxt" value="#ffffff"></div></div></div>
+  <div id="tp-group" class="hidden"><input type="text" id="grp-name" class="mi" placeholder="Group name (e.g. Social Media)"><p class="clabel">Layout</p><div class="layout-toggle"><div class="layout-opt on" id="grplo-list" onclick="setNewGrpLayout('list')">&#9776; List</div><div class="layout-opt" id="grplo-grid" onclick="setNewGrpLayout('grid')">&#8857; Grid</div></div><p class="clabel">Group Colors</p><div class="grp-color-row"><div class="ci">Header BG<input type="color" id="grp-hbg" value="#1a1a1a"></div><div class="ci">Header Text<input type="color" id="grp-htxt" value="#ffffff"></div><div class="ci">Cards BG<input type="color" id="grp-cbg" value="#111111"></div></div><p class="clabel">Link Icon Colors</p><div class="grp-color-row"><div class="ci">Icon Color<input type="color" id="grp-icon-color" value="#ffffff"></div><div class="ci">Circle BG<input type="color" id="grp-icon-bg" value="#1e1e1e"></div><div class="ci">Label Color<input type="color" id="grp-label-color" value="#ffffff"></div></div><p class="clabel">Password (optional)</p><div class="pw-row"><label class="pw-toggle"><input type="checkbox" id="grp-pw-on" onchange="togglePwInput('grp-pw-field',this.checked)"><span class="pw-track"></span><span class="pw-thumb"></span></label><span class="pw-lbl">Lock group with password</span></div><div id="grp-pw-field" style="display:none;"><input type="text" id="grp-pw" class="mi" placeholder="Set password&#8230;"></div></div>
   <div id="tp-album" class="hidden">
     <input type="text" id="alb-name" class="mi" placeholder="Album name (e.g. Summer Trip)">
     <p class="clabel">Cover Image</p>
     <div class="upbox" id="alb-cover-box" onclick="triggerUpload('albcoverinput')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>Set cover image</div>
+    <div class="img-hint">&#9432; Best size: 900 &times; 506 px (16:9)</div>
     <img id="alb-cover-prev" src="" style="display:none;width:100%;border-radius:12px;margin-top:6px;max-height:160px;object-fit:cover;">
     <p class="clabel">Display Style</p>
     <div class="alb-theme-grid">
@@ -414,19 +523,22 @@ body.no-bgimg::before{display:none;}
       <div class="alb-theme-opt" id="albt-floating" onclick="selectAlbTheme('floating')"><div class="alb-theme-icon">&#127980;</div><div>Floating Cards</div></div>
       <div class="alb-theme-opt" id="albt-flipbook" onclick="selectAlbTheme('flipbook')"><div class="alb-theme-icon">&#128218;</div><div>Flip Book</div></div>
     </div>
+    <p class="clabel">Password (optional)</p>
+    <div class="pw-row"><label class="pw-toggle"><input type="checkbox" id="alb-pw-on" onchange="togglePwInput('alb-pw-field',this.checked)"><span class="pw-track"></span><span class="pw-thumb"></span></label><span class="pw-lbl">Lock album with password</span></div>
+    <div id="alb-pw-field" style="display:none;"><input type="text" id="alb-pw" class="mi" placeholder="Set password&#8230;"></div>
   </div>
   <button class="abtn msbtn" onclick="addItem()">Add to Profile</button>
   <button class="mcan" onclick="closeModals()">Cancel</button>
 </div></div>
 
 <!-- EDIT MODAL -->
-<div id="emod" class="moverlay hidden" onclick="bgClose(event,'emod')"><div class="mbox"><p class="mtitle">Edit Item</p><textarea id="edit-text-content" class="mi" rows="5" style="display:none;" placeholder="Text content&#8230;"></textarea><input type="text" id="edit-title" class="mi" placeholder="Name"><input type="text" id="edit-url" class="mi" placeholder="URL / number / email"><div class="url-hint" id="edit-hint"></div><p class="clabel">Password (optional)</p><div class="pw-row"><label class="pw-toggle"><input type="checkbox" id="edit-pw-on" onchange="togglePwInput('edit-pw-field',this.checked)"><span class="pw-track"></span><span class="pw-thumb"></span></label><span class="pw-lbl">Protect with password</span></div><div id="edit-pw-field" style="display:none;"><input type="text" id="edit-pw" class="mi" placeholder="Password (blank = remove)&#8230;"></div><button class="abtn msbtn" onclick="saveEdit()">Save Changes</button><button class="mcan" onclick="closeModals()">Cancel</button></div></div>
+<div id="emod" class="moverlay hidden" onclick="bgClose(event,'emod')"><div class="mbox"><p class="mtitle">Edit Item</p><textarea id="edit-text-content" class="mi" rows="5" style="display:none;" placeholder="Text content&#8230;"></textarea><input type="text" id="edit-title" class="mi" placeholder="Name"><input type="text" id="edit-url" class="mi" placeholder="URL / number / email"><div class="url-hint" id="edit-hint"></div><div id="edit-text-colors" style="display:none;"><p class="clabel">Text Card Colors</p><div class="grp-color-row"><div class="ci">Text Color<input type="color" id="edit-text-color" value="#ffffff"></div><div class="ci">Envelope Flap<input type="color" id="edit-env-flap" value="#2a1c0e"></div><div class="ci">Envelope Body<input type="color" id="edit-env-body" value="#1a1a24"></div></div></div><div id="edit-icon-colors" style="display:none;"><p class="clabel">Icon Colors (Grid &amp; List)</p><div class="grp-color-row"><div class="ci">Icon Color<input type="color" id="edit-icon-color" value="#ffffff"></div><div class="ci">Circle BG<input type="color" id="edit-icon-bg" value="#1e1e1e"></div><div class="ci">Label Color<input type="color" id="edit-label-color" value="#ffffff"></div></div></div><p class="clabel">Password (optional)</p><div class="pw-row"><label class="pw-toggle"><input type="checkbox" id="edit-pw-on" onchange="togglePwInput('edit-pw-field',this.checked)"><span class="pw-track"></span><span class="pw-thumb"></span></label><span class="pw-lbl">Protect with password</span></div><div id="edit-pw-field" style="display:none;"><input type="text" id="edit-pw" class="mi" placeholder="Password (blank = remove)&#8230;"></div><button class="abtn msbtn" onclick="saveEdit()">Save Changes</button><button class="mcan" onclick="closeModals()">Cancel</button></div></div>
 
 <!-- EDIT ALBUM -->
-<div id="ealbmod" class="moverlay hidden" onclick="bgClose(event,'ealbmod')"><div class="mbox"><p class="mtitle">Edit Album</p><input type="text" id="ealb-name" class="mi" placeholder="Album name"><p class="clabel">Cover Image</p><div class="upbox" onclick="triggerUpload('ealb-cover-input')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>Change cover image</div><img id="ealb-cover-prev" src="" style="display:none;width:100%;border-radius:12px;margin-top:6px;max-height:160px;object-fit:cover;"><p class="clabel">Display Style</p><div class="alb-theme-grid"><div class="alb-theme-opt" id="ealbt-snap" onclick="selectEditAlbTheme('snap')"><div class="alb-theme-icon">&#9654;&#65039;</div><div>Snap Slider</div></div><div class="alb-theme-opt" id="ealbt-carousel" onclick="selectEditAlbTheme('carousel')"><div class="alb-theme-icon">&#128257;</div><div>3D Carousel</div></div><div class="alb-theme-opt" id="ealbt-floating" onclick="selectEditAlbTheme('floating')"><div class="alb-theme-icon">&#127980;</div><div>Floating Cards</div></div><div class="alb-theme-opt" id="ealbt-flipbook" onclick="selectEditAlbTheme('flipbook')"><div class="alb-theme-icon">&#128218;</div><div>Flip Book</div></div></div><button class="abtn msbtn" onclick="saveAlbumEdit()">Save Changes</button><button class="mcan" onclick="closeModals()">Cancel</button></div></div>
+<div id="ealbmod" class="moverlay hidden" onclick="bgClose(event,'ealbmod')"><div class="mbox"><p class="mtitle">Edit Album</p><input type="text" id="ealb-name" class="mi" placeholder="Album name"><p class="clabel">Cover Image</p><div class="upbox" onclick="triggerUpload('ealb-cover-input')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>Change cover image</div><img id="ealb-cover-prev" src="" style="display:none;width:100%;border-radius:12px;margin-top:6px;max-height:160px;object-fit:cover;"><p class="clabel">Display Style</p><div class="alb-theme-grid"><div class="alb-theme-opt" id="ealbt-snap" onclick="selectEditAlbTheme('snap')"><div class="alb-theme-icon">&#9654;&#65039;</div><div>Snap Slider</div></div><div class="alb-theme-opt" id="ealbt-carousel" onclick="selectEditAlbTheme('carousel')"><div class="alb-theme-icon">&#128257;</div><div>3D Carousel</div></div><div class="alb-theme-opt" id="ealbt-floating" onclick="selectEditAlbTheme('floating')"><div class="alb-theme-icon">&#127980;</div><div>Floating Cards</div></div><div class="alb-theme-opt" id="ealbt-flipbook" onclick="selectEditAlbTheme('flipbook')"><div class="alb-theme-icon">&#128218;</div><div>Flip Book</div></div></div><p class="clabel">Password (optional)</p><div class="pw-row"><label class="pw-toggle"><input type="checkbox" id="ealb-pw-on" onchange="togglePwInput('ealb-pw-field',this.checked)"><span class="pw-track"></span><span class="pw-thumb"></span></label><span class="pw-lbl">Lock album with password</span></div><div id="ealb-pw-field" style="display:none;"><input type="text" id="ealb-pw" class="mi" placeholder="Password (blank = remove)&#8230;"></div><button class="abtn msbtn" onclick="saveAlbumEdit()">Save Changes</button><button class="mcan" onclick="closeModals()">Cancel</button></div></div>
 
 <!-- EDIT GROUP -->
-<div id="egmod" class="moverlay hidden" onclick="bgClose(event,'egmod')"><div class="mbox"><p class="mtitle">Edit Group</p><input type="text" id="eg-name" class="mi" placeholder="Group name"><p class="clabel">Group Colors</p><div class="grp-color-row"><div class="ci">Header BG<input type="color" id="eg-hbg"></div><div class="ci">Header Text<input type="color" id="eg-htxt"></div><div class="ci">Cards BG<input type="color" id="eg-cbg"></div><div class="ci">Link BG<input type="color" id="eg-lbg"></div><div class="ci">Link Text<input type="color" id="eg-ltxt"></div></div><button class="abtn msbtn" onclick="saveGroupEdit()">Save Changes</button><button class="mcan" onclick="closeModals()">Cancel</button></div></div>
+<div id="egmod" class="moverlay hidden" onclick="bgClose(event,'egmod')"><div class="mbox"><p class="mtitle">Edit Group</p><input type="text" id="eg-name" class="mi" placeholder="Group name"><p class="clabel">Layout</p><div class="layout-toggle"><div class="layout-opt on" id="eglo-list" onclick="setEgLayout('list')">&#9776; List</div><div class="layout-opt" id="eglo-grid" onclick="setEgLayout('grid')">&#8857; Grid</div></div><p class="clabel">Group Colors</p><div class="grp-color-row"><div class="ci">Header BG<input type="color" id="eg-hbg"></div><div class="ci">Header Text<input type="color" id="eg-htxt"></div><div class="ci">Cards BG<input type="color" id="eg-cbg"></div></div><p class="clabel">Link Icon Colors</p><div class="grp-color-row"><div class="ci">Icon Color<input type="color" id="eg-icon-color"></div><div class="ci">Circle BG<input type="color" id="eg-icon-bg"></div><div class="ci">Label Color<input type="color" id="eg-label-color"></div></div><p class="clabel">Password (optional)</p><div class="pw-row"><label class="pw-toggle"><input type="checkbox" id="eg-pw-on" onchange="togglePwInput('eg-pw-field',this.checked)"><span class="pw-track"></span><span class="pw-thumb"></span></label><span class="pw-lbl">Lock group with password</span></div><div id="eg-pw-field" style="display:none;"><input type="text" id="eg-pw" class="mi" placeholder="Password (blank = remove)&#8230;"></div><button class="abtn msbtn" onclick="saveGroupEdit()">Save Changes</button><button class="mcan" onclick="closeModals()">Cancel</button></div></div>
 
 <!-- CROP -->
 <div id="crop-modal"><div class="crop-title">Adjust Profile Photo</div><div class="crop-stage" id="crop-stage"><img id="crop-img" src="" draggable="false"></div><p style="font-size:.7rem;color:#333;letter-spacing:1px;text-align:center;">Drag to reposition &#8226; Pinch or slider to zoom</p><div class="crop-zoom-row"><span style="font-size:.7rem;color:#444;">&#8722;</span><input type="range" id="crop-zoom" min="1" max="4" step="0.01" value="1"><span style="font-size:.7rem;color:#444;">+</span></div><div class="crop-actions"><button class="crop-cancel" onclick="closeCrop()">Cancel</button><button class="crop-save" onclick="saveCrop()">Use Photo</button></div></div>
@@ -441,6 +553,7 @@ body.no-bgimg::before{display:none;}
 <input type="file" id="bginput" class="hidden" accept="image/*" onchange="onBgPick(this)">
 <input type="file" id="imginput" class="hidden" accept="image/*" onchange="onImgPick(this)">
 <input type="file" id="vidinput" class="hidden" accept="video/*" onchange="onVidPick(this)">
+<input type="file" id="photobtn-img-input" class="hidden" accept="image/*" onchange="onPhotoBtnPick(this)">
 <input type="file" id="albcoverinput" class="hidden" accept="image/*" onchange="onAlbCoverPick(this,'alb-cover-prev')">
 <input type="file" id="ealb-cover-input" class="hidden" accept="image/*" onchange="onAlbCoverPick(this,'ealb-cover-prev')">
 <input type="file" id="albmediainput" class="hidden" accept="image/*,video/*" multiple onchange="onAlbumMediaPick(this)">
@@ -492,6 +605,8 @@ let _crop={scale:1,minScale:1,maxScale:4,ox:0,oy:0,dragging:false,lastX:0,lastY:
 let _pinchStart=null,_selectedAlbTheme='snap',_editAlbTheme='snap';
 let _pendAlbCover=null,_editAlbCover=null;
 let _carIdx=0,_floatIdx=0,_flipIdx=0;
+let _pendPhotoBtnImg=null,_egGrpStyle='list',_newGrpStyle='list';
+const _revealingEnvs=new Set();
 
 function hideLs(){const l=document.getElementById('ls');l.classList.add('out');setTimeout(()=>l.classList.add('hidden'),300);}
 function escHtml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
@@ -570,6 +685,39 @@ window.doAuth=async function(){
 };
 window.doLogout=async()=>{stopLiveLocation();await _auth.signOut();location.reload();};
 
+/* ===== FORGOT PASSWORD ===== */
+window.openForgotModal=function(){
+  const email=document.getElementById('aemail').value.trim();
+  document.getElementById('forgot-email').value=email;
+  document.getElementById('forgot-msg').style.display='none';
+  document.getElementById('forgot-btn').disabled=false;
+  document.getElementById('forgot-btn').innerText='Send Reset Link';
+  document.getElementById('forgot-modal').classList.add('on');
+};
+window.closeForgotModal=function(){document.getElementById('forgot-modal').classList.remove('on');};
+window.doForgotPassword=async function(){
+  const email=document.getElementById('forgot-email').value.trim();
+  const msg=document.getElementById('forgot-msg'),btn=document.getElementById('forgot-btn');
+  if(!email){msg.className='forgot-msg er';msg.innerText='Please enter your email address.';msg.style.display='block';return;}
+  btn.disabled=true;btn.innerText='Sending\u2026';msg.style.display='none';
+  try{
+    firebase.auth().languageCode='en';
+    await firebase.auth().sendPasswordResetEmail(email,{url:location.origin,handleCodeInApp:false});
+    msg.className='forgot-msg ok';
+    msg.innerText='\u2713 Reset link sent! Check your inbox \u2014 and spam folder if you don\u2019t see it within a minute.';
+    msg.style.display='block';
+    btn.innerText='Sent \u2713';
+    btn.disabled=false;
+  }catch(e){
+    btn.disabled=false;btn.innerText='Send Reset Link';
+    const c=e.code||'';
+    msg.className='forgot-msg er';
+    msg.innerText=c.includes('user-not-found')||c.includes('invalid-credential')?'No account found with this email.':c.includes('invalid-email')?'Invalid email address.':c.includes('too-many-requests')?'Too many attempts. Wait a moment and try again.':e.message||'Error. Try again.';
+    msg.style.display='block';
+  }
+};
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&document.getElementById('forgot-modal').classList.contains('on'))doForgotPassword();});
+
 /* ===== RENDER ===== */
 function render(){
   if(!window.S)return;const c=window.S.colors||{};
@@ -583,17 +731,41 @@ function render(){
   document.getElementById('pname').innerText=window.S.name||'VEXA USER';
   document.getElementById('pbio').innerText=window.S.bio||'';
   document.getElementById('avimg').src=window.S.avatar||'https://api.dicebear.com/7.x/avataaars/svg?seed=V';
-  if(!window._pub){document.getElementById('cbg').value=c.bg||'#0a0a0a';document.getElementById('ccard').value=c.card||'#1e1e1e';document.getElementById('cname').value=c.name||'#fff';document.getElementById('cbio').value=c.bio||'#a0a0a0';document.getElementById('clink').value=c.link||'#fff';const ls=window.S.linkStyle||'list';document.getElementById('lo-list').classList.toggle('on',ls==='list');document.getElementById('lo-grid').classList.toggle('on',ls==='grid');}
+  if(!window._pub){document.getElementById('cbg').value=c.bg||'#0a0a0a';document.getElementById('ccard').value=c.card||'#1e1e1e';document.getElementById('cname').value=c.name||'#fff';document.getElementById('cbio').value=c.bio||'#a0a0a0';document.getElementById('clink').value=c.link||'#fff';document.getElementById('ciconcolor').value=c.iconColor||'#ffffff';document.getElementById('ciconbg').value=c.iconBg||'#1e1e1e';document.getElementById('clabelcolor').value=c.labelColor||'#ffffff';const ls=window.S.linkStyle||'list';document.getElementById('lo-list').classList.toggle('on',ls==='list');document.getElementById('lo-grid').classList.toggle('on',ls==='grid');}
   renderLinks();
 }
 
 /* ===== BUILD ITEMS ===== */
-function buildItem(l,gi,ii){
+function buildItem(l,gi,ii,forceStyle,grpDefs){
   const gii=ii>=0?`${gi},${ii}`:`${gi},-1`;
   const editBtn=window._edit?`<div class="item-actions"><button class="dotsbtn" onclick="openCtx(event,this,${gi},${ii})">&#8942;</button></div>`:'';
   const locked=l.password&&!l._unlocked;
   const lockBadge=l.password?`<div class="lock-badge"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Protected</div>`:'';
-  if(l.type==='text')return `<div style="position:relative;"><div class="text-card">${escHtml(l.content||'')}</div>${editBtn}</div>`;
+  if(l.type==='text'){
+    if(locked){
+      const envBg=l.envBg||'linear-gradient(160deg,#1a1a24,#111118)';
+      const envFlap=l.envFlap||'linear-gradient(160deg,#2a1c0e,#1c1424)';
+      const sealClr=l.envSeal||'rgba(255,200,50,.9)';
+      const badgeClr=l.envBadge||'rgba(255,210,50,.9)';
+      const badgeBdr=l.envBadge||'rgba(255,210,50,.3)';
+      const titleClr=l.envTitleClr||'rgba(255,255,200,.4)';
+      const envId='env_'+gi+'_'+ii;
+      return `<div class="env-outer" onclick="onPwItem(${gi},${ii},'text')"><div class="env-card" id="${envId}" style=""><div class="env-flap" style="background:${envFlap};"><div class="env-seal" style="color:${sealClr};">&#128140;</div></div><div class="env-body" style="background:${envBg};"><div class="env-tap-badge" style="color:${badgeClr};border:1px solid ${badgeBdr};background:rgba(255,210,50,.08);">TAP TO REVEAL</div><div class="env-title" style="color:${titleClr};">${escHtml(l.title||'Encrypted Message')}</div></div></div>${editBtn}</div>`;
+    }
+    const envKey=`${gi}_${ii}`;const revClass=_revealingEnvs.has(envKey)?' revealed':'';
+    const txtColor=l.textColor||'var(--link)';const txtBg=l.textBg||'';
+    return `<div style="position:relative;"><div class="text-card${revClass}" style="${txtBg?'background:'+txtBg+';':''}color:${txtColor};">${escHtml(l.content||'')}</div>${editBtn}</div>`;
+  }
+  if(l.type==='photobtn'){
+    if(locked)return `<div style="position:relative;"><div class="lcard gc" style="cursor:pointer;" onclick="onPwItem(${gi},${ii},'link')">&#128274; ${escHtml(l.title||'Protected Button')}</div>${editBtn}</div>`;
+    const trk=window._pub&&window.S?`onclick="window._FBClick('${window.S.publicId}','${(l.title||'').replace(/'/g,"\\'")}').catch(()=>{})"` :'';
+    const style=l.pbStyle==='small'?'small':'full';
+    const arrowSvg=`<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`;
+    if(style==='small'){
+      return `<div style="position:relative;"><a href="${l.url}" target="_blank" rel="noopener" class="photo-btn-card pbs-small" ${trk}><img class="photo-btn-img" src="${l.coverUrl||''}" loading="lazy" alt=""><div class="photo-btn-overlay"><span class="photo-btn-title">${escHtml(l.title||'')}</span><div class="photo-btn-arrow">${arrowSvg}</div></div></a>${editBtn}</div>`;
+    }
+    return `<div style="position:relative;"><a href="${l.url}" target="_blank" rel="noopener" class="photo-btn-card pbs-full" ${trk}><img class="photo-btn-img" src="${l.coverUrl||''}" loading="lazy" alt=""><div class="photo-btn-overlay"><span class="photo-btn-title">${escHtml(l.title||'')}</span><div class="photo-btn-arrow">${arrowSvg}</div></div></a>${editBtn}</div>`;
+  }
   if(l.type==='image'){
     if(locked)return `<div style="position:relative;"><div class="lcard gc" style="cursor:pointer;" onclick="onPwItem(${gi},${ii},'image')">&#128274; ${escHtml(l.title||'Protected Image')}</div>${editBtn}</div>`;
     if(window._pub){const eid='med_'+gi+'_'+ii;return `<div class="mcard" id="${eid}" style="position:relative;"><button class="media-tap-btn" onclick="revealMedia('${eid}',${gi},${ii},'image')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>${escHtml(l.title||'Tap to view image')}</button>${lockBadge}</div>`;}
@@ -608,8 +780,19 @@ function buildItem(l,gi,ii){
   if(locked)return `<div style="position:relative;"><div class="lcard gc" style="cursor:pointer;" onclick="onPwItem(${gi},${ii},'link')">&#128274; ${escHtml(l.title)}</div>${editBtn}</div>`;
   const trk=window._pub&&window.S?`onclick="window._FBClick('${window.S.publicId}','${(l.title||'').replace(/'/g,"\\'")}').catch(()=>{})"` :'';
   const icon=getIcon(l.title,l.url);
-  if((window.S?.linkStyle||'list')==='grid')return `<div class="grid-litem"><a href="${l.url}" target="_blank" rel="noopener" ${trk} style="display:contents;"><div class="gli-circle">${icon}</div><span class="gli-label">${escHtml(l.title)}</span></a></div>`;
-  return `<div style="position:relative;"><a href="${l.url}" target="_blank" rel="noopener" class="lcard gc" ${trk}><span class="lc-icon">${icon}</span><span class="lc-text">${escHtml(l.title)}</span></a>${editBtn}</div>`;
+  const effectiveStyle=forceStyle||(window.S?.linkStyle||'list');
+  /* Per-item colors with group defaults fallback, then global colors */
+  const gc=window.S?.colors||{};
+  const icoClr=l.iconColor||(grpDefs&&grpDefs.iconColor)||gc.iconColor||null;
+  const icoBg=l.iconBg||(grpDefs&&grpDefs.iconBg)||gc.iconBg||null;
+  const lblClr=l.labelColor||(grpDefs&&grpDefs.labelColor)||gc.labelColor||null;
+  if(effectiveStyle==='grid'){
+    const circleStyle=`background:${icoBg||'var(--card)'};color:${icoClr||'var(--link)'};`;
+    const labelStyle=`color:${lblClr||'var(--link)'};`;
+    return `<div class="grid-litem"><a href="${l.url}" target="_blank" rel="noopener" ${trk} style="display:contents;"><div class="gli-circle" style="${circleStyle}">${icon}</div><span class="gli-label" style="${labelStyle}">${escHtml(l.title)}</span></a></div>`;
+  }
+  const iconStyle=icoClr?`style="color:${icoClr};"`:''
+  return `<div style="position:relative;"><a href="${l.url}" target="_blank" rel="noopener" class="lcard gc" ${trk}><span class="lc-icon" ${iconStyle}>${icon}</span><span class="lc-text" style="color:${lblClr||'var(--link)'};">${escHtml(l.title)}</span></a>${editBtn}</div>`;
 }
 window.revealMedia=function(eid,gi,ii,type){
   const item=ii>=0?(window.S.links[gi].items||[])[ii]:window.S.links[gi];if(!item||!item.url){toast('Media not available','e');return;}
@@ -647,13 +830,54 @@ function renderLinks(){
   const linkStyle=window.S?.linkStyle||'list';let gridWrap=null;
   (window.S.links||[]).forEach((l,i)=>{
     if(l.type==='group'){
-      gridWrap=null;const hbg=l.hbg||'#1a1a1a',htxt=l.htxt||'#fff',gcbg=l.gcbg||'#111';
-      let inner=(l.items||[]).map((it,ii)=>`<div style="width:100%;">${buildItem(it,i,ii)}</div>`).join('');
+      gridWrap=null;
+      /* Group password check */
+      if(l.password&&window._pub&&!l._unlocked){
+        const w=document.createElement('div');w.style.cssText='width:100%;';
+        const editBtn=window._edit?`<button class="dotsbtn" onclick="openCtx(event,this,${i},-2)" style="margin-left:auto;">&#8942;</button>`:'';
+        const hbg=l.hbg||'#1a1a1a',htxt=l.htxt||'#fff',gcbg=l.gcbg||'#111';
+        w.innerHTML=`<div class="grp-wrap"><div class="grp-header" style="background:${hbg};"><span class="grp-title-left" style="color:${htxt};">${escHtml(l.name||'Group')}</span>${editBtn}</div><div class="grp-inner" style="background:${gcbg}aa;cursor:pointer;padding:20px;display:flex;flex-direction:column;align-items:center;gap:10px;" onclick="onPwItem(${i},-1,'group')"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><span style="font-size:.78rem;color:#555;letter-spacing:1px;">TAP TO UNLOCK</span></div></div>`;
+        sec.appendChild(w);return;
+      }
+      const hbg=l.hbg||'#1a1a1a',htxt=l.htxt||'#fff',gcbg=l.gcbg||'#111';
+      const grpLinkStyle=l.linkStyle||'list';
+      /* Group color defaults passed down to items */
+      const grpDefs={iconColor:l.iconColor||null,iconBg:l.iconBg||null,labelColor:l.labelColor||null};
+      let innerHtml='';
+      if(grpLinkStyle==='grid'){
+        /* Render items in 3-column grid */
+        const linkItems=(l.items||[]).filter(it=>it.type==='link');
+        const nonLinkItems=(l.items||[]).filter(it=>it.type!=='link');
+        let gridCells=linkItems.map((it,ii)=>{
+          const realIi=(l.items||[]).indexOf(it);
+          return buildItem(it,i,realIi,'grid',grpDefs);
+        }).join('');
+        if(gridCells) innerHtml+=`<div class="links-grid" style="padding:4px 0;">${gridCells}</div>`;
+        nonLinkItems.forEach(it=>{
+          const realIi=(l.items||[]).indexOf(it);
+          innerHtml+=`<div style="width:100%;">${buildItem(it,i,realIi,'list',grpDefs)}</div>`;
+        });
+      } else {
+        innerHtml=(l.items||[]).map((it,ii)=>`<div style="width:100%;">${buildItem(it,i,ii,'list',grpDefs)}</div>`).join('');
+      }
       const addBtn=window._edit?`<button onclick="openAddToGroup(${i})" style="width:100%;background:rgba(255,255,255,.06);border:1px dashed rgba(255,255,255,.15);border-radius:12px;color:#555;padding:11px;cursor:pointer;font-size:.82rem;margin-top:4px;">+ Add to &quot;${escHtml(l.name||'Group')}&quot;</button>`:'';
       const editBtn=window._edit?`<button class="dotsbtn" onclick="openCtx(event,this,${i},-2)" style="margin-left:auto;">&#8942;</button>`:'';
-      const w=document.createElement('div');w.style.cssText='width:100%;';w.innerHTML=`<div class="grp-wrap"><div class="grp-header" style="background:${hbg};"><span class="grp-title-left" style="color:${htxt};">${escHtml(l.name||'Group')}</span>${editBtn}</div><div class="grp-inner" style="background:${gcbg}aa;">${inner}${addBtn}</div></div>`;sec.appendChild(w);
+      const w=document.createElement('div');w.style.cssText='width:100%;';
+      w.innerHTML=`<div class="grp-wrap"><div class="grp-header" style="background:${hbg};"><span class="grp-title-left" style="color:${htxt};">${escHtml(l.name||'Group')}</span>${editBtn}</div><div class="grp-inner" style="background:${gcbg}aa;">${innerHtml}${addBtn}</div></div>`;
+      sec.appendChild(w);
     } else if(l.type==='album'){
-      gridWrap=null;const w=document.createElement('div');w.style.cssText='width:100%;';w.innerHTML=buildAlbumCard(l,i);sec.appendChild(w);
+      gridWrap=null;
+      /* Album password check */
+      if(l.password&&window._pub&&!l._unlocked){
+        const w=document.createElement('div');w.style.cssText='width:100%;';
+        const editBtn=window._edit?`<button class="dotsbtn" onclick="openCtx(event,this,${i},-2)">&#8942;</button>`:'';
+        let coverHtml;
+        if(l.coverUrl){coverHtml=`<div class="album-cover-wrap" onclick="onPwItem(${i},-1,'album')"><img class="album-cover-img" src="${l.coverUrl}" loading="lazy" alt=""><div class="album-cover-overlay"><div class="album-tap-badge">&#128274; LOCKED</div><div style="font-size:.68rem;color:rgba(255,255,255,.5);letter-spacing:1px;">TAP TO UNLOCK</div></div></div>`;}
+        else{coverHtml=`<div class="album-no-cover" onclick="onPwItem(${i},-1,'album')"><div style="text-align:center;color:#333;"><div style="font-size:36px;margin-bottom:8px;">&#128274;</div><div style="font-size:.78rem;letter-spacing:1px;">LOCKED &mdash; TAP TO UNLOCK</div></div></div>`;}
+        w.innerHTML=`<div class="album-card">${coverHtml}<div class="album-card-footer"><span class="album-card-name">&#128193; ${escHtml(l.name||'Album')}</span>${editBtn}</div></div>`;
+        sec.appendChild(w);return;
+      }
+      const w=document.createElement('div');w.style.cssText='width:100%;';w.innerHTML=buildAlbumCard(l,i);sec.appendChild(w);
     } else if(linkStyle==='grid'&&l.type==='link'){
       if(!gridWrap){gridWrap=document.createElement('div');gridWrap.className='links-grid';sec.appendChild(gridWrap);}
       const tmp=document.createElement('div');tmp.innerHTML=buildItem(l,i,-1);gridWrap.appendChild(tmp.firstChild||tmp);
@@ -672,7 +896,7 @@ window.openCtx=function(e,btn,gi,ii){
     html=`<div class="ctx-item" onclick="${isAlb?`openEditAlbum(${gi})`:`openEditGroup(${gi})`};closeCtx()">&#9999;&#65039; Edit</div><div class="ctx-item" onclick="moveItem(-1)">&#11014;&#65039; Move Up</div><div class="ctx-item" onclick="moveItem(1)">&#11015;&#65039; Move Down</div><div class="ctx-item danger" onclick="closeCtx();askDelGroup(${gi})">&#128465; Delete</div>`;
   } else {
     const item=ii>=0?(window.S.links[gi].items||[])[ii]:window.S.links[gi];
-    if(item&&['link','location','image','video','text'].includes(item.type))html+='<div class="ctx-item" onclick="startEdit()">&#9999;&#65039; Edit</div>';
+    if(item&&['link','location','image','video','text','photobtn'].includes(item.type))html+='<div class="ctx-item" onclick="startEdit()">&#9999;&#65039; Edit</div>';
     html+='<div class="ctx-item" onclick="moveItem(-1)">&#11014;&#65039; Move Up</div><div class="ctx-item" onclick="moveItem(1)">&#11015;&#65039; Move Down</div><div class="ctx-item danger" onclick="closeCtx();ctxDelete()">&#128465; Delete</div>';
   }
   const menu=document.getElementById('ctx-menu');menu.innerHTML=html;menu.classList.remove('hidden');
@@ -688,15 +912,40 @@ document.addEventListener('click',e=>{if(!document.getElementById('ctx-menu').co
 window.startEdit=function(){
   closeCtx();const item=ctxIi>=0?(window.S.links[ctxGi].items||[])[ctxIi]:window.S.links[ctxGi];if(!item)return;
   const ta=document.getElementById('edit-text-content'),et=document.getElementById('edit-title'),eu=document.getElementById('edit-url'),eh=document.getElementById('edit-hint');
-  if(item.type==='text'){ta.style.display='block';ta.value=item.content||'';et.style.display='none';eu.style.display='none';if(eh)eh.style.display='none';}
-  else{ta.style.display='none';et.style.display='';et.value=item.title||'';eu.style.display=['location','image','video'].includes(item.type)?'none':'';eu.value=item.url||'';if(eh){eh.style.display='';eh.innerText='';}const hasPw=!!item.password;document.getElementById('edit-pw-on').checked=hasPw;togglePwInput('edit-pw-field',hasPw);document.getElementById('edit-pw').value=item.password||'';et.oninput=updateEditHint;eu.oninput=updateEditHint;}
+  const textColors=document.getElementById('edit-text-colors');
+  const iconColorsEl=document.getElementById('edit-icon-colors');
+  if(textColors)textColors.style.display='none';
+  if(iconColorsEl)iconColorsEl.style.display='none';
+  if(item.type==='text'){
+    ta.style.display='block';ta.value=item.content||'';et.style.display='none';eu.style.display='none';if(eh)eh.style.display='none';
+    if(textColors){textColors.style.display='block';document.getElementById('edit-text-color').value=item.textColor||'#ffffff';document.getElementById('edit-env-flap').value=item.envFlap||'#2a1c0e';document.getElementById('edit-env-body').value=item.envBg||'#1a1a24';}
+    const hasPw=!!item.password;document.getElementById('edit-pw-on').checked=hasPw;togglePwInput('edit-pw-field',hasPw);document.getElementById('edit-pw').value=item.password||'';
+  }else if(item.type==='photobtn'){
+    ta.style.display='none';et.style.display='';et.value=item.title||'';eu.style.display='';eu.value=item.url||'';if(eh){eh.style.display='';eh.innerText='';}
+    const hasPw=!!item.password;document.getElementById('edit-pw-on').checked=hasPw;togglePwInput('edit-pw-field',hasPw);document.getElementById('edit-pw').value=item.password||'';
+    et.oninput=updateEditHint;eu.oninput=updateEditHint;
+  }else{
+    ta.style.display='none';et.style.display='';et.value=item.title||'';eu.style.display=['location','image','video'].includes(item.type)?'none':'';eu.value=item.url||'';if(eh){eh.style.display='';eh.innerText='';}
+    if(item.type==='link'&&iconColorsEl){iconColorsEl.style.display='block';document.getElementById('edit-icon-color').value=item.iconColor||'#ffffff';document.getElementById('edit-icon-bg').value=item.iconBg||'#1e1e1e';document.getElementById('edit-label-color').value=item.labelColor||'#ffffff';}
+    const hasPw=!!item.password;document.getElementById('edit-pw-on').checked=hasPw;togglePwInput('edit-pw-field',hasPw);document.getElementById('edit-pw').value=item.password||'';et.oninput=updateEditHint;eu.oninput=updateEditHint;
+  }
   document.getElementById('emod').classList.remove('hidden');
 };
 window.saveEdit=function(){
   const item=ctxIi>=0?(window.S.links[ctxGi].items||[])[ctxIi]:window.S.links[ctxGi];if(!item)return;
-  if(item.type==='text'){item.content=document.getElementById('edit-text-content').value;save();renderLinks();closeModals();toast('Updated \u2713','s');return;}
+  if(item.type==='text'){
+    item.content=document.getElementById('edit-text-content').value;
+    const tc=document.getElementById('edit-text-color');if(tc)item.textColor=tc.value;
+    const ef=document.getElementById('edit-env-flap');if(ef)item.envFlap=ef.value;
+    const eb=document.getElementById('edit-env-body');if(eb)item.envBg=eb.value;
+    const pwOn=document.getElementById('edit-pw-on').checked,pw=document.getElementById('edit-pw').value.trim();item.password=pwOn&&pw?pw:null;
+    if(!item.password)item._unlocked=false;
+    save();renderLinks();closeModals();toast('Updated \u2713','s');return;
+  }
   const t=document.getElementById('edit-title').value.trim();if(!t){toast('Name required','e');return;}
-  item.title=t;const r=document.getElementById('edit-url').value.trim();if(r&&item.type==='link')item.url=smartPrefix(t,r);
+  item.title=t;const r=document.getElementById('edit-url').value.trim();
+  if(r&&(item.type==='link'||item.type==='photobtn'))item.url=smartPrefix(t,r);
+  if(item.type==='link'){const ic=document.getElementById('edit-icon-color');const ib=document.getElementById('edit-icon-bg');const lc=document.getElementById('edit-label-color');if(ic)item.iconColor=ic.value;if(ib)item.iconBg=ib.value;if(lc)item.labelColor=lc.value;}
   const pwOn=document.getElementById('edit-pw-on').checked,pw=document.getElementById('edit-pw').value.trim();item.password=pwOn&&pw?pw:null;
   save();renderLinks();closeModals();toast('Updated \u2713','s');
 };
@@ -717,8 +966,26 @@ window.togglePreview=function(){window._edit=!window._edit;document.getElementBy
 /* ===== PASSWORD ===== */
 window.onPwItem=function(gi,ii,type){
   const item=ii<0?window.S.links[gi]:(window.S.links[gi].items||[])[ii];
-  document.getElementById('pw-modal-sub').innerText='"'+(item.title||'Item')+'" is protected';document.getElementById('pw-modal-input').value='';document.getElementById('pw-err').style.display='none';document.getElementById('pw-modal').classList.add('on');
-  _pwCb=entered=>{if(entered===item.password){closePwModal();item._unlocked=true;renderLinks();if(type==='link')window.open(item.url,'_blank');else if(type==='image')setTimeout(()=>openLightbox(gi,ii),60);else if(type==='location'){setTimeout(()=>toggleLocMap(`lm${gi}x${ii}`,gi,ii),80);}if(window._pub&&window.S)window._FBClick(window.S.publicId,item.title||type).catch(()=>{});}else{document.getElementById('pw-err').style.display='block';document.getElementById('pw-modal-input').value='';document.getElementById('pw-modal-input').focus();}};
+  if(!item)return;
+  document.getElementById('pw-modal-sub').innerText='"'+(item.title||item.name||'Item')+'" is protected';document.getElementById('pw-modal-input').value='';document.getElementById('pw-err').style.display='none';document.getElementById('pw-modal').classList.add('on');
+  _pwCb=entered=>{if(entered===item.password){closePwModal();item._unlocked=true;
+    if(type==='text'){
+      /* Animate envelope open then reveal */
+      const envId='env_'+gi+'_'+ii;const envEl=document.getElementById(envId);
+      if(envEl){
+        envEl.classList.add('env-opening');
+        setTimeout(()=>{envEl.classList.add('env-falling');},300);
+        setTimeout(()=>{renderLinks();if(window._pub&&window.S)window._FBClick(window.S.publicId,item.title||type).catch(()=>{});},750);
+      }else{renderLinks();}
+    }else{
+      renderLinks();
+      if(type==='link')window.open(item.url,'_blank');
+      else if(type==='image')setTimeout(()=>openLightbox(gi,ii),60);
+      else if(type==='location'){setTimeout(()=>toggleLocMap(`lm${gi}x${ii}`,gi,ii),80);}
+      else if(type==='album'){setTimeout(()=>openAlbumViewer(gi),60);}
+      if(window._pub&&window.S&&type!=='group'&&type!=='album')window._FBClick(window.S.publicId,item.title||item.name||type).catch(()=>{});
+    }
+  }else{document.getElementById('pw-err').style.display='block';document.getElementById('pw-modal-input').value='';document.getElementById('pw-modal-input').focus();}};
 };
 window.submitPwModal=()=>{if(_pwCb)_pwCb(document.getElementById('pw-modal-input').value);};
 window.closePwModal=()=>{document.getElementById('pw-modal').classList.remove('on');_pwCb=null;};
@@ -740,14 +1007,14 @@ function slocSet(lat,lng){document.getElementById('sloc-lat').value=lat.toFixed(
 window.confirmStaticLoc=function(){const lat=parseFloat(document.getElementById('sloc-lat').value),lng=parseFloat(document.getElementById('sloc-lng').value);if(isNaN(lat)||isNaN(lng)){toast('Paste a valid Google Maps link first','e');return;}const item=getLocDraft();item.lat=lat;item.lng=lng;closeStaticLocModal();pushItem(item);};
 
 /* ===== TABS ===== */
-const ALL_TABS=['link','text','image','video','location','group','album'];
-window.setTab=function(t){curTab=t;pendMedia=null;ALL_TABS.forEach(x=>{const tab=document.getElementById('tab-'+x),tp=document.getElementById('tp-'+x);if(tab)tab.classList.toggle('on',x===t);if(tp)tp.classList.toggle('hidden',x!==t);});const imgprev=document.getElementById('imgprev'),vidprev=document.getElementById('vidprev');if(imgprev)imgprev.style.display='none';if(vidprev)vidprev.style.display='none';const imgbox=document.getElementById('imgbox'),vidbox=document.getElementById('vidbox');if(imgbox)imgbox.style.display='flex';if(vidbox)vidbox.style.display='flex';};
+const ALL_TABS=['link','text','photobtn','image','video','location','group','album'];
+window.setTab=function(t){curTab=t;pendMedia=null;_pendPhotoBtnImg=null;_pendPbStyle='full';['full','small'].forEach(k=>{const el=document.getElementById('pbs-'+k);if(el)el.classList.toggle('selected',k==='full');});ALL_TABS.forEach(x=>{const tab=document.getElementById('tab-'+x),tp=document.getElementById('tp-'+x);if(tab)tab.classList.toggle('on',x===t);if(tp)tp.classList.toggle('hidden',x!==t);});const imgprev=document.getElementById('imgprev'),vidprev=document.getElementById('vidprev'),pbprev=document.getElementById('photobtn-prev');if(imgprev)imgprev.style.display='none';if(vidprev)vidprev.style.display='none';if(pbprev)pbprev.style.display='none';const imgbox=document.getElementById('imgbox'),vidbox=document.getElementById('vidbox'),pbbox=document.getElementById('photobtnbox');if(imgbox)imgbox.style.display='flex';if(vidbox)vidbox.style.display='flex';if(pbbox)pbbox.style.display='flex';};
 window.openAddToGroup=gi=>{
   addToGrpIdx=gi;const isAlb=window.S.links[gi]&&window.S.links[gi].type==='album';
   document.getElementById('lmod-title').innerText=isAlb?'Add Media to Album':'Add to Group';
   ALL_TABS.forEach(x=>{const el=document.getElementById('tab-'+x);if(el)el.classList.remove('hidden');});
   ['group','album'].forEach(x=>{const el=document.getElementById('tab-'+x);if(el)el.classList.add('hidden');});
-  if(isAlb){['link','text','location'].forEach(x=>{const el=document.getElementById('tab-'+x);if(el)el.classList.add('hidden');});setTab('image');}
+  if(isAlb){['link','text','location','photobtn'].forEach(x=>{const el=document.getElementById('tab-'+x);if(el)el.classList.add('hidden');});setTab('image');}
   else setTab('link');
   document.getElementById('ltitle').value='';document.getElementById('lurl').value='';document.getElementById('url-hint').innerText='';
   document.getElementById('lmod').classList.remove('hidden');
@@ -760,6 +1027,9 @@ window.onAlbCoverPick=function(inp,prevId){const f=inp.files[0];inp.value='';if(
 /* ===== MEDIA PICK ===== */
 window.onImgPick=inp=>{const f=inp.files[0];inp.value='';if(!f)return;resizeImg(f,900,.82,d64=>{pendMedia={type:'image',url:d64};document.getElementById('imgprev').src=d64;document.getElementById('imgprev').style.display='block';document.getElementById('imgbox').style.display='none';});};
 window.onVidPick=inp=>{const f=inp.files[0];inp.value='';if(!f)return;if(f.size>_MAX_VID){toast('Video too large! Max 10MB. Please compress first.','e');return;}toast('Reading video\u2026','s');const r=new FileReader();r.onload=e=>{pendMedia={type:'video',url:e.target.result};document.getElementById('vidprev').src=e.target.result;document.getElementById('vidprev').style.display='block';document.getElementById('vidbox').style.display='none';toast('Video ready \u2713','s');};r.readAsDataURL(f);};
+let _pendPbStyle='full';
+window.setPbStyle=function(s){if(s!=='full'&&s!=='small')s='full';_pendPbStyle=s;['full','small'].forEach(k=>{const el=document.getElementById('pbs-'+k);if(el)el.classList.toggle('selected',k===s);});};
+window.onPhotoBtnPick=inp=>{const f=inp.files[0];inp.value='';if(!f)return;resizeImg(f,900,.82,d64=>{_pendPhotoBtnImg=d64;const prev=document.getElementById('photobtn-prev');if(prev){prev.src=d64;prev.style.display='block';}const box=document.getElementById('photobtnbox');if(box)box.style.display='none';toast('Image ready \u2713','s');});};
 window.onAlbumMediaPick=inp=>{
   const files=Array.from(inp.files);inp.value='';if(!files.length)return;
   const gi=addToGrpIdx>=0?addToGrpIdx:-1;if(gi<0||!window.S.links[gi]||window.S.links[gi].type!=='album'){toast('Select an album first','e');return;}
@@ -785,28 +1055,58 @@ window.addItem=function(){
   if(curTab==='location'){_pendLocLabel=document.getElementById('loc-label-input').value.trim()||'Location';const pwOn=document.getElementById('loc-pw-on').checked;_pendLocPw=pwOn?document.getElementById('loc-pw').value.trim()||null:null;_pendLocGrpIdx=addToGrpIdx;closeModals();openLocModal();return;}
   let item=null;
   if(curTab==='link'){const t=document.getElementById('ltitle').value.trim(),r=document.getElementById('lurl').value.trim();if(!t||!r){toast('Fill in name and URL','e');return;}const pwOn=document.getElementById('link-pw-on').checked,pw=pwOn?document.getElementById('link-pw').value.trim():null;item={type:'link',title:t,url:smartPrefix(t,r),password:pw||null};}
-  else if(curTab==='text'){const c=document.getElementById('text-content').value.trim();if(!c){toast('Enter some text','e');return;}item={type:'text',content:c};}
-  else if(curTab==='group'){const name=document.getElementById('grp-name').value.trim();if(!name){toast('Enter group name','e');return;}item={type:'group',name,hbg:document.getElementById('grp-hbg').value,htxt:document.getElementById('grp-htxt').value,gcbg:document.getElementById('grp-cbg').value,lbg:document.getElementById('grp-lbg').value,ltxt:document.getElementById('grp-ltxt').value,items:[]};}
-  else if(curTab==='album'){const name=document.getElementById('alb-name').value.trim();if(!name){toast('Enter album name','e');return;}item={type:'album',name,albumTheme:_selectedAlbTheme,coverUrl:_pendAlbCover||null,items:[]};_pendAlbCover=null;}
+  else if(curTab==='text'){const c=document.getElementById('text-content').value.trim();if(!c){toast('Enter some text','e');return;}const pwOn=document.getElementById('text-pw-on').checked,pw=pwOn?document.getElementById('text-pw').value.trim():null;item={type:'text',content:c,password:pw||null};}
+  else if(curTab==='photobtn'){const t=document.getElementById('photobtn-title').value.trim(),r=document.getElementById('photobtn-url').value.trim();if(!t){toast('Enter a button label','e');return;}if(!r){toast('Enter a destination URL','e');return;}if(!_pendPhotoBtnImg){toast('Select a cover image first','e');return;}const pbPwOn=document.getElementById('photobtn-pw-on').checked,pbPw=pbPwOn?document.getElementById('photobtn-pw').value.trim()||null:null;const pbStyle=(_pendPbStyle==='small')?'small':'full';item={type:'photobtn',title:t,url:smartPrefix(t,r),coverUrl:_pendPhotoBtnImg,pbStyle,password:pbPw||null};_pendPhotoBtnImg=null;}
+  else if(curTab==='group'){const name=document.getElementById('grp-name').value.trim();if(!name){toast('Enter group name','e');return;}const grpPwOn=document.getElementById('grp-pw-on').checked,grpPw=grpPwOn?document.getElementById('grp-pw').value.trim()||null:null;item={type:'group',name,linkStyle:_newGrpStyle,hbg:document.getElementById('grp-hbg').value,htxt:document.getElementById('grp-htxt').value,gcbg:document.getElementById('grp-cbg').value,iconColor:document.getElementById('grp-icon-color').value,iconBg:document.getElementById('grp-icon-bg').value,labelColor:document.getElementById('grp-label-color').value,password:grpPw,items:[]};}
+  else if(curTab==='album'){const name=document.getElementById('alb-name').value.trim();if(!name){toast('Enter album name','e');return;}const albPwOn=document.getElementById('alb-pw-on').checked,albPw=albPwOn?document.getElementById('alb-pw').value.trim()||null:null;item={type:'album',name,albumTheme:_selectedAlbTheme,coverUrl:_pendAlbCover||null,password:albPw||null,items:[]};_pendAlbCover=null;}
   else if(pendMedia){const isImg=curTab==='image';const k=isImg?'img':'vid';const titleEl=document.getElementById(k+'-title');const userTitle=titleEl?titleEl.value.trim():'';const pwOn=document.getElementById(k+'-pw-on').checked,pw=pwOn?document.getElementById(k+'-pw').value.trim():null;item={...pendMedia,title:userTitle||(isImg?'Photo':'Video'),password:pw||null};}
   else{toast('Select media first','e');return;}
   pushItem(item);
   document.getElementById('ltitle').value='';document.getElementById('lurl').value='';document.getElementById('grp-name').value='';document.getElementById('alb-name').value='';document.getElementById('text-content').value='';
   const ic=document.getElementById('alb-cover-prev');if(ic){ic.style.display='none';ic.src='';}
-  ['link','img','vid','loc'].forEach(k=>{const el=document.getElementById(k+'-pw-on');if(el){el.checked=false;togglePwInput(k+'-pw-field',false);}});
+  ['link','img','vid','loc','text'].forEach(k=>{const el=document.getElementById(k+'-pw-on');if(el){el.checked=false;togglePwInput(k+'-pw-field',false);}});
   pendMedia=null;['imgprev','vidprev'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});['imgbox','vidbox'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='flex';});
 };
 
 /* ===== EDIT GROUP / ALBUM ===== */
-window.openEditGroup=gi=>{editGrpIdx=gi;const g=window.S.links[gi];document.getElementById('eg-name').value=g.name||'';document.getElementById('eg-hbg').value=g.hbg||'#1a1a1a';document.getElementById('eg-htxt').value=g.htxt||'#fff';document.getElementById('eg-cbg').value=g.gcbg||'#111';document.getElementById('eg-lbg').value=g.lbg||'#1e1e1e';document.getElementById('eg-ltxt').value=g.ltxt||'#fff';document.getElementById('egmod').classList.remove('hidden');};
-window.saveGroupEdit=function(){const g=window.S.links[editGrpIdx];g.name=document.getElementById('eg-name').value.trim()||g.name;g.hbg=document.getElementById('eg-hbg').value;g.htxt=document.getElementById('eg-htxt').value;g.gcbg=document.getElementById('eg-cbg').value;g.lbg=document.getElementById('eg-lbg').value;g.ltxt=document.getElementById('eg-ltxt').value;save();renderLinks();closeModals();toast('Updated \u2713','s');};
+window.openEditGroup=gi=>{
+  editGrpIdx=gi;const g=window.S.links[gi];
+  document.getElementById('eg-name').value=g.name||'';
+  document.getElementById('eg-hbg').value=g.hbg||'#1a1a1a';
+  document.getElementById('eg-htxt').value=g.htxt||'#fff';
+  document.getElementById('eg-cbg').value=g.gcbg||'#111';
+  document.getElementById('eg-icon-color').value=g.iconColor||'#ffffff';
+  document.getElementById('eg-icon-bg').value=g.iconBg||'#1e1e1e';
+  document.getElementById('eg-label-color').value=g.labelColor||'#ffffff';
+  const hasPw=!!g.password;document.getElementById('eg-pw-on').checked=hasPw;togglePwInput('eg-pw-field',hasPw);document.getElementById('eg-pw').value=g.password||'';
+  _egGrpStyle=g.linkStyle||'list';
+  document.getElementById('eglo-list').classList.toggle('on',_egGrpStyle==='list');
+  document.getElementById('eglo-grid').classList.toggle('on',_egGrpStyle==='grid');
+  document.getElementById('egmod').classList.remove('hidden');
+};
+window.setEgLayout=function(style){_egGrpStyle=style;document.getElementById('eglo-list').classList.toggle('on',style==='list');document.getElementById('eglo-grid').classList.toggle('on',style==='grid');};
+window.setNewGrpLayout=function(style){_newGrpStyle=style;document.getElementById('grplo-list').classList.toggle('on',style==='list');document.getElementById('grplo-grid').classList.toggle('on',style==='grid');};
+window.saveGroupEdit=function(){
+  const g=window.S.links[editGrpIdx];
+  g.name=document.getElementById('eg-name').value.trim()||g.name;
+  g.hbg=document.getElementById('eg-hbg').value;
+  g.htxt=document.getElementById('eg-htxt').value;
+  g.gcbg=document.getElementById('eg-cbg').value;
+  g.iconColor=document.getElementById('eg-icon-color').value;
+  g.iconBg=document.getElementById('eg-icon-bg').value;
+  g.labelColor=document.getElementById('eg-label-color').value;
+  const pwOn=document.getElementById('eg-pw-on').checked,pw=document.getElementById('eg-pw').value.trim();g.password=pwOn&&pw?pw:null;
+  g.linkStyle=_egGrpStyle;
+  save();renderLinks();closeModals();toast('Updated \u2713','s');
+};
 window.openEditAlbum=gi=>{
   _albumGi=gi;_editAlbCover=null;const a=window.S.links[gi];document.getElementById('ealb-name').value=a.name||'';
   _editAlbTheme=a.albumTheme||'snap';['snap','carousel','floating','flipbook'].forEach(k=>{const el=document.getElementById('ealbt-'+k);if(el)el.classList.toggle('selected',k===_editAlbTheme);});
   const prev=document.getElementById('ealb-cover-prev');if(prev&&a.coverUrl){prev.src=a.coverUrl;prev.style.display='block';}else if(prev){prev.src='';prev.style.display='none';}
+  const hasPw=!!a.password;document.getElementById('ealb-pw-on').checked=hasPw;togglePwInput('ealb-pw-field',hasPw);document.getElementById('ealb-pw').value=a.password||'';
   document.getElementById('ealbmod').classList.remove('hidden');
 };
-window.saveAlbumEdit=function(){const a=window.S.links[_albumGi];if(!a)return;a.name=document.getElementById('ealb-name').value.trim()||a.name;a.albumTheme=_editAlbTheme;if(_editAlbCover)a.coverUrl=_editAlbCover;save();renderLinks();closeModals();toast('Updated \u2713','s');_editAlbCover=null;};
+window.saveAlbumEdit=function(){const a=window.S.links[_albumGi];if(!a)return;a.name=document.getElementById('ealb-name').value.trim()||a.name;a.albumTheme=_editAlbTheme;if(_editAlbCover)a.coverUrl=_editAlbCover;const pwOn=document.getElementById('ealb-pw-on').checked,pw=document.getElementById('ealb-pw').value.trim();a.password=pwOn&&pw?pw:null;save();renderLinks();closeModals();toast('Updated \u2713','s');_editAlbCover=null;};
 
 /* ===== ALBUM VIEWER ===== */
 window.openAlbumViewer=function(gi){
@@ -925,7 +1225,7 @@ window.downloadQR=function(){const url=profileUrl(),size=1200,tmp=document.creat
 window.openDesign=()=>document.getElementById('dmod').classList.remove('hidden');
 window.closeModals=function(){['dmod','lmod','emod','egmod','ealbmod'].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.add('hidden');});addToGrpIdx=-1;};
 window.bgClose=(e,id)=>{if(e.target.id===id)closeModals();};
-window.applyColors=function(){window.S.colors={bg:document.getElementById('cbg').value,card:document.getElementById('ccard').value,name:document.getElementById('cname').value,bio:document.getElementById('cbio').value,link:document.getElementById('clink').value};render();save();};
+window.applyColors=function(){window.S.colors={bg:document.getElementById('cbg').value,card:document.getElementById('ccard').value,name:document.getElementById('cname').value,bio:document.getElementById('cbio').value,link:document.getElementById('clink').value,iconColor:document.getElementById('ciconcolor').value,iconBg:document.getElementById('ciconbg').value,labelColor:document.getElementById('clabelcolor').value};render();save();};
 window.applyBlur=v=>{v=parseInt(v);document.documentElement.style.setProperty('--bg-blur',v+'px');document.getElementById('blur-val').innerText=v+'px';window.S.bgBlur=v;save();};
 window.setLinkStyle=function(style){if(!window.S)return;window.S.linkStyle=style;document.getElementById('lo-list').classList.toggle('on',style==='list');document.getElementById('lo-grid').classList.toggle('on',style==='grid');save();renderLinks();};
 window.onBgPick=inp=>{const f=inp.files[0];inp.value='';if(!f)return;resizeImg(f,1200,.78,d64=>{window.S.bgImage=d64;window.S.bgBlur=window.S.bgBlur||0;document.body.classList.remove('no-bgimg');document.body.style.backgroundImage='url('+d64+')';document.getElementById('rmbg').style.display='block';document.getElementById('blur-section').style.display='block';document.getElementById('bgblur').value=window.S.bgBlur;document.getElementById('blur-val').innerText=window.S.bgBlur+'px';document.documentElement.style.setProperty('--bg-blur',window.S.bgBlur+'px');save();toast('Background updated \u2713','s');});};
