@@ -483,6 +483,9 @@ body.no-bgimg::before{display:none;}
 .forgot-msg{font-size:.78rem;text-align:center;display:none;padding:8px 12px;border-radius:10px;}
 .forgot-msg.ok{background:rgba(0,200,80,.1);color:#4c8;border:1px solid rgba(0,200,80,.2);}
 .forgot-msg.er{background:rgba(255,60,60,.1);color:#f66;border:1px solid rgba(255,60,60,.2);}
+/* RESET SCREEN */
+#reset-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:20px;background:#000;position:relative;z-index:1;}
+.reset-success{font-size:.82rem;color:#4c8;background:rgba(0,200,80,.1);border:1px solid rgba(0,200,80,.2);border-radius:10px;padding:10px 14px;text-align:center;display:none;}
 </style>
 </head>
 <body class="no-bgimg">
@@ -516,6 +519,30 @@ body.no-bgimg::before{display:none;}
 <div id="theme-modal"><div class="theme-box"><p class="mtitle">&#127775; Choose Theme</p><div class="theme-grid"><div class="theme-opt" id="th-dark" onclick="applyThemePreset('dark')"><div class="theme-preview" style="background:#0a0a0a;"><div class="theme-prev-name" style="background:#fff;"></div><div class="theme-prev-card" style="background:#222;"></div><div class="theme-prev-card2" style="background:#222;"></div></div><div class="theme-label" style="background:#0a0a0a;color:#fff;">MIDNIGHT</div></div><div class="theme-opt" id="th-hazel" onclick="applyThemePreset('hazel')"><div class="theme-preview" style="background:#2d1400;"><div class="theme-prev-name" style="background:#fff;"></div><div class="theme-prev-card" style="background:#3d1e00;"></div><div class="theme-prev-card2" style="background:#3d1e00;"></div></div><div class="theme-label" style="background:#2d1400;color:#e8a86a;">HAZEL</div></div><div class="theme-opt" id="th-matrix" onclick="applyThemePreset('matrix')"><div class="theme-preview" style="background:#020f02;"><div class="theme-prev-name" style="background:#00ff41;"></div><div class="theme-prev-card" style="background:#0a1f0a;"></div><div class="theme-prev-card2" style="background:#0a1f0a;"></div></div><div class="theme-label" style="background:#020f02;color:#00ff41;">MATRIX</div></div><div class="theme-opt" id="th-slate" onclick="applyThemePreset('slate')"><div class="theme-preview" style="background:#0f172a;"><div class="theme-prev-name" style="background:#94a3b8;"></div><div class="theme-prev-card" style="background:#1e293b;"></div><div class="theme-prev-card2" style="background:#1e293b;"></div></div><div class="theme-label" style="background:#0f172a;color:#94a3b8;">SLATE</div></div></div><button class="mcan" onclick="closeThemeModal()">Cancel</button></div></div>
 
 <!-- AUTH -->
+<!-- RESET PASSWORD SCREEN (shown when email reset link is clicked) -->
+<div id="reset-screen" class="hidden">
+  <div class="vlogo">VEXA</div>
+  <div class="vslogan">One tap, endless connection</div>
+  <div class="abox" id="reset-box">
+    <p class="atitle">&#128273; Set New Password</p>
+    <div class="iw">
+      <input type="password" id="reset-pass" class="ai" placeholder="New password&#8230;" autocomplete="new-password">
+      <button class="eyebtn" type="button" onclick="toggleResetPass(1)">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+      </button>
+    </div>
+    <div class="iw">
+      <input type="password" id="reset-pass2" class="ai" placeholder="Confirm password&#8230;" autocomplete="new-password">
+      <button class="eyebtn" type="button" onclick="toggleResetPass(2)">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+      </button>
+    </div>
+    <div class="perr" id="reset-err"></div>
+    <div class="reset-success" id="reset-ok">&#10003; Password updated! You can now log in.</div>
+    <button class="abtn" id="reset-btn" onclick="doResetPassword()">Set New Password</button>
+    <button class="atoggle" onclick="location.href=location.pathname">Back to Login</button>
+  </div>
+</div>
 <div id="auth" class="hidden"><div class="vlogo">VEXA</div><div class="vslogan">One tap, endless connection</div><div class="abox" id="abox"><p class="atitle" id="atitle">Login</p><div class="iw"><input type="email" id="aemail" class="ai" placeholder="Email" autocomplete="email"></div><div class="iw"><input type="password" id="apass" class="ai" placeholder="Password" autocomplete="current-password"><button class="eyebtn" type="button" onclick="togglePass()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div><div class="perr" id="perr">Incorrect password.</div><button class="abtn" id="abtn" onclick="doAuth()">Continue</button><button class="atoggle" id="atog" onclick="toggleMode()">New here? Sign Up</button><button class="atoggle" style="color:#2a2a2a;margin-top:-4px;" onclick="openForgotModal()">Forgot password?</button></div></div>
 
 <!-- FORGOT PASSWORD MODAL -->
@@ -702,6 +729,7 @@ const NF='<div style="height:100vh;display:flex;align-items:center;justify-conte
 
 _auth.onAuthStateChanged(async user=>{
   clearTimeout(window._authTimer);
+  if(new URLSearchParams(location.search).get('mode')==='resetPassword')return;
   const pid=new URLSearchParams(location.search).get('id');
   if(pid){if(window._pubReady)return;const d=await _FBLoadPub(pid);if(d){window.S=d;if(!window.S.links)window.S.links=[];window._pub=true;window._edit=false;bootApp();_FBVisit(pid).catch(()=>{});}else{hideLs();document.body.innerHTML=NF;}return;}
   if(user){window._uid=user.uid;const d=await _FBLoad(user.uid);if(d){window.S=d;if(!window.S.links)window.S.links=[];}window._pub=false;window._edit=true;bootApp();}
@@ -815,7 +843,7 @@ window.doForgotPassword=async function(){
   btn.disabled=true;btn.innerText='Sending\u2026';msg.style.display='none';
   try{
     firebase.auth().languageCode='en';
-    await firebase.auth().sendPasswordResetEmail(email,{url:location.origin,handleCodeInApp:false});
+    await firebase.auth().sendPasswordResetEmail(email,{url:location.href,handleCodeInApp:false});
     msg.className='forgot-msg ok';
     msg.innerText='\u2713 Reset link sent! Check your inbox \u2014 and spam folder if you don\u2019t see it within a minute.';
     msg.style.display='block';
@@ -830,6 +858,45 @@ window.doForgotPassword=async function(){
   }
 };
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&document.getElementById('forgot-modal').classList.contains('on'))doForgotPassword();});
+
+/* ===== IN-APP RESET PASSWORD (handles ?mode=resetPassword&oobCode=... from email link) ===== */
+let _resetPassVis1=false,_resetPassVis2=false;
+window.toggleResetPass=function(n){
+  if(n===1){_resetPassVis1=!_resetPassVis1;document.getElementById('reset-pass').type=_resetPassVis1?'text':'password';}
+  else{_resetPassVis2=!_resetPassVis2;document.getElementById('reset-pass2').type=_resetPassVis2?'text':'password';}
+};
+window.doResetPassword=async function(){
+  const p1=document.getElementById('reset-pass').value,p2=document.getElementById('reset-pass2').value;
+  const errEl=document.getElementById('reset-err'),btn=document.getElementById('reset-btn');
+  errEl.style.display='none';
+  if(!p1||p1.length<6){errEl.innerText='Password must be at least 6 characters.';errEl.style.display='block';return;}
+  if(p1!==p2){errEl.innerText='Passwords do not match.';errEl.style.display='block';return;}
+  const oobCode=new URLSearchParams(location.search).get('oobCode');
+  if(!oobCode){errEl.innerText='Invalid or expired reset link. Please request a new one.';errEl.style.display='block';return;}
+  btn.disabled=true;btn.innerText='Saving\u2026';
+  try{
+    await firebase.auth().confirmPasswordReset(oobCode,p1);
+    btn.style.display='none';
+    document.getElementById('reset-ok').style.display='block';
+    document.getElementById('reset-pass').style.display='none';
+    document.getElementById('reset-pass2').style.display='none';
+    document.querySelectorAll('#reset-box .eyebtn').forEach(b=>b.style.display='none');
+    setTimeout(()=>{ location.href=location.pathname; },2500);
+  }catch(e){
+    btn.disabled=false;btn.innerText='Set New Password';
+    const c=e.code||'';
+    errEl.innerText=c.includes('expired')||c.includes('invalid')?'This link has expired. Please request a new reset link.':c.includes('weak-password')?'Password is too weak. Use at least 6 characters.':e.message||'Something went wrong. Try again.';
+    errEl.style.display='block';
+  }
+};
+/* Check for reset mode on load */
+(function checkResetMode(){
+  const p=new URLSearchParams(location.search);
+  if(p.get('mode')==='resetPassword'&&p.get('oobCode')){
+    document.getElementById('ls')&&document.getElementById('ls').classList.add('hidden');
+    document.getElementById('reset-screen').classList.remove('hidden');
+  }
+})();
 
 function render(){
   if(!window.S)return;const c=window.S.colors||{};
