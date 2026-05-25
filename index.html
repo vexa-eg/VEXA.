@@ -11,7 +11,7 @@
 <link rel="preload" as="script" href="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js" crossorigin>
 <link rel="preload" as="script" href="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js" crossorigin>
 <link rel="preconnect" href="https://vexa-1234-default-rtdb.firebaseio.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#0a0a0a;--card:rgba(30,30,30,0.9);--glass:rgba(255,255,255,0.12);--name:#fff;--bio:#a0a0a0;--link:#fff;--r:16px;--bg-blur:0px;}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;font-family:'Inter',sans-serif;margin:0;padding:0;}
@@ -298,7 +298,7 @@ body.no-bgimg::before{display:none;}
 
 /* ====== 3D EFFECTS ====== */
 .avwrap{position:relative;width:108px;height:108px;border-radius:50%;border:2px solid rgba(255,255,255,.2);overflow:hidden;margin-bottom:16px;box-shadow:0 8px 0 rgba(0,0,0,.4),0 12px 40px rgba(0,0,0,.5),0 0 0 4px rgba(255,255,255,.06)!important;}
-.pname{font-family:'Bebas Neue',sans-serif;font-size:2.3rem;letter-spacing:3px;color:var(--name);outline:none;text-align:center;min-width:60px;text-shadow:0 2px 8px rgba(0,0,0,.6),0 1px 0 rgba(255,255,255,.06);}
+.pname{font-family:'Inter',sans-serif;font-size:2rem;font-weight:900;letter-spacing:1.5px;color:var(--name);outline:none;text-align:center;min-width:60px;text-shadow:0 2px 8px rgba(0,0,0,.6),0 1px 0 rgba(255,255,255,.06);text-transform:none;}
 .pbio{color:var(--bio);margin:7px 0 26px;font-size:.9rem;text-align:center;max-width:85%;outline:none;line-height:1.55;text-shadow:0 1px 4px rgba(0,0,0,.4);}
 .lcard{display:flex;align-items:center;padding:15px 18px;text-decoration:none;color:var(--link);font-weight:600;font-size:.93rem;transition:transform .15s,box-shadow .15s;border-radius:16px;box-shadow:0 5px 0 rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.07);gap:14px;position:relative;}
 .lcard:hover{transform:translateY(-3px);box-shadow:0 8px 0 rgba(0,0,0,.3),0 12px 32px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.07);}
@@ -504,7 +504,7 @@ body.no-bgimg::before{display:none;}
 <div id="ctx-menu" class="ctx-menu hidden"></div>
 
 <!-- PW MODAL -->
-<div id="pw-modal"><div class="pw-box"><div class="pw-box-title">&#128274; Protected</div><div class="pw-box-sub" id="pw-modal-sub">This item is password protected</div><input type="password" id="pw-modal-input" class="mi" placeholder="Enter password&#8230;"><div class="pw-err" id="pw-err">Wrong password. Try again.</div><button class="abtn" onclick="submitPwModal()">Unlock</button><button class="pw-cancel-txt" onclick="closePwModal()">Cancel</button></div></div>
+<div id="pw-modal"><div class="pw-box"><div class="pw-box-title">&#128274; Protected</div><div class="pw-box-sub" id="pw-modal-sub">This item is password protected</div><input type="password" id="pw-modal-input" class="mi" placeholder="Enter password&#8230;" autocomplete="off" name="vexa-unlock-pw"><div class="pw-err" id="pw-err">Wrong password. Try again.</div><button class="abtn" onclick="submitPwModal()">Unlock</button><button class="pw-cancel-txt" onclick="closePwModal()">Cancel</button></div></div>
 
 <!-- LOC MODAL -->
 <div id="loc-modal"><div class="loc-mbox"><p class="mtitle" style="margin-bottom:4px;">Add Location</p><div class="loc-opt" onclick="addLiveLocation()"><div class="loc-opt-icon live"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f44" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg></div><div><div class="loc-opt-title" style="display:flex;align-items:center;gap:6px;">Live Location <span class="loc-live-dot"></span></div><div class="loc-opt-sub">Always shows your real-time GPS</div></div></div><div class="loc-opt" onclick="addStaticLocation()"><div class="loc-opt-icon static"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#50b4ff" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div><div><div class="loc-opt-title">Fixed Location</div><div class="loc-opt-sub">Pick any place from Google Maps</div></div></div><button class="mcan" onclick="closeLocModal()">Cancel</button></div></div>
@@ -639,7 +639,7 @@ body.no-bgimg::before{display:none;}
 </div></div>
 
 <!-- EDIT MODAL -->
-<div id="emod" class="moverlay hidden" onclick="bgClose(event,'emod')"><div class="mbox"><p class="mtitle">Edit Item</p><textarea id="edit-text-content" class="mi" rows="5" style="display:none;" placeholder="Text content&#8230;"></textarea><input type="text" id="edit-title" class="mi" placeholder="Name"><input type="text" id="edit-url" class="mi" placeholder="URL / number / email"><div class="url-hint" id="edit-hint"></div><div id="edit-text-colors" style="display:none;"><p class="clabel">Envelope Colors</p><div class="grp-color-row"><div class="ci">Flap Color<input type="color" id="edit-env-flap" value="#2a1f14"></div><div class="ci">Body Color<input type="color" id="edit-env-body" value="#1c1828"></div><div class="ci">Accent Color<input type="color" id="edit-env-accent" value="#ffd232"></div></div><p class="clabel">Seal Emoji &amp; Text</p><div class="grp-color-row" style="align-items:flex-end;"><div class="ci" style="flex:0 0 auto;"><span>Seal Emoji</span><input type="text" id="edit-env-emoji" class="mi" style="margin-bottom:0;width:70px;text-align:center;font-size:1.3rem;padding:8px;" placeholder="🔒" maxlength="2"></div><div class="ci">Text Color<input type="color" id="edit-text-color" value="#ffffff"></div><div class="ci">Paper BG<input type="color" id="edit-env-paper" value="#1c1828"></div></div></div><div id="edit-icon-colors" style="display:none;"><p class="clabel">Icon Colors (Grid &amp; List)</p><div class="grp-color-row"><div class="ci">Icon Color<input type="color" id="edit-icon-color" value="#ffffff"></div><div class="ci">Circle BG<input type="color" id="edit-icon-bg" value="#1e1e1e"></div><div class="ci">Label Color<input type="color" id="edit-label-color" value="#ffffff"></div></div></div><p class="clabel">Password (optional)</p><div class="pw-row"><label class="pw-toggle"><input type="checkbox" id="edit-pw-on" onchange="togglePwInput('edit-pw-field',this.checked)"><span class="pw-track"></span><span class="pw-thumb"></span></label><span class="pw-lbl">Protect with password</span></div><div id="edit-pw-field" style="display:none;"><input type="text" id="edit-pw" class="mi" placeholder="Password (blank = remove)&#8230;"></div><button class="abtn msbtn" onclick="saveEdit()">Save Changes</button><button class="mcan" onclick="closeModals()">Cancel</button></div></div>
+<div id="emod" class="moverlay hidden" onclick="bgClose(event,'emod')"><div class="mbox"><p class="mtitle">Edit Item</p><textarea id="edit-text-content" class="mi" rows="5" style="display:none;" placeholder="Text content&#8230;"></textarea><input type="text" id="edit-title" class="mi" placeholder="Name"><input type="text" id="edit-url" class="mi" placeholder="URL / number / email"><div class="url-hint" id="edit-hint"></div><div id="edit-text-colors" style="display:none;"><p class="clabel">Envelope Colors</p><div class="grp-color-row"><div class="ci">Flap Color<input type="color" id="edit-env-flap" value="#2a1f14"></div><div class="ci">Body Color<input type="color" id="edit-env-body" value="#1c1828"></div><div class="ci">Accent Color<input type="color" id="edit-env-accent" value="#ffd232"></div></div><p class="clabel">Seal Emoji &amp; Text</p><div class="grp-color-row" style="align-items:flex-end;"><div class="ci" style="flex:0 0 auto;"><span>Seal Emoji</span><input type="text" id="edit-env-emoji" class="mi" style="margin-bottom:0;width:70px;text-align:center;font-size:1.3rem;padding:8px;" placeholder="🔒" maxlength="2"></div><div class="ci">Text Color<input type="color" id="edit-text-color" value="#ffffff"></div><div class="ci">Paper BG<input type="color" id="edit-env-paper" value="#1c1828"></div></div></div><div id="edit-icon-colors" style="display:none;"><p class="clabel">Icon Colors (Grid &amp; List)</p><div class="grp-color-row"><div class="ci">Icon Color<input type="color" id="edit-icon-color" value="#ffffff"></div><div class="ci">Link BG<input type="color" id="edit-icon-bg" value="#1e1e1e"></div><div class="ci">Label Color<input type="color" id="edit-label-color" value="#ffffff"></div></div></div><p class="clabel">Password (optional)</p><div class="pw-row"><label class="pw-toggle"><input type="checkbox" id="edit-pw-on" onchange="togglePwInput('edit-pw-field',this.checked)"><span class="pw-track"></span><span class="pw-thumb"></span></label><span class="pw-lbl">Protect with password</span></div><div id="edit-pw-field" style="display:none;"><input type="text" id="edit-pw" class="mi" placeholder="Password (blank = remove)&#8230;"></div><button class="abtn msbtn" onclick="saveEdit()">Save Changes</button><button class="mcan" onclick="closeModals()">Cancel</button></div></div>
 
 <!-- EDIT ALBUM -->
 <div id="ealbmod" class="moverlay hidden" onclick="bgClose(event,'ealbmod')"><div class="mbox"><p class="mtitle">Edit Album</p><input type="text" id="ealb-name" class="mi" placeholder="Album name"><p class="clabel">Cover Image</p><div class="upbox" onclick="triggerUpload('ealb-cover-input')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>Change cover image</div><img id="ealb-cover-prev" src="" style="display:none;width:100%;border-radius:12px;margin-top:6px;max-height:160px;object-fit:cover;"><p class="clabel">Display Style</p><div class="alb-theme-grid"><div class="alb-theme-opt" id="ealbt-snap" onclick="selectEditAlbTheme('snap')"><div class="alb-theme-icon">&#9654;&#65039;</div><div>Snap Slider</div></div><div class="alb-theme-opt" id="ealbt-carousel" onclick="selectEditAlbTheme('carousel')"><div class="alb-theme-icon">&#128257;</div><div>3D Carousel</div></div><div class="alb-theme-opt" id="ealbt-floating" onclick="selectEditAlbTheme('floating')"><div class="alb-theme-icon">&#127980;</div><div>Floating Cards</div></div><div class="alb-theme-opt" id="ealbt-flipbook" onclick="selectEditAlbTheme('flipbook')"><div class="alb-theme-icon">&#128218;</div><div>Flip Book</div></div></div><p class="clabel">Password (optional)</p><div class="pw-row"><label class="pw-toggle"><input type="checkbox" id="ealb-pw-on" onchange="togglePwInput('ealb-pw-field',this.checked)"><span class="pw-track"></span><span class="pw-thumb"></span></label><span class="pw-lbl">Lock album with password</span></div><div id="ealb-pw-field" style="display:none;"><input type="text" id="ealb-pw" class="mi" placeholder="Password (blank = remove)&#8230;"></div><button class="abtn msbtn" onclick="saveAlbumEdit()">Save Changes</button><button class="mcan" onclick="closeModals()">Cancel</button></div></div>
@@ -697,7 +697,30 @@ const NF='<div style="height:100vh;display:flex;align-items:center;justify-conte
 /* Eager public load */
 (async()=>{
   const pid=new URLSearchParams(location.search).get('id');if(!pid)return;
-  try{const d=await _FBLoadPub(pid);if(d){window.S=d;if(!window.S.links)window.S.links=[];window._pub=true;window._edit=false;window._pubReady=true;bootApp();_FBVisit(pid).catch(()=>{});}else{hideLs();document.body.innerHTML=NF;}}catch(_){}
+  /* ── FIX 3/7: Check localStorage cache for instant render ── */
+  try{
+    const _c=localStorage.getItem('vexa_pub_'+pid);
+    if(_c){
+      const _cd=JSON.parse(_c);
+      if(_cd&&_cd.publicId){
+        window.S=_cd;if(!window.S.links)window.S.links=[];
+        window._pub=true;window._edit=false;window._pubReady=true;
+        bootApp();_FBVisit(pid).catch(()=>{});
+        /* Silently refresh cache from Firebase in background */
+        _FBLoadPub(pid).then(_fd=>{if(_fd)try{localStorage.setItem('vexa_pub_'+pid,JSON.stringify(_fd));}catch(_e){}}).catch(()=>{});
+        return;
+      }
+    }
+  }catch(_){}
+  /* No cache — load from Firebase then save to cache */
+  try{
+    const d=await _FBLoadPub(pid);
+    if(d){
+      try{localStorage.setItem('vexa_pub_'+pid,JSON.stringify(d));}catch(_e){}
+      window.S=d;if(!window.S.links)window.S.links=[];window._pub=true;window._edit=false;window._pubReady=true;
+      bootApp();_FBVisit(pid).catch(()=>{});
+    }else{hideLs();document.body.innerHTML=NF;}
+  }catch(_){}
 })();
 
 _auth.onAuthStateChanged(async user=>{
@@ -775,7 +798,7 @@ window.bootApp=function(){
   if(!window._pub){
     document.querySelectorAll('.edit-only').forEach(e=>e.classList.remove('hidden'));
     document.getElementById('avwrap').style.cursor='pointer';document.getElementById('avwrap').onclick=()=>triggerUpload('avinput');
-    nm.contentEditable=true;bio.contentEditable=true;nm.onblur=()=>{S.name=nm.innerText.trim();save();};bio.onblur=()=>{S.bio=bio.innerText.trim();save();};bio.setAttribute('data-ph','Bio');
+    nm.contentEditable=true;bio.contentEditable=true;nm.setAttribute('autocapitalize','none');nm.setAttribute('autocorrect','off');nm.onblur=()=>{S.name=nm.innerText.trim();save();};bio.onblur=()=>{S.bio=bio.innerText.trim();save();};bio.setAttribute('data-ph','Bio');
     if(!window.S){const uid=firebase.auth().currentUser?.uid||'x';window.S={name:'',bio:'',avatar:'',links:[],colors:{},publicId:uid.slice(0,14),linkStyle:'list'};}
     if(!window.S.linkStyle)window.S.linkStyle='list';
   }else{
@@ -784,6 +807,7 @@ window.bootApp=function(){
     nm.contentEditable=false;bio.contentEditable=false;bio.removeAttribute('data-ph');
   }
   render();document.getElementById('app').classList.remove('hidden');
+  if(window._pub){try{const _authEl=document.getElementById('auth');if(_authEl)_authEl.remove();}catch(_){}}
   if(!window._pub&&window.S)setTimeout(resumeLiveTracking,800);
 };
 
@@ -1048,7 +1072,7 @@ window.startEdit=function(){
     et.oninput=updateEditHint;eu.oninput=updateEditHint;
   }else{
     ta.style.display='none';et.style.display='';et.value=item.title||'';eu.style.display=['location','image','video'].includes(item.type)?'none':'';eu.value=item.url||'';if(eh){eh.style.display='';eh.innerText='';}
-    if(item.type==='link'&&iconColorsEl){iconColorsEl.style.display='block';document.getElementById('edit-icon-color').value=item.iconColor||'#ffffff';document.getElementById('edit-icon-bg').value=item.iconBg||'#1e1e1e';document.getElementById('edit-label-color').value=item.labelColor||'#ffffff';}
+    if(item.type==='link'&&iconColorsEl){iconColorsEl.style.display='block';const _gc=window.S?.colors||{};document.getElementById('edit-icon-color').value=item.iconColor||_gc.iconColor||'#ffffff';document.getElementById('edit-icon-bg').value=item.iconBg||_gc.card||'#1e1e1e';document.getElementById('edit-label-color').value=item.labelColor||_gc.labelColor||_gc.link||'#ffffff';}
     const hasPw=!!item.password;document.getElementById('edit-pw-on').checked=hasPw;togglePwInput('edit-pw-field',hasPw);document.getElementById('edit-pw').value=item.password||'';et.oninput=updateEditHint;eu.oninput=updateEditHint;
   }
   document.getElementById('emod').classList.remove('hidden');
@@ -1092,7 +1116,7 @@ window.togglePreview=function(){window._edit=!window._edit;document.getElementBy
 window.onPwItem=function(gi,ii,type){
   const item=ii<0?window.S.links[gi]:(window.S.links[gi].items||[])[ii];
   if(!item)return;
-  document.getElementById('pw-modal-sub').innerText='"'+(item.title||item.name||'Item')+'" is protected';document.getElementById('pw-modal-input').value='';document.getElementById('pw-err').style.display='none';document.getElementById('pw-modal').classList.add('on');
+  document.getElementById('pw-modal-sub').innerText='"'+(item.title||item.name||'Item')+'" is protected';const _pmi=document.getElementById('pw-modal-input');_pmi.value='';_pmi.type=(window._pub||!window._edit)?'password':'text';document.getElementById('pw-err').style.display='none';document.getElementById('pw-modal').classList.add('on');
   _pwCb=entered=>{if(entered===item.password){closePwModal();item._unlocked=true;
     if(type==='text'){
       const sceneEl=document.getElementById('envscene_'+gi+'_'+ii);
