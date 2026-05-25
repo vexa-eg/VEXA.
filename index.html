@@ -488,33 +488,11 @@ body.no-bgimg::before{display:none;}
 <body class="no-bgimg">
 <script>
 (function(){
-  var params=new URLSearchParams(location.search);
-  var pid=params.get('id');
-  var mode=params.get('mode');
-  var oob=params.get('oobCode');
-  if(pid){
-    /* ===== PUBLIC PROFILE =====
-       Start REST fetch BEFORE Firebase SDK loads — saves 2-4s on mobile.
-       Firebase SDK (~380KB, 3 files) loads in parallel while fetch runs. */
-    try{var _lc=localStorage.getItem('vexa_pub_'+pid);if(_lc){var _ld=JSON.parse(_lc);if(_ld&&_ld.publicId)window._pubCached=_ld;}}catch(_e){}
-    window._pubFetchPromise=fetch('https://vexa-1234-default-rtdb.firebaseio.com/pub/'+pid+'.json')
-      .then(function(r){return r.ok?r.json():null;}).catch(function(){return null;});
-  } else if(mode==='resetPassword'&&oob){
-    /* ===== RESET PASSWORD MODE ===== */
-    window._resetMode=true;window._resetCode=oob;
-    window._authTimer=setTimeout(function(){
-      var ls=document.getElementById('ls'),au=document.getElementById('auth');
-      var ab=document.getElementById('abox'),rb=document.getElementById('reset-box');
-      if(ls&&au){ls.classList.add('out');setTimeout(function(){ls.classList.add('hidden');},300);au.classList.remove('hidden');}
-      if(ab)ab.classList.add('hidden');
-      if(rb)rb.classList.remove('hidden');
-    },80);
-  } else {
-    /* ===== AUTH PAGE ===== */
+  if(!new URLSearchParams(location.search).get('id')){
     window._authTimer=setTimeout(function(){
       var ls=document.getElementById('ls'),au=document.getElementById('auth');
       if(ls&&au){ls.classList.add('out');setTimeout(function(){ls.classList.add('hidden');},300);au.classList.remove('hidden');}
-    },80);
+    },120);
   }
 })();
 </script>
@@ -538,21 +516,7 @@ body.no-bgimg::before{display:none;}
 <div id="theme-modal"><div class="theme-box"><p class="mtitle">&#127775; Choose Theme</p><div class="theme-grid"><div class="theme-opt" id="th-dark" onclick="applyThemePreset('dark')"><div class="theme-preview" style="background:#0a0a0a;"><div class="theme-prev-name" style="background:#fff;"></div><div class="theme-prev-card" style="background:#222;"></div><div class="theme-prev-card2" style="background:#222;"></div></div><div class="theme-label" style="background:#0a0a0a;color:#fff;">MIDNIGHT</div></div><div class="theme-opt" id="th-hazel" onclick="applyThemePreset('hazel')"><div class="theme-preview" style="background:#2d1400;"><div class="theme-prev-name" style="background:#fff;"></div><div class="theme-prev-card" style="background:#3d1e00;"></div><div class="theme-prev-card2" style="background:#3d1e00;"></div></div><div class="theme-label" style="background:#2d1400;color:#e8a86a;">HAZEL</div></div><div class="theme-opt" id="th-matrix" onclick="applyThemePreset('matrix')"><div class="theme-preview" style="background:#020f02;"><div class="theme-prev-name" style="background:#00ff41;"></div><div class="theme-prev-card" style="background:#0a1f0a;"></div><div class="theme-prev-card2" style="background:#0a1f0a;"></div></div><div class="theme-label" style="background:#020f02;color:#00ff41;">MATRIX</div></div><div class="theme-opt" id="th-slate" onclick="applyThemePreset('slate')"><div class="theme-preview" style="background:#0f172a;"><div class="theme-prev-name" style="background:#94a3b8;"></div><div class="theme-prev-card" style="background:#1e293b;"></div><div class="theme-prev-card2" style="background:#1e293b;"></div></div><div class="theme-label" style="background:#0f172a;color:#94a3b8;">SLATE</div></div></div><button class="mcan" onclick="closeThemeModal()">Cancel</button></div></div>
 
 <!-- AUTH -->
-<div id="auth" class="hidden"><div class="vlogo">VEXA</div><div class="vslogan">One tap, endless connection</div><div class="abox" id="abox"><p class="atitle" id="atitle">Login</p><div class="iw"><input type="email" id="aemail" class="ai" placeholder="Email" autocomplete="email"></div><div class="iw"><input type="password" id="apass" class="ai" placeholder="Password" autocomplete="current-password"><button class="eyebtn" type="button" onclick="togglePass()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div><div class="perr" id="perr">Incorrect password.</div><button class="abtn" id="abtn" onclick="doAuth()">Continue</button><button class="atoggle" id="atog" onclick="toggleMode()">New here? Sign Up</button><button class="atoggle" style="color:#2a2a2a;margin-top:-4px;" onclick="openForgotModal()">Forgot password?</button></div>
-<!-- RESET PASSWORD BOX -->
-<div class="abox hidden" id="reset-box" style="gap:16px;text-align:center;">
-  <div style="font-size:2.2rem;line-height:1;">&#128272;</div>
-  <div>
-    <p class="atitle" style="margin-bottom:6px;">New Password</p>
-    <p style="font-size:.76rem;color:#444;line-height:1.55;">Type your new password and confirm it below.<br>Or press Continue to go back to login.</p>
-  </div>
-  <div class="iw"><input type="password" id="reset-pw1" class="ai" placeholder="New password" autocomplete="new-password"><button class="eyebtn" type="button" onclick="toggleResetPw(1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
-  <div class="iw"><input type="password" id="reset-pw2" class="ai" placeholder="Confirm new password" autocomplete="new-password"><button class="eyebtn" type="button" onclick="toggleResetPw(2)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
-  <div class="perr" id="reset-err" style="display:none;text-align:center;"></div>
-  <div id="reset-ok" style="display:none;color:#4c8;font-size:.82rem;background:rgba(0,200,80,.08);border:1px solid rgba(0,200,80,.2);border-radius:12px;padding:10px 14px;">&#10003; Password updated! Redirecting to login…</div>
-  <button class="abtn" id="reset-btn" onclick="doResetPassword()">Continue</button>
-</div>
-</div>
+<div id="auth" class="hidden"><div class="vlogo">VEXA</div><div class="vslogan">One tap, endless connection</div><div class="abox" id="abox"><p class="atitle" id="atitle">Login</p><div class="iw"><input type="email" id="aemail" class="ai" placeholder="Email" autocomplete="email"></div><div class="iw"><input type="password" id="apass" class="ai" placeholder="Password" autocomplete="current-password"><button class="eyebtn" type="button" onclick="togglePass()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div><div class="perr" id="perr">Incorrect password.</div><button class="abtn" id="abtn" onclick="doAuth()">Continue</button><button class="atoggle" id="atog" onclick="toggleMode()">New here? Sign Up</button><button class="atoggle" style="color:#2a2a2a;margin-top:-4px;" onclick="openForgotModal()">Forgot password?</button></div></div>
 
 <!-- FORGOT PASSWORD MODAL -->
 <div id="forgot-modal">
@@ -709,18 +673,12 @@ body.no-bgimg::before{display:none;}
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-<script>
-/* Skip firebase-auth for public profiles — not needed, saves ~150KB + 2-3s init time */
-if(!new URLSearchParams(location.search).get('id')){
-  document.write('<scr'+'ipt src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"><\/scr'+'ipt>');
-}
-</script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
 <script>
 /* ===== FIREBASE ===== */
 firebase.initializeApp({apiKey:"AIzaSyBDM5mBSTW8g3VlGusFWFdgN14hpqi3-zs",authDomain:"vexa-1234.firebaseapp.com",databaseURL:"https://vexa-1234-default-rtdb.firebaseio.com",projectId:"vexa-1234",storageBucket:"vexa-1234.firebasestorage.app",messagingSenderId:"362188399240",appId:"1:362188399240:web:fd6c50ae6ed3647bc8753d"});
-const _auth=typeof firebase.auth==='function'?firebase.auth():{onAuthStateChanged:function(){},signOut:async function(){},confirmPasswordReset:async function(){}};
-const _db=firebase.database();
+const _auth=firebase.auth(),_db=firebase.database();
 const _MAX_BYTES=8*1024*1024,_MAX_VID=10*1024*1024;
 const _FBSave=async(uid,state)=>{
   function strip(links){return(links||[]).map(l=>{const c={...l};delete c._unlocked;if(c.items)c.items=strip(c.items);return c;});}
@@ -736,51 +694,39 @@ const _FBAnalytics=async pid=>{const s=await _db.ref('analytics/'+pid).once('val
 const _FBResetAnalytics=async pid=>{await _db.ref('analytics/'+pid).set(null);};
 const NF='<div style="height:100vh;display:flex;align-items:center;justify-content:center;flex-direction:column;background:#000;gap:14px;"><div style="font-family:Bebas Neue,sans-serif;font-size:3.5rem;letter-spacing:8px;background:linear-gradient(180deg,#fff,#888);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">VEXA</div><p style="color:#444;font-size:.9rem;">Profile not found</p></div>';
 
-/* ===== EAGER PUBLIC LOAD (ULTRA-FAST) =====
-   Uses REST fetch started at body-start (before Firebase loaded).
-   Cache hit = instant. No cache = fetch already in-flight = minimal wait. */
+/* Eager public load */
 (async()=>{
   const pid=new URLSearchParams(location.search).get('id');if(!pid)return;
-
-  /* CACHE HIT — render instantly from localStorage */
-  if(window._pubCached){
-    window.S=window._pubCached;if(!window.S.links)window.S.links=[];
-    window._pub=true;window._edit=false;window._pubReady=true;
-    bootApp();
-    _FBVisit(pid).catch(()=>{});
-    /* Update cache silently from pre-started fetch */
-    if(window._pubFetchPromise)window._pubFetchPromise
-      .then(d=>{if(d&&d.publicId)try{localStorage.setItem('vexa_pub_'+pid,JSON.stringify(d));}catch(_e){}})
-      .catch(()=>{});
-    return;
-  }
-
-  /* NO CACHE — await pre-started fetch (already running since page start) */
+  /* ── FIX 3/7: Check localStorage cache for instant render ── */
   try{
-    const d=window._pubFetchPromise?await window._pubFetchPromise:await _FBLoadPub(pid);
-    if(d&&d.publicId){
+    const _c=localStorage.getItem('vexa_pub_'+pid);
+    if(_c){
+      const _cd=JSON.parse(_c);
+      if(_cd&&_cd.publicId){
+        window.S=_cd;if(!window.S.links)window.S.links=[];
+        window._pub=true;window._edit=false;window._pubReady=true;
+        bootApp();_FBVisit(pid).catch(()=>{});
+        /* Silently refresh cache from Firebase in background */
+        _FBLoadPub(pid).then(_fd=>{if(_fd)try{localStorage.setItem('vexa_pub_'+pid,JSON.stringify(_fd));}catch(_e){}}).catch(()=>{});
+        return;
+      }
+    }
+  }catch(_){}
+  /* No cache — load from Firebase then save to cache */
+  try{
+    const d=await _FBLoadPub(pid);
+    if(d){
       try{localStorage.setItem('vexa_pub_'+pid,JSON.stringify(d));}catch(_e){}
-      window.S=d;if(!window.S.links)window.S.links=[];
-      window._pub=true;window._edit=false;window._pubReady=true;
+      window.S=d;if(!window.S.links)window.S.links=[];window._pub=true;window._edit=false;window._pubReady=true;
       bootApp();_FBVisit(pid).catch(()=>{});
     }else{hideLs();document.body.innerHTML=NF;}
-  }catch(_){hideLs();document.body.innerHTML=NF;}
+  }catch(_){}
 })();
 
 _auth.onAuthStateChanged(async user=>{
   clearTimeout(window._authTimer);
   const pid=new URLSearchParams(location.search).get('id');
-  /* Public profile — skip if already loaded by eager loader */
   if(pid){if(window._pubReady)return;const d=await _FBLoadPub(pid);if(d){window.S=d;if(!window.S.links)window.S.links=[];window._pub=true;window._edit=false;bootApp();_FBVisit(pid).catch(()=>{});}else{hideLs();document.body.innerHTML=NF;}return;}
-  /* Reset password mode — show reset form */
-  if(window._resetMode){
-    hideLs();
-    document.getElementById('auth').classList.remove('hidden');
-    const ab=document.getElementById('abox'),rb=document.getElementById('reset-box');
-    if(ab)ab.classList.add('hidden');
-    if(rb)rb.classList.remove('hidden');
-    return;
-  }
   if(user){window._uid=user.uid;const d=await _FBLoad(user.uid);if(d){window.S=d;if(!window.S.links)window.S.links=[];}window._pub=false;window._edit=true;bootApp();}
   else{hideLs();document.getElementById('auth').classList.remove('hidden');}
 });
@@ -876,35 +822,6 @@ window.doAuth=async function(){
 };
 window.doLogout=async()=>{stopLiveLocation();await _auth.signOut();location.reload();};
 
-/* ===== RESET PASSWORD (handles ?mode=resetPassword&oobCode=XXX) ===== */
-window.toggleResetPw=function(n){const el=document.getElementById('reset-pw'+n);if(el)el.type=el.type==='password'?'text':'password';};
-window.doResetPassword=async function(){
-  const p1=(document.getElementById('reset-pw1').value||'').trim();
-  const p2=(document.getElementById('reset-pw2').value||'').trim();
-  const err=document.getElementById('reset-err');
-  const ok=document.getElementById('reset-ok');
-  const btn=document.getElementById('reset-btn');
-  err.style.display='none';ok.style.display='none';
-  /* No password entered → go to login immediately */
-  if(!p1&&!p2){location.href=location.origin+location.pathname;return;}
-  /* Validation */
-  if(p1.length<6){err.innerText='Password must be at least 6 characters.';err.style.display='block';return;}
-  if(p1!==p2){err.innerText='Passwords don\'t match.';err.style.display='block';return;}
-  btn.disabled=true;btn.innerText='Saving\u2026';
-  try{
-    await firebase.auth().confirmPasswordReset(window._resetCode,p1);
-    ok.style.display='block';
-    btn.innerText='Done \u2713';
-    /* Go to login after 2 seconds */
-    setTimeout(()=>location.href=location.origin+location.pathname,2000);
-  }catch(e){
-    btn.disabled=false;btn.innerText='Continue';
-    const c=e.code||'';
-    err.innerText=c.includes('expired')?'This reset link has expired. Request a new one.':c.includes('invalid')?'Invalid reset link. Request a new one.':e.message||'Something went wrong. Try again.';
-    err.style.display='block';
-  }
-};
-
 /* ===== FORGOT PASSWORD ===== */
 window.openForgotModal=function(){
   const email=document.getElementById('aemail').value.trim();
@@ -922,7 +839,7 @@ window.doForgotPassword=async function(){
   btn.disabled=true;btn.innerText='Sending\u2026';msg.style.display='none';
   try{
     firebase.auth().languageCode='en';
-    await firebase.auth().sendPasswordResetEmail(email,{url:location.origin+location.pathname,handleCodeInApp:false});
+    await firebase.auth().sendPasswordResetEmail(email,{url:location.origin,handleCodeInApp:false});
     msg.className='forgot-msg ok';
     msg.innerText='\u2713 Reset link sent! Check your inbox \u2014 and spam folder if you don\u2019t see it within a minute.';
     msg.style.display='block';
