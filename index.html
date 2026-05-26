@@ -8,9 +8,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
 <link rel="preload" as="script" href="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js" crossorigin>
+<link rel="preload" as="script" href="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js" crossorigin>
 <link rel="preload" as="script" href="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js" crossorigin>
 <link rel="preconnect" href="https://vexa-1234-default-rtdb.firebaseio.com" crossorigin>
-<link rel="dns-prefetch" href="https://identitytoolkit.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#0a0a0a;--card:rgba(30,30,30,0.9);--glass:rgba(255,255,255,0.12);--name:#fff;--bio:#a0a0a0;--link:#fff;--r:16px;--bg-blur:0px;}
@@ -483,45 +483,25 @@ body.no-bgimg::before{display:none;}
 .forgot-msg{font-size:.78rem;text-align:center;display:none;padding:8px 12px;border-radius:10px;}
 .forgot-msg.ok{background:rgba(0,200,80,.1);color:#4c8;border:1px solid rgba(0,200,80,.2);}
 .forgot-msg.er{background:rgba(255,60,60,.1);color:#f66;border:1px solid rgba(255,60,60,.2);}
-/* RESET PASSWORD BOX */
-#reset-box{gap:16px;}
-.reset-ok{color:#4c8;font-size:.82rem;background:rgba(0,200,80,.08);border:1px solid rgba(0,200,80,.2);border-radius:12px;padding:10px 14px;text-align:center;display:none;}
 </style>
 </head>
 <body class="no-bgimg">
 <script>
-/* ======================================================
-   EARLY INIT — runs immediately, before Firebase loads
-   For public profiles (?id=): starts REST fetch NOW so
-   data arrives in parallel with Firebase SDK download.
-   Firebase SDK (~320KB) takes 300ms-3s on mobile.
-   REST fetch starts instantly using pre-established TCP.
-   ====================================================== */
 (function(){
   var params=new URLSearchParams(location.search);
   var pid=params.get('id');
   var mode=params.get('mode');
   var oob=params.get('oobCode');
-
   if(pid){
-    /* ── PUBLIC PROFILE ──
-       1. Check localStorage for instant cached render.
-       2. Start REST fetch immediately (before Firebase loads).
-          The preconnect in <head> means TCP is already ready. */
-    try{
-      var c=localStorage.getItem('vexa_pub_'+pid);
-      if(c){var d=JSON.parse(c);if(d&&d.publicId)window._pubCached=d;}
-    }catch(e){}
-
-    /* REST fetch: starts in parallel with Firebase SDK download */
-    window._pubRestPromise=fetch(
-      'https://vexa-1234-default-rtdb.firebaseio.com/pub/'+pid+'.json'
-    ).then(function(r){return r.ok?r.json():null;}).catch(function(){return null;});
-
-  }else if(mode==='resetPassword'&&oob){
-    /* ── RESET PASSWORD LINK ── */
-    window._resetMode=true;
-    window._resetCode=oob;
+    /* ===== PUBLIC PROFILE =====
+       Start REST fetch BEFORE Firebase SDK loads — saves 2-4s on mobile.
+       Firebase SDK (~380KB, 3 files) loads in parallel while fetch runs. */
+    try{var _lc=localStorage.getItem('vexa_pub_'+pid);if(_lc){var _ld=JSON.parse(_lc);if(_ld&&_ld.publicId)window._pubCached=_ld;}}catch(_e){}
+    window._pubFetchPromise=fetch('https://vexa-1234-default-rtdb.firebaseio.com/pub/'+pid+'.json')
+      .then(function(r){return r.ok?r.json():null;}).catch(function(){return null;});
+  } else if(mode==='resetPassword'&&oob){
+    /* ===== RESET PASSWORD MODE ===== */
+    window._resetMode=true;window._resetCode=oob;
     window._authTimer=setTimeout(function(){
       var ls=document.getElementById('ls'),au=document.getElementById('auth');
       var ab=document.getElementById('abox'),rb=document.getElementById('reset-box');
@@ -529,9 +509,8 @@ body.no-bgimg::before{display:none;}
       if(ab)ab.classList.add('hidden');
       if(rb)rb.classList.remove('hidden');
     },80);
-
-  }else{
-    /* ── AUTH PAGE ── show form fast */
+  } else {
+    /* ===== AUTH PAGE ===== */
     window._authTimer=setTimeout(function(){
       var ls=document.getElementById('ls'),au=document.getElementById('auth');
       if(ls&&au){ls.classList.add('out');setTimeout(function(){ls.classList.add('hidden');},300);au.classList.remove('hidden');}
@@ -560,14 +539,17 @@ body.no-bgimg::before{display:none;}
 
 <!-- AUTH -->
 <div id="auth" class="hidden"><div class="vlogo">VEXA</div><div class="vslogan">One tap, endless connection</div><div class="abox" id="abox"><p class="atitle" id="atitle">Login</p><div class="iw"><input type="email" id="aemail" class="ai" placeholder="Email" autocomplete="email"></div><div class="iw"><input type="password" id="apass" class="ai" placeholder="Password" autocomplete="current-password"><button class="eyebtn" type="button" onclick="togglePass()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div><div class="perr" id="perr">Incorrect password.</div><button class="abtn" id="abtn" onclick="doAuth()">Continue</button><button class="atoggle" id="atog" onclick="toggleMode()">New here? Sign Up</button><button class="atoggle" style="color:#2a2a2a;margin-top:-4px;" onclick="openForgotModal()">Forgot password?</button></div>
-<!-- RESET PASSWORD BOX — shown when user arrives from reset-email link -->
+<!-- RESET PASSWORD BOX -->
 <div class="abox hidden" id="reset-box" style="gap:16px;text-align:center;">
-  <div style="font-size:2rem;margin-bottom:-4px;">&#128272;</div>
-  <div><p class="atitle" style="margin-bottom:6px;">New Password</p><p style="font-size:.76rem;color:#444;line-height:1.55;">Type your new password and confirm it.<br>Or press Continue to go back to login.</p></div>
+  <div style="font-size:2.2rem;line-height:1;">&#128272;</div>
+  <div>
+    <p class="atitle" style="margin-bottom:6px;">New Password</p>
+    <p style="font-size:.76rem;color:#444;line-height:1.55;">Type your new password and confirm it below.<br>Or press Continue to go back to login.</p>
+  </div>
   <div class="iw"><input type="password" id="reset-pw1" class="ai" placeholder="New password" autocomplete="new-password"><button class="eyebtn" type="button" onclick="toggleResetPw(1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
   <div class="iw"><input type="password" id="reset-pw2" class="ai" placeholder="Confirm new password" autocomplete="new-password"><button class="eyebtn" type="button" onclick="toggleResetPw(2)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
-  <div class="perr" id="reset-err" style="display:none;"></div>
-  <div class="reset-ok" id="reset-ok">&#10003; Password updated! Redirecting&#8230;</div>
+  <div class="perr" id="reset-err" style="display:none;text-align:center;"></div>
+  <div id="reset-ok" style="display:none;color:#4c8;font-size:.82rem;background:rgba(0,200,80,.08);border:1px solid rgba(0,200,80,.2);border-radius:12px;padding:10px 14px;">&#10003; Password updated! Redirecting to login…</div>
   <button class="abtn" id="reset-btn" onclick="doResetPassword()">Continue</button>
 </div>
 </div>
@@ -727,20 +709,17 @@ body.no-bgimg::before{display:none;}
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-<!-- firebase-auth: loaded ONLY for auth/admin pages, NOT for public profiles.
-     Skipping it on public pages saves ~150KB download + 2-4s Auth init (network call to Google).
-     document.write() is safe here — this is a synchronous inline script during HTML parsing. -->
-<script>if(!new URLSearchParams(location.search).get('id')){document.write('\x3Cscript src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"\x3E\x3C\/script\x3E');}</script>
+<script>
+/* Skip firebase-auth for public profiles — not needed, saves ~150KB + 2-3s init time */
+if(!new URLSearchParams(location.search).get('id')){
+  document.write('<scr'+'ipt src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"><\/scr'+'ipt>');
+}
+</script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
 <script>
 /* ===== FIREBASE ===== */
 firebase.initializeApp({apiKey:"AIzaSyBDM5mBSTW8g3VlGusFWFdgN14hpqi3-zs",authDomain:"vexa-1234.firebaseapp.com",databaseURL:"https://vexa-1234-default-rtdb.firebaseio.com",projectId:"vexa-1234",storageBucket:"vexa-1234.firebasestorage.app",messagingSenderId:"362188399240",appId:"1:362188399240:web:fd6c50ae6ed3647bc8753d"});
-/* _auth: full object for admin pages, safe stub for public profiles (auth SDK not loaded) */
-const _auth=typeof firebase.auth==='function'?firebase.auth():{
-  onAuthStateChanged:function(){},
-  signOut:async function(){},
-  confirmPasswordReset:async function(c,p){return firebase.auth().confirmPasswordReset(c,p);}
-};
+const _auth=typeof firebase.auth==='function'?firebase.auth():{onAuthStateChanged:function(){},signOut:async function(){},confirmPasswordReset:async function(){}};
 const _db=firebase.database();
 const _MAX_BYTES=8*1024*1024,_MAX_VID=10*1024*1024;
 const _FBSave=async(uid,state)=>{
@@ -757,68 +736,43 @@ const _FBAnalytics=async pid=>{const s=await _db.ref('analytics/'+pid).once('val
 const _FBResetAnalytics=async pid=>{await _db.ref('analytics/'+pid).set(null);};
 const NF='<div style="height:100vh;display:flex;align-items:center;justify-content:center;flex-direction:column;background:#000;gap:14px;"><div style="font-family:Bebas Neue,sans-serif;font-size:3.5rem;letter-spacing:8px;background:linear-gradient(180deg,#fff,#888);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">VEXA</div><p style="color:#444;font-size:.9rem;">Profile not found</p></div>';
 
-/* ================================================================
-   EAGER PUBLIC LOAD — ultra-fast rendering for scanned profiles
-   Priority order:
-     1. localStorage cache   → 0ms   (instant)
-     2. REST fetch result    → ~0ms  (already in-flight from body-start)
-     3. Firebase SDK fallback → varies (only if REST failed)
-   ================================================================ */
+/* ===== EAGER PUBLIC LOAD (ULTRA-FAST) =====
+   Uses REST fetch started at body-start (before Firebase loaded).
+   Cache hit = instant. No cache = fetch already in-flight = minimal wait. */
 (async()=>{
-  const pid=new URLSearchParams(location.search).get('id');
-  if(!pid)return;
+  const pid=new URLSearchParams(location.search).get('id');if(!pid)return;
 
-  /* ── 1. CACHE HIT: render immediately ── */
+  /* CACHE HIT — render instantly from localStorage */
   if(window._pubCached){
-    window.S=window._pubCached;
-    if(!window.S.links)window.S.links=[];
+    window.S=window._pubCached;if(!window.S.links)window.S.links=[];
     window._pub=true;window._edit=false;window._pubReady=true;
     bootApp();
     _FBVisit(pid).catch(()=>{});
-    /* Silently update cache in background from REST result */
-    if(window._pubRestPromise){
-      window._pubRestPromise.then(d=>{
-        if(d&&d.publicId)try{localStorage.setItem('vexa_pub_'+pid,JSON.stringify(d));}catch(_e){}
-      }).catch(()=>{});
-    }
+    /* Update cache silently from pre-started fetch */
+    if(window._pubFetchPromise)window._pubFetchPromise
+      .then(d=>{if(d&&d.publicId)try{localStorage.setItem('vexa_pub_'+pid,JSON.stringify(d));}catch(_e){}})
+      .catch(()=>{});
     return;
   }
 
-  /* ── 2. NO CACHE: use REST fetch (already in-flight since page start) ── */
-  let d=null;
+  /* NO CACHE — await pre-started fetch (already running since page start) */
   try{
-    if(window._pubRestPromise) d=await window._pubRestPromise;
-  }catch(_){}
-
-  /* ── 3. REST failed or returned nothing → Firebase SDK fallback ── */
-  if(!d||!d.publicId){
-    try{d=await _FBLoadPub(pid);}catch(_){}
-  }
-
-  if(d&&d.publicId){
-    try{localStorage.setItem('vexa_pub_'+pid,JSON.stringify(d));}catch(_e){}
-    window.S=d;if(!window.S.links)window.S.links=[];
-    window._pub=true;window._edit=false;window._pubReady=true;
-    bootApp();_FBVisit(pid).catch(()=>{});
-  }else{
-    /* Profile genuinely doesn't exist */
-    hideLs();document.body.innerHTML=NF;
-  }
+    const d=window._pubFetchPromise?await window._pubFetchPromise:await _FBLoadPub(pid);
+    if(d&&d.publicId){
+      try{localStorage.setItem('vexa_pub_'+pid,JSON.stringify(d));}catch(_e){}
+      window.S=d;if(!window.S.links)window.S.links=[];
+      window._pub=true;window._edit=false;window._pubReady=true;
+      bootApp();_FBVisit(pid).catch(()=>{});
+    }else{hideLs();document.body.innerHTML=NF;}
+  }catch(_){hideLs();document.body.innerHTML=NF;}
 })();
 
 _auth.onAuthStateChanged(async user=>{
   clearTimeout(window._authTimer);
   const pid=new URLSearchParams(location.search).get('id');
-
-  /* Public profile: eager load already handles this. Skip entirely. */
-  if(pid){
-    if(window._pubReady)return;
-    /* Fallback only if eager load somehow didn't complete */
-    try{const d=await _FBLoadPub(pid);if(d){window.S=d;if(!window.S.links)window.S.links=[];window._pub=true;window._edit=false;bootApp();_FBVisit(pid).catch(()=>{});}else{hideLs();document.body.innerHTML=NF;}}catch(_){}
-    return;
-  }
-
-  /* Reset password mode */
+  /* Public profile — skip if already loaded by eager loader */
+  if(pid){if(window._pubReady)return;const d=await _FBLoadPub(pid);if(d){window.S=d;if(!window.S.links)window.S.links=[];window._pub=true;window._edit=false;bootApp();_FBVisit(pid).catch(()=>{});}else{hideLs();document.body.innerHTML=NF;}return;}
+  /* Reset password mode — show reset form */
   if(window._resetMode){
     hideLs();
     document.getElementById('auth').classList.remove('hidden');
@@ -827,8 +781,6 @@ _auth.onAuthStateChanged(async user=>{
     if(rb)rb.classList.remove('hidden');
     return;
   }
-
-  /* Normal auth */
   if(user){window._uid=user.uid;const d=await _FBLoad(user.uid);if(d){window.S=d;if(!window.S.links)window.S.links=[];}window._pub=false;window._edit=true;bootApp();}
   else{hideLs();document.getElementById('auth').classList.remove('hidden');}
 });
@@ -924,15 +876,8 @@ window.doAuth=async function(){
 };
 window.doLogout=async()=>{stopLiveLocation();await _auth.signOut();location.reload();};
 
-/* ===== RESET PASSWORD =====
-   Handles ?mode=resetPassword&oobCode=XXX links from Firebase email.
-   Requires: Firebase Console → Auth → Email Templates → Password Reset
-   → Customize action URL → set to your domain (e.g. https://sllr.co/vexa-eg)
-   ========================================================== */
-window.toggleResetPw=function(n){
-  const el=document.getElementById('reset-pw'+n);
-  if(el)el.type=el.type==='password'?'text':'password';
-};
+/* ===== RESET PASSWORD (handles ?mode=resetPassword&oobCode=XXX) ===== */
+window.toggleResetPw=function(n){const el=document.getElementById('reset-pw'+n);if(el)el.type=el.type==='password'?'text':'password';};
 window.doResetPassword=async function(){
   const p1=(document.getElementById('reset-pw1').value||'').trim();
   const p2=(document.getElementById('reset-pw2').value||'').trim();
@@ -940,24 +885,22 @@ window.doResetPassword=async function(){
   const ok=document.getElementById('reset-ok');
   const btn=document.getElementById('reset-btn');
   err.style.display='none';ok.style.display='none';
-
-  /* Empty → go to login immediately */
+  /* No password entered → go to login immediately */
   if(!p1&&!p2){location.href=location.origin+location.pathname;return;}
+  /* Validation */
   if(p1.length<6){err.innerText='Password must be at least 6 characters.';err.style.display='block';return;}
-  if(p1!==p2){err.innerText="Passwords don't match.";err.style.display='block';return;}
-
+  if(p1!==p2){err.innerText='Passwords don\'t match.';err.style.display='block';return;}
   btn.disabled=true;btn.innerText='Saving\u2026';
   try{
-    /* firebase.auth() is always available here (reset page = auth page) */
     await firebase.auth().confirmPasswordReset(window._resetCode,p1);
-    ok.style.display='block';btn.innerText='Done \u2713';
+    ok.style.display='block';
+    btn.innerText='Done \u2713';
+    /* Go to login after 2 seconds */
     setTimeout(()=>location.href=location.origin+location.pathname,2000);
   }catch(e){
     btn.disabled=false;btn.innerText='Continue';
     const c=e.code||'';
-    err.innerText=c.includes('expired')?'This reset link has expired. Request a new one.'
-      :c.includes('invalid')?'Invalid reset link. Request a new one.'
-      :e.message||'Something went wrong. Try again.';
+    err.innerText=c.includes('expired')?'This reset link has expired. Request a new one.':c.includes('invalid')?'Invalid reset link. Request a new one.':e.message||'Something went wrong. Try again.';
     err.style.display='block';
   }
 };
