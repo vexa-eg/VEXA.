@@ -900,7 +900,7 @@ window.updateUrlHint=()=>document.getElementById('url-hint').innerText=urlHintTe
 window.updateEditHint=()=>{const eh=document.getElementById('edit-hint');if(eh)eh.innerText=urlHintText(document.getElementById('edit-title').value,document.getElementById('edit-url').value);};
 
 /* ===== BOOT ===== */
-window.bootApp=function(){
+function bootApp(){
   hideLs();document.getElementById('auth').classList.add('hidden');
   const bio=document.getElementById('pbio'),nm=document.getElementById('pname');
   if(!window._pub){
