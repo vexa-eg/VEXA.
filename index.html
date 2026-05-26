@@ -773,13 +773,8 @@ const NF='<div style="height:100vh;display:flex;align-items:center;justify-conte
   if(window._pubCached){
     window.S=window._pubCached;
     if(!window.S.links)window.S.links=[];
-    /* _pubReady before await so auth fallback skips */
-    window._pubReady=true;
-    /* Defer one macrotask: lets const/let vars initialize (avoids TDZ crash).
-       Global init ~line 838 resets _pub, so we re-assert it after the await. */
-    await new Promise(r=>setTimeout(r,0));
-    window._pub=true; window._edit=false;
-    bootApp();
+    window._pub=true;window._edit=false;window._pubReady=true;
+    bootApp(); /* safe: function declaration is hoisted — always defined */
     _FBVisit(pid).catch(()=>{});
     /* Silently update cache in background from REST result */
     if(window._pubRestPromise){
