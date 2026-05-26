@@ -774,12 +774,7 @@ const NF='<div style="height:100vh;display:flex;align-items:center;justify-conte
     window.S=window._pubCached;
     if(!window.S.links)window.S.links=[];
     window._pub=true;window._edit=false;window._pubReady=true;
-    /* CRITICAL FIX: bootApp is assigned as a function-expression lower in this
-       same script block. The async IIFE runs synchronously to this point (no
-       prior await), so bootApp is still undefined. One macrotask tick lets the
-       rest of the block finish executing, making bootApp available. Cost: <1ms. */
-    await new Promise(r=>setTimeout(r,0));
-    bootApp();
+    bootApp(); /* safe: function declaration is hoisted — always defined */
     _FBVisit(pid).catch(()=>{});
     /* Silently update cache in background from REST result */
     if(window._pubRestPromise){
