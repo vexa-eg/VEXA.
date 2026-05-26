@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#000000">
 <title>VEXA</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -726,12 +727,12 @@ body.no-bgimg::before{display:none;}
 <input type="file" id="albmediainput" class="hidden" accept="image/*,video/*" multiple onchange="onAlbumMediaPick(this)">
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js" crossorigin="anonymous"></script>
 <!-- firebase-auth: loaded ONLY for auth/admin pages, NOT for public profiles.
      Skipping it on public pages saves ~150KB download + 2-4s Auth init (network call to Google).
      document.write() is safe here — this is a synchronous inline script during HTML parsing. -->
 <script>if(!new URLSearchParams(location.search).get('id')){document.write('\x3Cscript src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"\x3E\x3C\/script\x3E');}</script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js" crossorigin="anonymous"></script>
 <script>
 /* ===== FIREBASE ===== */
 firebase.initializeApp({apiKey:"AIzaSyBDM5mBSTW8g3VlGusFWFdgN14hpqi3-zs",authDomain:"vexa-1234.firebaseapp.com",databaseURL:"https://vexa-1234-default-rtdb.firebaseio.com",projectId:"vexa-1234",storageBucket:"vexa-1234.firebasestorage.app",messagingSenderId:"362188399240",appId:"1:362188399240:web:fd6c50ae6ed3647bc8753d"});
@@ -773,6 +774,11 @@ const NF='<div style="height:100vh;display:flex;align-items:center;justify-conte
     window.S=window._pubCached;
     if(!window.S.links)window.S.links=[];
     window._pub=true;window._edit=false;window._pubReady=true;
+    /* CRITICAL FIX: bootApp is assigned as a function-expression lower in this
+       same script block. The async IIFE runs synchronously to this point (no
+       prior await), so bootApp is still undefined. One macrotask tick lets the
+       rest of the block finish executing, making bootApp available. Cost: <1ms. */
+    await new Promise(r=>setTimeout(r,0));
     bootApp();
     _FBVisit(pid).catch(()=>{});
     /* Silently update cache in background from REST result */
