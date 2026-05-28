@@ -875,7 +875,7 @@ _auth.onAuthStateChanged(async user=>{
 });
 
 /* ===== GLOBALS ===== */
-window.S=null;window._uid=null;window._pub=false;window._edit=true;
+if(!window._pubReady){window.S=null;window._pub=false;window._edit=true;}window._uid=null;
 let passVis=false,curTab='link',pendMedia=null,qrInst=null,isSignUp=false;
 let addToGrpIdx=-1,ctxGi=-1,ctxIi=-1,editGrpIdx=null,_albumGi=-1;
 let _confirmCb=null,_saveTimer=null,_pwCb=null,_liveWatchId=null;
