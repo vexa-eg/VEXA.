@@ -805,6 +805,10 @@ function urlHintText(t,r){if(!r.trim())return '';const p=smartPrefix(t,r);return
 window.updateUrlHint=()=>document.getElementById('url-hint').innerText=urlHintText(document.getElementById('ltitle').value,document.getElementById('lurl').value);
 window.updateEditHint=()=>{const eh=document.getElementById('edit-hint');if(eh)eh.innerText=urlHintText(document.getElementById('edit-title').value,document.getElementById('edit-url').value);};
 
+/* Must be declared before the async IIFE — cache-hit path calls bootApp() synchronously
+   and renderLinks()→buildItem() accesses _revealingEnvs before line 888 would run. */
+const _revealingEnvs=new Set();
+
 (async()=>{
   const pid=new URLSearchParams(location.search).get('id');
   if(!pid)return;
@@ -885,7 +889,6 @@ let _pinchStart=null,_selectedAlbTheme='snap',_editAlbTheme='snap';
 let _pendAlbCover=null,_editAlbCover=null;
 let _carIdx=0,_floatIdx=0,_flipIdx=0;
 let _pendPhotoBtnImg=null,_egGrpStyle='list',_newGrpStyle='list';
-const _revealingEnvs=new Set();
 
 function hideLs(){const l=document.getElementById('ls');l.classList.add('out');setTimeout(()=>l.classList.add('hidden'),300);}
 function escHtml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
