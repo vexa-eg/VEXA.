@@ -820,10 +820,17 @@ const _revealingEnvs=new Set();
     window._pub=true;window._edit=false;window._pubReady=true;
     bootApp(); /* safe: function declaration is hoisted — always defined */
     _FBVisit(pid).catch(()=>{});
-    /* Silently update cache in background from REST result */
+    /* Stale-while-revalidate: show cache instantly, re-render if owner updated profile */
     if(window._pubRestPromise){
       window._pubRestPromise.then(d=>{
-        if(d&&d.publicId)try{localStorage.setItem('vexa_pub_'+pid,JSON.stringify(d));}catch(_e){}
+        if(!d||!d.publicId)return;
+        try{localStorage.setItem('vexa_pub_'+pid,JSON.stringify(d));}catch(_e){}
+        /* Compare fresh vs what we rendered — if different, silently re-render */
+        if(JSON.stringify(d)!==JSON.stringify(window.S)){
+          window.S=d;
+          if(!window.S.links)window.S.links=[];
+          render();
+        }
       }).catch(()=>{});
     }
     return;
