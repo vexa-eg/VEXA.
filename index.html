@@ -1141,6 +1141,26 @@ function buildAlbumCard(l,i){
   return `<div class="album-card">${coverHtml}<div class="album-card-footer"><span class="album-card-name">&#128193; ${escHtml(l.name||'Album')}</span>${addBtn}${editBtn}</div></div>`;
 }
 
+
+/* ===== UPDATE ALBUM CARD COUNT (no full re-render) ===== */
+function updateAlbumCardCount(gi){
+  const alb=window.S.links[gi];if(!alb)return;
+  const count=(alb.items||[]).length;
+  /* Update the count badge inside the album cover overlay */
+  const cards=document.querySelectorAll('#lsec .album-cover-wrap, #lsec .album-no-cover');
+  cards.forEach(wrap=>{
+    const onclick=wrap.getAttribute('onclick')||'';
+    if(onclick.includes('openAlbumViewer('+gi+')')){
+      /* cover overlay count */
+      const badge=wrap.querySelector('.album-cover-overlay div:last-child');
+      if(badge)badge.innerText=count+' ITEMS';
+      /* no-cover count text */
+      const sub=wrap.querySelector('div>div:last-child');
+      if(sub&&sub.innerText.includes('item'))sub.innerText=count+' items';
+    }
+  });
+}
+
 function renderLinks(){
   const sec=document.getElementById('lsec');sec.innerHTML='';
   const linkStyle=window.S?.linkStyle||'list';let gridWrap=null;
@@ -1392,22 +1412,23 @@ window.onVidPick=inp=>{
 let _pendPbStyle='full';
 window.setPbStyle=function(s){if(s!=='full'&&s!=='small')s='full';_pendPbStyle=s;['full','small'].forEach(k=>{const el=document.getElementById('pbs-'+k);if(el)el.classList.toggle('selected',k===s);});};
 window.onPhotoBtnPick=inp=>{const f=inp.files[0];inp.value='';if(!f)return;resizeImg(f,900,.82,d64=>{_pendPhotoBtnImg=d64;const prev=document.getElementById('photobtn-prev');if(prev){prev.src=d64;prev.style.display='block';}const box=document.getElementById('photobtnbox');if(box)box.style.display='none';toast('Image ready \u2713','s');});};
-function onAlbumMediaPick_direct(files){
+async function onAlbumMediaPick_direct(files){
   const gi=addToGrpIdx>=0?addToGrpIdx:-1;if(gi<0||!window.S.links[gi]||window.S.links[gi].type!=='album'){toast('Select an album first','e');return;}
   const alb=window.S.links[gi];if(!alb.items)alb.items=[];
   if(!files.length)return;
-  /* فلترة الفيديوهات الكبيرة قبل أي قراءة */
-  const filtered=Array.from(files).filter(f=>{
-    if(f.type.startsWith('video/')&&!_checkVidSize(f))return false;
-    return true;
-  });
+  const filtered=Array.from(files).filter(f=>{if(f.type.startsWith('video/')&&!_checkVidSize(f))return false;return true;});
   if(!filtered.length)return;
-  toast('Adding '+filtered.length+' item(s)\u2026','s');let done=0;
-  filtered.forEach(f=>{
-    if(f.type.startsWith('image/')){resizeImg(f,1200,.85,d64=>{alb.items.push({type:'image',url:d64,title:'Photo'});done++;if(done===filtered.length){saveNow().then(()=>{renderLinks();closeModals();openAlbumViewer(gi);toast('Added '+filtered.length+' item(s) \u2713','s');});}});}
-    else if(f.type.startsWith('video/')){const r=new FileReader();r.onload=ev=>{alb.items.push({type:'video',url:ev.target.result,title:'Video'});done++;if(done===filtered.length){saveNow().then(()=>{renderLinks();closeModals();openAlbumViewer(gi);toast('Added '+filtered.length+' item(s) \u2713','s');});}};r.readAsDataURL(f);}
-    else done++;
-  });
+  toast('Adding '+filtered.length+' item(s)\u2026','s');
+  for(const f of filtered){
+    await new Promise(resolve=>{
+      if(f.type.startsWith('image/')){resizeImg(f,1200,.85,d64=>{alb.items.push({type:'image',url:d64,title:'Photo'});resolve();});}
+      else if(f.type.startsWith('video/')){const r=new FileReader();r.onload=ev=>{alb.items.push({type:'video',url:ev.target.result,title:'Video'});resolve();};r.onerror=()=>resolve();r.readAsDataURL(f);}
+      else resolve();
+    });
+    updateAlbumCardCount(gi);
+  }
+  await saveNow();
+  renderLinks();closeModals();openAlbumViewer(gi);toast('Added '+filtered.length+' item(s) \u2713','s');
 }
 window.onAlbumMediaPick=inp=>{
   const files=Array.from(inp.files);inp.value='';if(!files.length)return;
@@ -1477,7 +1498,7 @@ window.openEditAlbum=gi=>{
   const hasPw=!!a.password;document.getElementById('ealb-pw-on').checked=hasPw;togglePwInput('ealb-pw-field',hasPw);document.getElementById('ealb-pw').value=a.password||'';
   document.getElementById('ealbmod').classList.remove('hidden');
 };
-window.saveAlbumEdit=function(){const a=window.S.links[_albumGi];if(!a)return;a.name=document.getElementById('ealb-name').value.trim()||a.name;a.albumTheme=_editAlbTheme;if(_editAlbCover)a.coverUrl=_editAlbCover;const pwOn=document.getElementById('ealb-pw-on').checked,pw=document.getElementById('ealb-pw').value.trim();a.password=pwOn&&pw?pw:null;save();renderLinks();closeModals();toast('Updated \u2713','s');_editAlbCover=null;};
+window.saveAlbumEdit=async function(){const a=window.S.links[_albumGi];if(!a)return;a.name=document.getElementById('ealb-name').value.trim()||a.name;a.albumTheme=_editAlbTheme;if(_editAlbCover)a.coverUrl=_editAlbCover;const pwOn=document.getElementById('ealb-pw-on').checked,pw=document.getElementById('ealb-pw').value.trim();a.password=pwOn&&pw?pw:null;await saveNow();renderLinks();closeModals();toast('Saved \u2713','s');_editAlbCover=null;};
 
 let _avEditMode=false;
 /* ===== ALBUM VIEWER ===== */
@@ -1525,7 +1546,7 @@ function renderAvEditBar(){
     if(it.type==='video'){th.innerHTML=`<video src="${it.url}" preload="metadata" style="width:100%;height:100%;object-fit:cover;display:block;" muted></video>`;}
     else{th.innerHTML=`<img src="${it.url}" loading="lazy" alt="">`;}
     /* delete */
-    const del=document.createElement('div');del.className='av-edit-del';del.innerHTML='&#x2715;';del.onclick=async e=>{e.stopPropagation();alb.items.splice(idx,1);const mode=alb.albumTheme||'snap';renderAlbumContent(mode);renderAvEditBar();await saveNow();};th.appendChild(del);
+    const del=document.createElement('div');del.className='av-edit-del';del.innerHTML='&#x2715;';del.onclick=async e=>{e.stopPropagation();alb.items.splice(idx,1);const mode=alb.albumTheme||'snap';renderAlbumContent(mode);renderAvEditBar();updateAlbumCardCount(_albumGi);await saveNow();};th.appendChild(del);
     /* drag reorder */
     th.addEventListener('dragstart',e=>{e.dataTransfer.setData('text/plain',idx);th.style.opacity='.4';});
     th.addEventListener('dragend',()=>{th.style.opacity='1';});
@@ -1536,20 +1557,21 @@ function renderAvEditBar(){
   });
 }
 
-window.onAvAddPick=function(inp){
+window.onAvAddPick=async function(inp){
   const files=Array.from(inp.files);inp.value='';if(!files.length)return;
   const alb=window.S.links[_albumGi];if(!alb)return;if(!alb.items)alb.items=[];
-  const filtered=files.filter(f=>{
-    if(f.type.startsWith('video/')&&!_checkVidSize(f))return false;
-    return true;
-  });
+  const filtered=files.filter(f=>{if(f.type.startsWith('video/')&&!_checkVidSize(f))return false;return true;});
   if(!filtered.length)return;
-  toast('Adding '+filtered.length+' item(s)\u2026','s');let done=0;
-  filtered.forEach(f=>{
-    if(f.type.startsWith('image/')){resizeImg(f,1200,.85,d64=>{alb.items.push({type:'image',url:d64,title:'Photo'});done++;if(done===filtered.length){saveNow();const mode=alb.albumTheme||'snap';renderAlbumContent(mode);if(_avEditMode)renderAvEditBar();toast('Added \u2713','s');}});}
-    else if(f.type.startsWith('video/')){const r=new FileReader();r.onload=ev=>{alb.items.push({type:'video',url:ev.target.result,title:'Video'});done++;if(done===filtered.length){saveNow();const mode=alb.albumTheme||'snap';renderAlbumContent(mode);if(_avEditMode)renderAvEditBar();toast('Added \u2713','s');}};r.readAsDataURL(f);}
-    else done++;
-  });
+  toast('Adding '+filtered.length+' item(s)\u2026','s');
+  for(const f of filtered){
+    await new Promise(resolve=>{
+      if(f.type.startsWith('image/')){resizeImg(f,1200,.85,d64=>{alb.items.push({type:'image',url:d64,title:'Photo'});resolve();});}
+      else if(f.type.startsWith('video/')){const r=new FileReader();r.onload=ev=>{alb.items.push({type:'video',url:ev.target.result,title:'Video'});resolve();};r.onerror=()=>resolve();r.readAsDataURL(f);}
+      else resolve();
+    });
+    const mode=alb.albumTheme||'snap';renderAlbumContent(mode);if(_avEditMode)renderAvEditBar();updateAlbumCardCount(_albumGi);
+  }
+  await saveNow();toast('Added \u2713','s');
 };
 
 function mediaEl(it,style){
