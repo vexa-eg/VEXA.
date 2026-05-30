@@ -475,7 +475,18 @@ body.no-bgimg::before{display:none;}
 #env-overlay-close{position:fixed;top:16px;right:16px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:#fff;width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;z-index:7300;}
 #env-overlay-paper{background:linear-gradient(155deg,#1c1828,#2a1f14);border-radius:16px;padding:32px 26px;max-width:460px;width:100%;max-height:80vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);animation:envOverlayIn .4s cubic-bezier(.16,1,.3,1);}
 #env-overlay-text{font-size:.96rem;line-height:1.7;white-space:pre-wrap;word-break:break-word;color:#fff;}
-/* FORGOT PW */
+/* ALBUM VIEWER EDIT MODE */
+.av-edit-bar{display:flex;align-items:center;gap:8px;padding:8px 16px;border-bottom:1px solid rgba(255,255,255,.08);flex-shrink:0;overflow-x:auto;scrollbar-width:none;}
+.av-edit-bar::-webkit-scrollbar{display:none;}
+.av-edit-thumb{position:relative;width:56px;height:56px;border-radius:10px;overflow:hidden;flex-shrink:0;cursor:grab;border:2px solid transparent;transition:border-color .18s;}
+.av-edit-thumb.drag-over{border-color:#fff;}
+.av-edit-thumb img,.av-edit-thumb video{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none;}
+.av-edit-del{position:absolute;top:2px;right:2px;width:18px;height:18px;background:rgba(255,40,40,.85);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff;cursor:pointer;z-index:2;}
+.av-edit-add{width:56px;height:56px;border-radius:10px;border:1px dashed rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;color:#555;font-size:22px;cursor:pointer;flex-shrink:0;}
+.av-edit-add:hover{border-color:#fff;color:#fff;}
+.av-edit-toggle{padding:6px 14px;border-radius:20px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:#fff;font-size:.72rem;font-weight:700;cursor:pointer;white-space:nowrap;letter-spacing:.5px;}
+.av-edit-toggle.active{background:rgba(255,255,255,.2);border-color:rgba(255,255,255,.5);}
+
 #forgot-modal{position:fixed;inset:0;background:rgba(0,0,0,.92);display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;pointer-events:none;transition:opacity .22s;backdrop-filter:blur(8px);z-index:7600;}
 #forgot-modal.on{opacity:1;pointer-events:all;}
 .forgot-box{background:#161616;border:1px solid rgba(255,255,255,.12);border-radius:22px;padding:28px 24px;width:100%;max-width:320px;display:flex;flex-direction:column;gap:14px;}
@@ -669,7 +680,7 @@ body.no-bgimg::before{display:none;}
     <div id="photobtn-pw-field" style="display:none;"><input type="text" id="photobtn-pw" class="mi" placeholder="Set password&#8230;"></div>
   </div>
   <div id="tp-image" class="hidden"><input type="text" id="img-title" class="mi" placeholder="Label (e.g. My Photos)"><div class="upbox" id="imgbox" onclick="triggerUpload('imginput')"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>Select image</div><div class="img-hint">&#9432; Best size: 900 &times; 600 px</div><img id="imgprev" src="" style="display:none;width:100%;border-radius:12px;margin-top:10px;max-height:220px;object-fit:cover;"><p class="clabel">Password (optional)</p><div class="pw-row"><label class="pw-toggle"><input type="checkbox" id="img-pw-on" onchange="togglePwInput('img-pw-field',this.checked)"><span class="pw-track"></span><span class="pw-thumb"></span></label><span class="pw-lbl">Protect with password</span></div><div id="img-pw-field" style="display:none;"><input type="text" id="img-pw" class="mi" placeholder="Set password&#8230;"></div></div>
-  <div id="tp-video" class="hidden"><input type="text" id="vid-title" class="mi" placeholder="Label (e.g. Promo Video)"><div class="vid-size-info">&#9888;&#65039; Max video size: <strong>10 MB</strong> &mdash; Compress before uploading</div><div class="upbox" id="vidbox" onclick="triggerUpload('vidinput')"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>Select video</div><video id="vidprev" style="display:none;width:100%;border-radius:12px;margin-top:10px;max-height:220px;" controls playsinline></video><p class="clabel">Password (optional)</p><div class="pw-row"><label class="pw-toggle"><input type="checkbox" id="vid-pw-on" onchange="togglePwInput('vid-pw-field',this.checked)"><span class="pw-track"></span><span class="pw-thumb"></span></label><span class="pw-lbl">Protect with password</span></div><div id="vid-pw-field" style="display:none;"><input type="text" id="vid-pw" class="mi" placeholder="Set password&#8230;"></div></div>
+  <div id="tp-video" class="hidden"><input type="text" id="vid-title" class="mi" placeholder="Label (e.g. Promo Video)"><div class="upbox" id="vidbox" onclick="triggerUpload('vidinput')"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>Select video</div><video id="vidprev" style="display:none;width:100%;border-radius:12px;margin-top:10px;max-height:220px;" controls playsinline></video><p class="clabel">Password (optional)</p><div class="pw-row"><label class="pw-toggle"><input type="checkbox" id="vid-pw-on" onchange="togglePwInput('vid-pw-field',this.checked)"><span class="pw-track"></span><span class="pw-thumb"></span></label><span class="pw-lbl">Protect with password</span></div><div id="vid-pw-field" style="display:none;"><input type="text" id="vid-pw" class="mi" placeholder="Set password&#8230;"></div></div>
   <div id="tp-location" class="hidden"><input type="text" id="loc-label-input" class="mi" placeholder="Label (e.g. Our Shop)"><p class="clabel">Password (optional)</p><div class="pw-row"><label class="pw-toggle"><input type="checkbox" id="loc-pw-on" onchange="togglePwInput('loc-pw-field',this.checked)"><span class="pw-track"></span><span class="pw-thumb"></span></label><span class="pw-lbl">Protect with password</span></div><div id="loc-pw-field" style="display:none;"><input type="text" id="loc-pw" class="mi" placeholder="Set password&#8230;"></div></div>
   <div id="tp-group" class="hidden"><input type="text" id="grp-name" class="mi" placeholder="Group name (e.g. Social Media)"><p class="clabel">Layout</p><div class="layout-toggle"><div class="layout-opt on" id="grplo-list" onclick="setNewGrpLayout('list')">&#9776; List</div><div class="layout-opt" id="grplo-grid" onclick="setNewGrpLayout('grid')">&#8857; Grid</div></div><p class="clabel">Group Colors</p><div class="grp-color-row"><div class="ci">Header BG<input type="color" id="grp-hbg" value="#1a1a1a"></div><div class="ci">Header Text<input type="color" id="grp-htxt" value="#ffffff"></div><div class="ci">Cards BG<input type="color" id="grp-cbg" value="#111111"></div></div><p class="clabel">Link Colors (List &amp; Grid)</p><div class="grp-color-row"><div class="ci">Icon Color<input type="color" id="grp-icon-color" value="#ffffff"></div><div class="ci">Card BG<input type="color" id="grp-icon-bg" value="#1e1e1e"></div><div class="ci">Label Color<input type="color" id="grp-label-color" value="#ffffff"></div></div><p class="clabel">Password (optional)</p><div class="pw-row"><label class="pw-toggle"><input type="checkbox" id="grp-pw-on" onchange="togglePwInput('grp-pw-field',this.checked)"><span class="pw-track"></span><span class="pw-thumb"></span></label><span class="pw-lbl">Lock group with password</span></div><div id="grp-pw-field" style="display:none;"><input type="text" id="grp-pw" class="mi" placeholder="Set password&#8230;"></div></div>
   <div id="tp-album" class="hidden">
@@ -715,12 +726,14 @@ body.no-bgimg::before{display:none;}
 </div>
 
 <!-- ALBUM VIEWER -->
-<div id="album-viewer"><div class="av-header"><button class="av-close" onclick="closeAlbumViewer()">&#x2715;</button><div class="av-title" id="av-title">Album</div></div><div class="av-content" id="av-content"></div></div>
+<div id="album-viewer"><div class="av-header"><button class="av-close" onclick="closeAlbumViewer()">&#x2715;</button><div class="av-title" id="av-title">Album</div><button class="av-edit-toggle edit-only hidden" id="av-edit-toggle" onclick="toggleAlbumEditMode()">&#9998; Edit</button></div><div class="av-edit-bar edit-only hidden" id="av-edit-bar"></div><div class="av-content" id="av-content"></div></div>
+
+<input type="file" id="av-add-input" class="hidden" accept="image/*,video/*" multiple onchange="onAvAddPick(this)">
 
 <input type="file" id="avinput" class="hidden" accept="image/*" onchange="onAvatarPick(this)">
 <input type="file" id="bginput" class="hidden" accept="image/*" onchange="onBgPick(this)">
-<input type="file" id="imginput" class="hidden" accept="image/*" onchange="onImgPick(this)">
-<input type="file" id="vidinput" class="hidden" accept="video/*" onchange="onVidPick(this)">
+<input type="file" id="imginput" class="hidden" accept="image/*" multiple onchange="onImgPick(this)">
+<input type="file" id="vidinput" class="hidden" accept="video/*" multiple onchange="onVidPick(this)">
 <input type="file" id="photobtn-img-input" class="hidden" accept="image/*" onchange="onPhotoBtnPick(this)">
 <input type="file" id="albcoverinput" class="hidden" accept="image/*" onchange="onAlbCoverPick(this,'alb-cover-prev')">
 <input type="file" id="ealb-cover-input" class="hidden" accept="image/*" onchange="onAlbCoverPick(this,'ealb-cover-prev')">
@@ -743,7 +756,7 @@ const _auth=typeof firebase.auth==='function'?firebase.auth():{
   confirmPasswordReset:async function(c,p){return firebase.auth().confirmPasswordReset(c,p);}
 };
 const _db=firebase.database();
-const _MAX_BYTES=8*1024*1024,_MAX_VID=10*1024*1024;
+const _MAX_BYTES=8*1024*1024;
 const _FBSave=async(uid,state)=>{
   function strip(links){return(links||[]).map(l=>{const c={...l};delete c._unlocked;if(c.items)c.items=strip(c.items);return c;});}
   const s={...JSON.parse(JSON.stringify(state)),links:strip(state.links)};
@@ -1353,22 +1366,41 @@ window.selectEditAlbTheme=function(t){_editAlbTheme=t;['snap','carousel','floati
 window.onAlbCoverPick=function(inp,prevId){const f=inp.files[0];inp.value='';if(!f)return;resizeImg(f,900,.82,d64=>{if(prevId==='alb-cover-prev')_pendAlbCover=d64;else _editAlbCover=d64;const prev=document.getElementById(prevId);if(prev){prev.src=d64;prev.style.display='block';}const box=document.getElementById(prevId==='alb-cover-prev'?'alb-cover-box':'alb-cover-box2');if(box)box.style.display='none';toast('Cover ready \u2713','s');});};
 
 /* ===== MEDIA PICK ===== */
-window.onImgPick=inp=>{const f=inp.files[0];inp.value='';if(!f)return;resizeImg(f,900,.82,d64=>{pendMedia={type:'image',url:d64};document.getElementById('imgprev').src=d64;document.getElementById('imgprev').style.display='block';document.getElementById('imgbox').style.display='none';});};
-window.onVidPick=inp=>{const f=inp.files[0];inp.value='';if(!f)return;if(f.size>_MAX_VID){toast('Video too large! Max 10MB. Please compress first.','e');return;}toast('Reading video\u2026','s');const r=new FileReader();r.onload=e=>{pendMedia={type:'video',url:e.target.result};document.getElementById('vidprev').src=e.target.result;document.getElementById('vidprev').style.display='block';document.getElementById('vidbox').style.display='none';toast('Video ready \u2713','s');};r.readAsDataURL(f);};
+window.onImgPick=inp=>{
+  const files=Array.from(inp.files);inp.value='';if(!files.length)return;
+  /* إضافة مباشرة للألبوم لو إحنا جوا ألبوم */
+  if(addToGrpIdx>=0&&window.S.links[addToGrpIdx]&&window.S.links[addToGrpIdx].type==='album'){
+    onAlbumMediaPick_direct(files);return;
+  }
+  /* صورة مفردة للبروفايل — بنستخدم أول ملف بس */
+  const f=files[0];resizeImg(f,900,.82,d64=>{pendMedia={type:'image',url:d64};document.getElementById('imgprev').src=d64;document.getElementById('imgprev').style.display='block';document.getElementById('imgbox').style.display='none';});
+};
+window.onVidPick=inp=>{
+  const files=Array.from(inp.files);inp.value='';if(!files.length)return;
+  /* إضافة مباشرة للألبوم لو إحنا جوا ألبوم */
+  if(addToGrpIdx>=0&&window.S.links[addToGrpIdx]&&window.S.links[addToGrpIdx].type==='album'){
+    onAlbumMediaPick_direct(files);return;
+  }
+  /* فيديو مفرد للبروفايل — بنستخدم أول ملف بس */
+  const f=files[0];toast('Reading video\u2026','s');const r=new FileReader();r.onload=e=>{pendMedia={type:'video',url:e.target.result};document.getElementById('vidprev').src=e.target.result;document.getElementById('vidprev').style.display='block';document.getElementById('vidbox').style.display='none';toast('Video ready \u2713','s');};r.readAsDataURL(f);
+};
 let _pendPbStyle='full';
 window.setPbStyle=function(s){if(s!=='full'&&s!=='small')s='full';_pendPbStyle=s;['full','small'].forEach(k=>{const el=document.getElementById('pbs-'+k);if(el)el.classList.toggle('selected',k===s);});};
 window.onPhotoBtnPick=inp=>{const f=inp.files[0];inp.value='';if(!f)return;resizeImg(f,900,.82,d64=>{_pendPhotoBtnImg=d64;const prev=document.getElementById('photobtn-prev');if(prev){prev.src=d64;prev.style.display='block';}const box=document.getElementById('photobtnbox');if(box)box.style.display='none';toast('Image ready \u2713','s');});};
-window.onAlbumMediaPick=inp=>{
-  const files=Array.from(inp.files);inp.value='';if(!files.length)return;
+function onAlbumMediaPick_direct(files){
   const gi=addToGrpIdx>=0?addToGrpIdx:-1;if(gi<0||!window.S.links[gi]||window.S.links[gi].type!=='album'){toast('Select an album first','e');return;}
   const alb=window.S.links[gi];if(!alb.items)alb.items=[];
-  const remaining=50-alb.items.length;if(remaining<=0){toast('Album is full (50 items max)','e');return;}
-  const toProcess=files.slice(0,remaining);toast('Adding '+toProcess.length+' item(s)\u2026','s');let done=0;
-  toProcess.forEach(f=>{
-    if(f.type.startsWith('image/')){resizeImg(f,1200,.85,d64=>{alb.items.push({type:'image',url:d64,title:'Photo'});done++;if(done===toProcess.length){save();renderLinks();closeModals();toast('Added '+toProcess.length+' item(s) \u2713','s');}});}
-    else if(f.type.startsWith('video/')){if(f.size>_MAX_VID){done++;toast('Skipped video > 10MB','e');return;}const r=new FileReader();r.onload=ev=>{alb.items.push({type:'video',url:ev.target.result,title:'Video'});done++;if(done===toProcess.length){save();renderLinks();closeModals();toast('Added '+toProcess.length+' item(s) \u2713','s');}};r.readAsDataURL(f);}
+  if(!files.length)return;
+  toast('Adding '+files.length+' item(s)\u2026','s');let done=0;
+  files.forEach(f=>{
+    if(f.type.startsWith('image/')){resizeImg(f,1200,.85,d64=>{alb.items.push({type:'image',url:d64,title:'Photo'});done++;if(done===files.length){save();renderLinks();closeModals();toast('Added '+files.length+' item(s) \u2713','s');}});}
+    else if(f.type.startsWith('video/')){const r=new FileReader();r.onload=ev=>{alb.items.push({type:'video',url:ev.target.result,title:'Video'});done++;if(done===files.length){save();renderLinks();closeModals();toast('Added '+files.length+' item(s) \u2713','s');}};r.readAsDataURL(f);}
     else done++;
   });
+}
+window.onAlbumMediaPick=inp=>{
+  const files=Array.from(inp.files);inp.value='';if(!files.length)return;
+  onAlbumMediaPick_direct(files);
 };
 
 /* ===== ADD ITEM ===== */
@@ -1436,14 +1468,64 @@ window.openEditAlbum=gi=>{
 };
 window.saveAlbumEdit=function(){const a=window.S.links[_albumGi];if(!a)return;a.name=document.getElementById('ealb-name').value.trim()||a.name;a.albumTheme=_editAlbTheme;if(_editAlbCover)a.coverUrl=_editAlbCover;const pwOn=document.getElementById('ealb-pw-on').checked,pw=document.getElementById('ealb-pw').value.trim();a.password=pwOn&&pw?pw:null;save();renderLinks();closeModals();toast('Updated \u2713','s');_editAlbCover=null;};
 
+let _avEditMode=false;
 /* ===== ALBUM VIEWER ===== */
 window.openAlbumViewer=function(gi){
   _albumGi=gi;const alb=window.S.links[gi];if(!alb)return;
+  _avEditMode=false;
   document.getElementById('av-title').innerText=alb.name||'Album';
   document.getElementById('album-viewer').classList.add('on');
+  /* show edit toggle only for owner */
+  const tog=document.getElementById('av-edit-toggle'),bar=document.getElementById('av-edit-bar');
+  if(window._edit){tog.classList.remove('hidden');tog.innerText='\u270E Edit';}
+  else{tog.classList.add('hidden');}
+  bar.classList.add('hidden');bar.innerHTML='';
   const mode=alb.albumTheme||'snap';renderAlbumContent(mode);
 };
-window.closeAlbumViewer=function(){document.getElementById('album-viewer').classList.remove('on');};
+window.closeAlbumViewer=function(){document.getElementById('album-viewer').classList.remove('on');_avEditMode=false;};
+
+window.toggleAlbumEditMode=function(){
+  _avEditMode=!_avEditMode;
+  const tog=document.getElementById('av-edit-toggle'),bar=document.getElementById('av-edit-bar');
+  tog.innerText=_avEditMode?'\u2713 Done':'\u270E Edit';
+  tog.classList.toggle('active',_avEditMode);
+  if(_avEditMode){bar.classList.remove('hidden');renderAvEditBar();}
+  else{bar.classList.add('hidden');bar.innerHTML='';}
+};
+
+function renderAvEditBar(){
+  const bar=document.getElementById('av-edit-bar');if(!bar)return;
+  const alb=window.S.links[_albumGi];const items=(alb&&alb.items)||[];
+  bar.innerHTML='';
+  /* Add button */
+  const addEl=document.createElement('div');addEl.className='av-edit-add';addEl.title='Add media';addEl.innerHTML='+';addEl.onclick=()=>triggerUpload('av-add-input');bar.appendChild(addEl);
+  /* Thumbnails with delete + drag-to-reorder */
+  items.forEach((it,idx)=>{
+    const th=document.createElement('div');th.className='av-edit-thumb';th.draggable=true;th.dataset.idx=idx;
+    if(it.type==='video'){th.innerHTML=`<video src="${it.url}" preload="metadata" style="width:100%;height:100%;object-fit:cover;display:block;" muted></video>`;}
+    else{th.innerHTML=`<img src="${it.url}" loading="lazy" alt="">`;}
+    /* delete */
+    const del=document.createElement('div');del.className='av-edit-del';del.innerHTML='&#x2715;';del.onclick=e=>{e.stopPropagation();askConfirm('Delete this item?',()=>{alb.items.splice(idx,1);save();const mode=alb.albumTheme||'snap';renderAlbumContent(mode);renderAvEditBar();});};th.appendChild(del);
+    /* drag reorder */
+    th.addEventListener('dragstart',e=>{e.dataTransfer.setData('text/plain',idx);th.style.opacity='.4';});
+    th.addEventListener('dragend',()=>{th.style.opacity='1';});
+    th.addEventListener('dragover',e=>{e.preventDefault();th.classList.add('drag-over');});
+    th.addEventListener('dragleave',()=>th.classList.remove('drag-over'));
+    th.addEventListener('drop',e=>{e.preventDefault();th.classList.remove('drag-over');const from=parseInt(e.dataTransfer.getData('text/plain'));const to=idx;if(from===to)return;const arr=alb.items;arr.splice(to,0,...arr.splice(from,1));save();const mode=alb.albumTheme||'snap';renderAlbumContent(mode);renderAvEditBar();});
+    bar.appendChild(th);
+  });
+}
+
+window.onAvAddPick=function(inp){
+  const files=Array.from(inp.files);inp.value='';if(!files.length)return;
+  const alb=window.S.links[_albumGi];if(!alb)return;if(!alb.items)alb.items=[];
+  toast('Adding '+files.length+' item(s)\u2026','s');let done=0;
+  files.forEach(f=>{
+    if(f.type.startsWith('image/')){resizeImg(f,1200,.85,d64=>{alb.items.push({type:'image',url:d64,title:'Photo'});done++;if(done===files.length){save();const mode=alb.albumTheme||'snap';renderAlbumContent(mode);if(_avEditMode)renderAvEditBar();toast('Added \u2713','s');}});}
+    else if(f.type.startsWith('video/')){const r=new FileReader();r.onload=ev=>{alb.items.push({type:'video',url:ev.target.result,title:'Video'});done++;if(done===files.length){save();const mode=alb.albumTheme||'snap';renderAlbumContent(mode);if(_avEditMode)renderAvEditBar();toast('Added \u2713','s');}};r.readAsDataURL(f);}
+    else done++;
+  });
+};
 
 function mediaEl(it,style){
   if(it.type==='video')return `<video src="${it.url}" playsinline preload="none" ${style} autoplay muted loop></video>`;
@@ -1459,30 +1541,56 @@ function renderAlbumContent(mode){
   else if(mode==='flipbook')buildFlipbook(items,cont);
 }
 
+/* SWIPE HELPER — يرجع +1 (يمين/next) أو -1 (شمال/prev) */
+function addSwipe(el,onNext,onPrev){
+  let sx=0,sy=0;
+  el.addEventListener('touchstart',e=>{sx=e.touches[0].clientX;sy=e.touches[0].clientY;},{passive:true});
+  el.addEventListener('touchend',e=>{
+    const dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;
+    if(Math.abs(dx)>Math.abs(dy)&&Math.abs(dx)>40){if(dx<0)onNext();else onPrev();}
+  },{passive:true});
+}
+
 /* SNAP */
 function buildSnap(items,cont){
   cont.innerHTML=`<div class="snap-track">${items.map(it=>`<div class="snap-item">${mediaEl(it,'style="width:100%;max-height:60vh;object-fit:cover;display:block;"')}</div>`).join('')}</div>`;
-  // Auto-play videos in view
   const vids=cont.querySelectorAll('video');vids.forEach(v=>{v.muted=true;v.play().catch(()=>{});});
 }
 
-/* CAROUSEL — tap to rotate */
+/* CAROUSEL — tap أو swipe للتنقل */
 function buildCarousel(items,cont){
   _carIdx=0;const n=items.length,angle=360/n,radius=Math.max(120,n*32);
-  let html=`<div class="carousel-wrap"><div class="carousel-scene" id="car-scene" onclick="carNext()"><div class="carousel-rotor" id="car-rotor">`;
+  let html=`<div class="carousel-wrap"><div class="carousel-scene" id="car-scene"><div class="carousel-rotor" id="car-rotor">`;
   items.forEach((it,i)=>html+=`<div class="car-card" style="transform:rotateY(${i*angle}deg) translateZ(${radius}px);">${mediaEl(it,'style="width:100%;height:100%;object-fit:cover;display:block;"')}</div>`);
-  html+=`</div></div><div class="carousel-idx" id="car-idx">1 / ${n}</div><div class="carousel-hint">Tap to rotate</div></div>`;
+  html+=`</div></div><div class="carousel-idx" id="car-idx">1 / ${n}</div><div class="carousel-hint">Swipe or tap \u276F next &nbsp;|\u276E prev</div></div>`;
   cont.innerHTML=html;applyCarRot(n);
   autoPlayVisible(cont);
+  const scene=document.getElementById('car-scene');
+  if(scene){
+    scene.addEventListener('click',e=>{
+      const rect=scene.getBoundingClientRect();const isRight=e.clientX-rect.left>rect.width/2;
+      isRight?carNext():carPrev();
+    });
+    addSwipe(scene,carNext,carPrev);
+  }
 }
 window.carNext=function(){const alb=window.S.links[_albumGi];const n=(alb&&alb.items||[]).length;if(!n)return;_carIdx=(_carIdx+1)%n;applyCarRot(n);const el=document.getElementById('car-idx');if(el)el.innerText=(_carIdx+1)+' / '+n;};
+window.carPrev=function(){const alb=window.S.links[_albumGi];const n=(alb&&alb.items||[]).length;if(!n)return;_carIdx=(_carIdx-1+n)%n;applyCarRot(n);const el=document.getElementById('car-idx');if(el)el.innerText=(_carIdx+1)+' / '+n;};
 function applyCarRot(n){const r=document.getElementById('car-rotor');if(!r)return;const angle=360/(n||1);r.style.transform=`rotateY(${-_carIdx*angle}deg)`;}
 
-/* FLOATING — deck of cards, tap to reveal next */
+/* FLOATING — swipe أو tap للتنقل */
 function buildFloating(items,cont){
   _floatIdx=0;
-  cont.innerHTML=`<div class="float-deck-wrap"><div class="float-deck" id="float-deck" onclick="floatNext()"></div><div class="float-idx" id="float-idx">1 / ${items.length}</div><div class="float-hint">Tap card to reveal next</div></div>`;
+  cont.innerHTML=`<div class="float-deck-wrap"><div class="float-deck" id="float-deck"></div><div class="float-idx" id="float-idx">1 / ${items.length}</div><div class="float-hint">Swipe left \u279C next &nbsp;| Swipe right \u279C prev</div></div>`;
   updateFloatDeck(items);
+  const deck=document.getElementById('float-deck');
+  if(deck){
+    deck.addEventListener('click',e=>{
+      const rect=deck.getBoundingClientRect();const isRight=e.clientX-rect.left>rect.width/2;
+      isRight?floatNext():floatPrev();
+    });
+    addSwipe(deck,floatNext,floatPrev);
+  }
 }
 function updateFloatDeck(items){
   const deck=document.getElementById('float-deck');if(!deck)return;
@@ -1501,17 +1609,21 @@ window.floatNext=function(){const alb=window.S.links[_albumGi];const items=(alb&
   if(topCard){topCard.classList.add('fly-out');setTimeout(()=>{_floatIdx=(_floatIdx+1)%n;updateFloatDeck(items);const el=document.getElementById('float-idx');if(el)el.innerText=(_floatIdx+1)+' / '+n;},400);}
   else{_floatIdx=(_floatIdx+1)%n;updateFloatDeck(items);const el=document.getElementById('float-idx');if(el)el.innerText=(_floatIdx+1)+' / '+n;}
 };
+window.floatPrev=function(){const alb=window.S.links[_albumGi];const items=(alb&&alb.items)||[];const n=items.length;if(!n)return;
+  _floatIdx=(_floatIdx-1+n)%n;updateFloatDeck(items);const el=document.getElementById('float-idx');if(el)el.innerText=(_floatIdx+1)+' / '+n;
+};
 
-/* FLIPBOOK — tap left/right half to navigate */
+/* FLIPBOOK — tap أو swipe يمين/شمال */
 function buildFlipbook(items,cont){
   _flipIdx=0;const n=items.length;
-  cont.innerHTML=`<div class="flipbook-wrap"><div class="flipbook-scene" id="flip-scene"></div><div class="flip-idx" id="flip-idx">1 / ${n}</div><div class="flip-hint">Tap right side → next &nbsp;|&nbsp; Tap left side → prev</div></div>`;
+  cont.innerHTML=`<div class="flipbook-wrap"><div class="flipbook-scene" id="flip-scene"></div><div class="flip-idx" id="flip-idx">1 / ${n}</div><div class="flip-hint">Swipe left \u279C next &nbsp;| Swipe right \u279C prev</div></div>`;
   renderFlipPage(items);
   const scene=document.getElementById('flip-scene');
   scene.addEventListener('click',function(e){
     const rect=scene.getBoundingClientRect();const isRight=e.clientX-rect.left>rect.width/2;
     isRight?flipGo(1,items):flipGo(-1,items);
   });
+  addSwipe(scene,()=>flipGo(1,items),()=>flipGo(-1,items));
 }
 function renderFlipPage(items){
   const scene=document.getElementById('flip-scene');if(!scene)return;
