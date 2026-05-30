@@ -104,21 +104,21 @@ body.no-bgimg::before{display:none;}
 .av-header{display:flex;align-items:center;padding:16px 20px;border-bottom:1px solid rgba(255,255,255,.08);flex-shrink:0;gap:12px;}
 .av-title{flex:1;font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:3px;}
 .av-close{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);color:#fff;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;}
-.av-content{flex:1;overflow:hidden;position:relative;contain:layout;}
+.av-content{flex:1;overflow:visible;position:relative;}
 /* SNAP */
 .snap-track{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;height:100%;scrollbar-width:none;padding:16px 8%;gap:14px;align-items:center;}
 .snap-track::-webkit-scrollbar{display:none;}
 .snap-item{scroll-snap-align:center;min-width:75vw;max-width:320px;border-radius:18px;overflow:hidden;background:#111;flex-shrink:0;box-shadow:0 8px 32px rgba(0,0,0,.6);}
 .snap-item img,.snap-item video{width:100%;max-height:60vh;object-fit:cover;display:block;}
 /* CAROUSEL */
-.carousel-wrap{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;overflow:visible;}
-.carousel-scene{perspective:1200px;width:min(240px,72vw);height:min(300px,52vh);position:relative;cursor:pointer;overflow:visible;}
-.carousel-rotor{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform .5s cubic-bezier(.25,.8,.25,1);}
-.car-card{position:absolute;width:min(240px,72vw);height:min(300px,52vh);border-radius:18px;overflow:hidden;background:#1a1a1a;box-shadow:0 10px 40px rgba(0,0,0,.7);}
+.carousel-wrap{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;overflow:visible;}
+.carousel-scene{perspective:900px;width:160px;height:200px;position:relative;cursor:pointer;overflow:visible;margin:0 auto;}
+.carousel-rotor{width:160px;height:200px;position:absolute;top:0;left:0;transform-style:preserve-3d;transition:transform .5s cubic-bezier(.25,.8,.25,1);}
+.car-card{position:absolute;width:160px;height:200px;border-radius:14px;overflow:hidden;background:#1a1a1a;box-shadow:0 8px 32px rgba(0,0,0,.8);}
 .car-card img,.car-card video{width:100%;height:100%;object-fit:cover;display:block;}
 .carousel-idx{font-size:.75rem;color:#555;letter-spacing:2px;}
 .carousel-hint{font-size:.68rem;color:#444;letter-spacing:1px;}
-.anim-size-badge{font-size:.62rem;color:#555;letter-spacing:1.5px;text-transform:uppercase;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:4px 12px;margin-bottom:4px;}
+.anim-size-badge{font-size:.62rem;color:#555;letter-spacing:1.5px;text-transform:uppercase;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:4px 12px;}
 /* FLOATING DECK */
 .float-deck-wrap{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;}
 .float-deck{position:relative;width:min(280px,78vw);height:min(360px,68vh);cursor:pointer;}
@@ -757,7 +757,7 @@ const _auth=typeof firebase.auth==='function'?firebase.auth():{
   confirmPasswordReset:async function(c,p){return firebase.auth().confirmPasswordReset(c,p);}
 };
 const _db=firebase.database();
-const _MAX_BYTES=50*1024*1024;
+const _MAX_BYTES=100*1024*1024;
 const _FBSave=async(uid,state)=>{
   function strip(links){return(links||[]).map(l=>{const c={...l};delete c._unlocked;if(c.items)c.items=strip(c.items);return c;});}
   const s={...JSON.parse(JSON.stringify(state)),links:strip(state.links)};
@@ -1394,8 +1394,8 @@ function onAlbumMediaPick_direct(files){
   if(!files.length)return;
   toast('Adding '+files.length+' item(s)\u2026','s');let done=0;
   files.forEach(f=>{
-    if(f.type.startsWith('image/')){resizeImg(f,1200,.85,d64=>{alb.items.push({type:'image',url:d64,title:'Photo'});done++;if(done===files.length){save();renderLinks();closeModals();toast('Added '+files.length+' item(s) \u2713','s');}});}
-    else if(f.type.startsWith('video/')){const r=new FileReader();r.onload=ev=>{alb.items.push({type:'video',url:ev.target.result,title:'Video'});done++;if(done===files.length){save();renderLinks();closeModals();toast('Added '+files.length+' item(s) \u2713','s');}};r.readAsDataURL(f);}
+    if(f.type.startsWith('image/')){resizeImg(f,1200,.85,d64=>{alb.items.push({type:'image',url:d64,title:'Photo'});done++;if(done===files.length){save();renderLinks();closeModals();openAlbumViewer(gi);toast('Added '+files.length+' item(s) \u2713','s');}});}
+    else if(f.type.startsWith('video/')){const r=new FileReader();r.onload=ev=>{alb.items.push({type:'video',url:ev.target.result,title:'Video'});done++;if(done===files.length){save();renderLinks();closeModals();openAlbumViewer(gi);toast('Added '+files.length+' item(s) \u2713','s');}};r.readAsDataURL(f);}
     else done++;
   });
 }
@@ -1554,36 +1554,41 @@ function addSwipe(el,onNext,onPrev){
 
 /* SNAP */
 function buildSnap(items,cont){
-  const snapW=Math.min(320,Math.floor(window.innerWidth*0.75));
-  cont.innerHTML=`<div style="display:flex;flex-direction:column;height:100%;"><div style="padding:8px 16px 4px;text-align:center;"><div class="anim-size-badge">&#128247; Best: ${snapW}&times;${Math.floor(snapW*1.2)}px</div></div><div class="snap-track">${items.map(it=>`<div class="snap-item">${mediaEl(it,'style="width:100%;max-height:60vh;object-fit:cover;display:block;"')}</div>`).join('')}</div></div>`;
+  const sizeBadge=window._edit?`<div style="padding:8px 16px 4px;text-align:center;"><div class="anim-size-badge">&#128247; Ideal: 310&times;372px</div></div>`:'';
+  cont.innerHTML=`<div style="display:flex;flex-direction:column;height:100%;">${sizeBadge}<div class="snap-track">${items.map(it=>`<div class="snap-item">${mediaEl(it,'style="width:100%;max-height:60vh;object-fit:cover;display:block;"')}</div>`).join('')}</div></div>`;
   const vids=cont.querySelectorAll('video');vids.forEach(v=>{v.muted=true;v.play().catch(()=>{});});
 }
 
 /* CAROUSEL — tap أو swipe للتنقل */
 function buildCarousel(items,cont){
   _carIdx=0;const n=items.length;
-  /* responsive card size */
-  const cardW=Math.min(240,Math.floor(window.innerWidth*0.72));
-  const cardH=Math.min(300,Math.floor(window.innerHeight*0.52));
+  /* أبعاد أصغر وثابتة عشان الكاروسيل يبقا أنيق */
+  const cardW=160;const cardH=200;
+  /* المسافة بين الكروت تتحسب أوتوماتيك على حسب عدد الصور */
   const angle=360/n;
-  /* radius large enough so cards don't overlap: circumference = cardW * n, radius = circumference / (2π) */
-  const radius=Math.max(cardW*0.6, Math.ceil((cardW*n)/(2*Math.PI))+10);
-  let html=`<div class="carousel-wrap"><div class="anim-size-badge">&#128247; Best: ${cardW}&times;${cardH}px</div><div class="carousel-scene" id="car-scene" style="width:${cardW}px;height:${cardH}px;"><div class="carousel-rotor" id="car-rotor">`;
-  items.forEach((it,i)=>html+=`<div class="car-card" style="width:${cardW}px;height:${cardH}px;transform:rotateY(${i*angle}deg) translateZ(${radius}px);">${mediaEl(it,'style="width:100%;height:100%;object-fit:cover;display:block;"')}</div>`);
-  html+=`</div></div><div class="carousel-idx" id="car-idx">1 / ${n}</div><div class="carousel-hint">Swipe or tap &#10095; next &nbsp;|&#10094; prev</div></div>`;
-  cont.innerHTML=html;applyCarRot(n);
+  const radius=Math.max(110,Math.round((cardW*n)/(2*Math.PI))+20);
+  /* badge الحجم يظهر في التعديل فقط */
+  const sizeBadge=window._edit?`<div class="anim-size-badge">&#128247; Ideal: 310&times;372px</div>`:'';
+  let html=`<div class="carousel-wrap">${sizeBadge}<div class="carousel-scene" id="car-scene"><div class="carousel-rotor" id="car-rotor">`;
+  items.forEach((it,i)=>{
+    html+=`<div class="car-card" style="transform:rotateY(${i*angle}deg) translateZ(${radius}px);">${mediaEl(it,'style="width:100%;height:100%;object-fit:cover;display:block;"')}</div>`;
+  });
+  html+=`</div></div><div class="carousel-idx" id="car-idx">1 / ${n}</div><div class="carousel-hint">&#10094; Swipe or tap &#10095;</div></div>`;
+  cont.innerHTML=html;
+  applyCarRot(n);
   autoPlayVisible(cont);
   const scene=document.getElementById('car-scene');
   if(scene){
     scene.addEventListener('click',e=>{
-      const rect=scene.getBoundingClientRect();const isRight=e.clientX-rect.left>rect.width/2;
-      isRight?carNext():carPrev();
+      const rect=scene.getBoundingClientRect();
+      e.clientX-rect.left>rect.width/2?carNext():carPrev();
     });
     addSwipe(scene,carNext,carPrev);
   }
 }
 window.carNext=function(){const alb=window.S.links[_albumGi];const n=(alb&&alb.items||[]).length;if(!n)return;_carIdx=(_carIdx+1)%n;applyCarRot(n);const el=document.getElementById('car-idx');if(el)el.innerText=(_carIdx+1)+' / '+n;};
 window.carPrev=function(){const alb=window.S.links[_albumGi];const n=(alb&&alb.items||[]).length;if(!n)return;_carIdx=(_carIdx-1+n)%n;applyCarRot(n);const el=document.getElementById('car-idx');if(el)el.innerText=(_carIdx+1)+' / '+n;};
+/* لما نضغط يمين → الأسطوانة تلف يمين (سالب) عشان الكرت التالي يجي للأمام */
 function applyCarRot(n){const r=document.getElementById('car-rotor');if(!r)return;const angle=360/(n||1);r.style.transform=`rotateY(${-_carIdx*angle}deg)`;}
 
 /* FLOATING — swipe أو tap للتنقل */
@@ -1591,7 +1596,8 @@ function buildFloating(items,cont){
   _floatIdx=0;
   const fw=Math.min(280,Math.floor(window.innerWidth*0.78));
   const fh=Math.min(360,Math.floor(window.innerHeight*0.68));
-  cont.innerHTML=`<div class="float-deck-wrap"><div class="anim-size-badge">&#128247; Best: ${fw}&times;${fh}px</div><div class="float-deck" id="float-deck" style="width:${fw}px;height:${fh}px;"></div><div class="float-idx" id="float-idx">1 / ${items.length}</div><div class="float-hint">Swipe left &#10140; next &nbsp;| Swipe right &#10140; prev</div></div>`;
+  const sizeBadge=window._edit?`<div class="anim-size-badge">&#128247; Ideal: 310&times;372px</div>`:'';
+  cont.innerHTML=`<div class="float-deck-wrap">${sizeBadge}<div class="float-deck" id="float-deck" style="width:${fw}px;height:${fh}px;"></div><div class="float-idx" id="float-idx">1 / ${items.length}</div><div class="float-hint">Swipe left &#10140; next &nbsp;| Swipe right &#10140; prev</div></div>`;
   updateFloatDeck(items);
   const deck=document.getElementById('float-deck');
   if(deck){
@@ -1628,7 +1634,8 @@ function buildFlipbook(items,cont){
   _flipIdx=0;const n=items.length;
   const fbw=Math.min(260,Math.floor(window.innerWidth*0.78));
   const fbh=Math.min(340,Math.floor(window.innerHeight*0.64));
-  cont.innerHTML=`<div class="flipbook-wrap"><div class="anim-size-badge">&#128247; Best: ${fbw}&times;${fbh}px</div><div class="flipbook-scene" id="flip-scene" style="width:${fbw}px;height:${fbh}px;"></div><div class="flip-idx" id="flip-idx">1 / ${n}</div><div class="flip-hint">Swipe left &#10140; next &nbsp;| Swipe right &#10140; prev</div></div>`;
+  const sizeBadge=window._edit?`<div class="anim-size-badge">&#128247; Ideal: 310&times;372px</div>`:'';
+  cont.innerHTML=`<div class="flipbook-wrap">${sizeBadge}<div class="flipbook-scene" id="flip-scene" style="width:${fbw}px;height:${fbh}px;"></div><div class="flip-idx" id="flip-idx">1 / ${n}</div><div class="flip-hint">Swipe left &#10140; next &nbsp;| Swipe right &#10140; prev</div></div>`;
   renderFlipPage(items);
   const scene=document.getElementById('flip-scene');
   scene.addEventListener('click',function(e){
