@@ -112,9 +112,9 @@ body.no-bgimg::before{display:none;}
 .snap-item img,.snap-item video{width:100%;max-height:60vh;object-fit:cover;display:block;}
 /* CAROUSEL */
 .carousel-wrap{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;overflow:visible;}
-.carousel-scene{perspective:800px;width:150px;height:190px;position:relative;cursor:pointer;overflow:visible;margin:0 auto;}
-.carousel-rotor{width:150px;height:190px;position:absolute;top:0;left:0;transform-style:preserve-3d;}
-.car-card{position:absolute;border-radius:14px;overflow:hidden;background:#1a1a1a;box-shadow:0 8px 32px rgba(0,0,0,.8);}
+.carousel-scene{perspective:900px;width:160px;height:200px;position:relative;cursor:pointer;overflow:visible;margin:0 auto;}
+.carousel-rotor{width:160px;height:200px;position:absolute;top:0;left:0;transform-style:preserve-3d;transition:transform .5s cubic-bezier(.25,.8,.25,1);}
+.car-card{position:absolute;width:160px;height:200px;border-radius:14px;overflow:hidden;background:#1a1a1a;box-shadow:0 8px 32px rgba(0,0,0,.8);}
 .car-card img,.car-card video{width:100%;height:100%;object-fit:cover;display:block;}
 .carousel-idx{font-size:.75rem;color:#555;letter-spacing:2px;}
 .carousel-hint{font-size:.68rem;color:#444;letter-spacing:1px;}
@@ -681,7 +681,7 @@ body.no-bgimg::before{display:none;}
     <div id="photobtn-pw-field" style="display:none;"><input type="text" id="photobtn-pw" class="mi" placeholder="Set password&#8230;"></div>
   </div>
   <div id="tp-image" class="hidden"><input type="text" id="img-title" class="mi" placeholder="Label (e.g. My Photos)"><div class="upbox" id="imgbox" onclick="triggerUpload('imginput')"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>Select image</div><div class="img-hint">&#9432; Best size: 900 &times; 600 px</div><img id="imgprev" src="" style="display:none;width:100%;border-radius:12px;margin-top:10px;max-height:220px;object-fit:cover;"><p class="clabel">Password (optional)</p><div class="pw-row"><label class="pw-toggle"><input type="checkbox" id="img-pw-on" onchange="togglePwInput('img-pw-field',this.checked)"><span class="pw-track"></span><span class="pw-thumb"></span></label><span class="pw-lbl">Protect with password</span></div><div id="img-pw-field" style="display:none;"><input type="text" id="img-pw" class="mi" placeholder="Set password&#8230;"></div></div>
-  <div id="tp-video" class="hidden"><input type="text" id="vid-title" class="mi" placeholder="Label (e.g. Promo Video)"><div style="display:flex;align-items:center;gap:6px;padding:8px 12px;background:rgba(255,180,0,.08);border:1px solid rgba(255,180,0,.22);border-radius:10px;font-size:.74rem;color:#f5a623;font-weight:600;letter-spacing:.3px;margin-bottom:8px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>⚠ Max video size: 15 MB</div><div class="upbox" id="vidbox" onclick="triggerUpload('vidinput')"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>Select video</div><video id="vidprev" style="display:none;width:100%;border-radius:12px;margin-top:10px;max-height:220px;" controls playsinline></video><p class="clabel">Password (optional)</p><div class="pw-row"><label class="pw-toggle"><input type="checkbox" id="vid-pw-on" onchange="togglePwInput('vid-pw-field',this.checked)"><span class="pw-track"></span><span class="pw-thumb"></span></label><span class="pw-lbl">Protect with password</span></div><div id="vid-pw-field" style="display:none;"><input type="text" id="vid-pw" class="mi" placeholder="Set password&#8230;"></div></div>
+  <div id="tp-video" class="hidden"><input type="text" id="vid-title" class="mi" placeholder="Label (e.g. Promo Video)"><div class="upbox" id="vidbox" onclick="triggerUpload('vidinput')"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>Select video</div><video id="vidprev" style="display:none;width:100%;border-radius:12px;margin-top:10px;max-height:220px;" controls playsinline></video><p class="clabel">Password (optional)</p><div class="pw-row"><label class="pw-toggle"><input type="checkbox" id="vid-pw-on" onchange="togglePwInput('vid-pw-field',this.checked)"><span class="pw-track"></span><span class="pw-thumb"></span></label><span class="pw-lbl">Protect with password</span></div><div id="vid-pw-field" style="display:none;"><input type="text" id="vid-pw" class="mi" placeholder="Set password&#8230;"></div></div>
   <div id="tp-location" class="hidden"><input type="text" id="loc-label-input" class="mi" placeholder="Label (e.g. Our Shop)"><p class="clabel">Password (optional)</p><div class="pw-row"><label class="pw-toggle"><input type="checkbox" id="loc-pw-on" onchange="togglePwInput('loc-pw-field',this.checked)"><span class="pw-track"></span><span class="pw-thumb"></span></label><span class="pw-lbl">Protect with password</span></div><div id="loc-pw-field" style="display:none;"><input type="text" id="loc-pw" class="mi" placeholder="Set password&#8230;"></div></div>
   <div id="tp-group" class="hidden"><input type="text" id="grp-name" class="mi" placeholder="Group name (e.g. Social Media)"><p class="clabel">Layout</p><div class="layout-toggle"><div class="layout-opt on" id="grplo-list" onclick="setNewGrpLayout('list')">&#9776; List</div><div class="layout-opt" id="grplo-grid" onclick="setNewGrpLayout('grid')">&#8857; Grid</div></div><p class="clabel">Group Colors</p><div class="grp-color-row"><div class="ci">Header BG<input type="color" id="grp-hbg" value="#1a1a1a"></div><div class="ci">Header Text<input type="color" id="grp-htxt" value="#ffffff"></div><div class="ci">Cards BG<input type="color" id="grp-cbg" value="#111111"></div></div><p class="clabel">Link Colors (List &amp; Grid)</p><div class="grp-color-row"><div class="ci">Icon Color<input type="color" id="grp-icon-color" value="#ffffff"></div><div class="ci">Card BG<input type="color" id="grp-icon-bg" value="#1e1e1e"></div><div class="ci">Label Color<input type="color" id="grp-label-color" value="#ffffff"></div></div><p class="clabel">Password (optional)</p><div class="pw-row"><label class="pw-toggle"><input type="checkbox" id="grp-pw-on" onchange="togglePwInput('grp-pw-field',this.checked)"><span class="pw-track"></span><span class="pw-thumb"></span></label><span class="pw-lbl">Lock group with password</span></div><div id="grp-pw-field" style="display:none;"><input type="text" id="grp-pw" class="mi" placeholder="Set password&#8230;"></div></div>
   <div id="tp-album" class="hidden">
@@ -757,14 +757,14 @@ const _auth=typeof firebase.auth==='function'?firebase.auth():{
   confirmPasswordReset:async function(c,p){return firebase.auth().confirmPasswordReset(c,p);}
 };
 const _db=firebase.database();
-const _MAX_BYTES=100*1024*1024; /* 100 MB */
-const _MAX_VID_BYTES=15*1024*1024; /* 15 MB */
-function _checkVidSize(file){if(file.size>_MAX_VID_BYTES){toast('Video too large — max 15 MB allowed','e');return false;}return true;}
+const _MAX_BYTES=100*1024*1024;
 const _FBSave=async(uid,state)=>{
   function strip(links){return(links||[]).map(l=>{const c={...l};delete c._unlocked;if(c.items)c.items=strip(c.items);return c;});}
   const s={...JSON.parse(JSON.stringify(state)),links:strip(state.links)};
-  if(new Blob([JSON.stringify(s)]).size>_MAX_BYTES){toast('Profile too large — remove some media','e');return;}
-  return Promise.all([_db.ref('users/'+uid).set(s),_db.ref('pub/'+s.publicId).set(s)]).catch(e=>{console.warn(e);toast('Save failed','e');});
+  const _sz=new Blob([JSON.stringify(s)]).size;
+  if(_sz>_MAX_BYTES){toast('Profile full ('+Math.round(_sz/1024/1024)+'MB / 100MB max) — delete some media to continue','e');return;}
+  if(_sz>_MAX_BYTES*0.92){toast('\u26a0\ufe0f Profile '+Math.round(_sz/1024/1024)+'MB of 100MB max — almost full!','e');}
+  return Promise.all([_db.ref('users/'+uid).set(s),_db.ref('pub/'+s.publicId).set(s)]).catch(e=>{console.warn(e);toast('Save failed — check connection','e');});
 };
 const _FBLoad=async uid=>{const s=await _db.ref('users/'+uid).once('value');return s.exists()?s.val():null;};
 const _FBLoadPub=async pid=>{const s=await _db.ref('pub/'+pid).once('value');return s.exists()?s.val():null;};
@@ -916,7 +916,7 @@ let _pendPhotoBtnImg=null,_egGrpStyle='list',_newGrpStyle='list';
 function hideLs(){const l=document.getElementById('ls');l.classList.add('out');setTimeout(()=>l.classList.add('hidden'),300);}
 function escHtml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function save(){if(!window._uid||window._pub)return;clearTimeout(_saveTimer);_saveTimer=setTimeout(async()=>{try{await _FBSave(window._uid,window.S);}catch(e){console.warn(e);}},800);}
-async function saveNow(){if(!window._uid||window._pub)return;clearTimeout(_saveTimer);try{await _FBSave(window._uid,window.S);}catch(e){console.warn(e);}}
+function saveNow(){if(!window._uid||window._pub)return;clearTimeout(_saveTimer);_FBSave(window._uid,window.S).catch(e=>console.warn(e));}
 function toast(msg,type){const t=document.getElementById('toast');t.innerText=msg;t.className=type||'s';t.style.display='block';clearTimeout(t._t);t._t=setTimeout(()=>t.style.display='none',2500);}
 window.triggerUpload=id=>document.getElementById(id).click();
 function resizeImg(file,maxW,quality,cb){const r=new FileReader();r.onload=ev=>{const img=new Image();img.onload=()=>{const ratio=Math.min(maxW/img.width,maxW/img.height,1),w=Math.round(img.width*ratio),h=Math.round(img.height*ratio),cv=document.createElement('canvas');cv.width=w;cv.height=h;cv.getContext('2d').drawImage(img,0,0,w,h);cb(cv.toDataURL('image/jpeg',quality));};img.onerror=()=>cb(ev.target.result);img.src=ev.target.result;};r.readAsDataURL(file);}
@@ -1087,8 +1087,7 @@ function buildItem(l,gi,ii,forceStyle,grpDefs){
   if(l.type==='video'){
     if(locked)return `<div style="position:relative;"><div class="lcard gc" style="cursor:pointer;" onclick="onPwItem(${gi},${ii},'video')">&#128274; ${escHtml(l.title||'Protected Video')}</div>${editBtn}</div>`;
     if(window._pub){const eid='med_'+gi+'_'+ii;return `<div class="mcard" id="${eid}" style="position:relative;"><button class="media-tap-btn" onclick="revealMedia('${eid}',${gi},${ii},'video')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>${escHtml(l.title||'Tap to play video')}</button>${lockBadge}</div>`;}
-    const vidWarn=window._edit?`<div style="display:flex;align-items:center;gap:6px;padding:6px 12px;background:rgba(255,180,0,.08);border:1px solid rgba(255,180,0,.2);border-radius:10px 10px 0 0;font-size:.72rem;color:#f5a623;font-weight:600;letter-spacing:.3px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>&#9888; Max video size: 15 MB</div>`:'';
-    return `<div style="position:relative;">${vidWarn}<div class="mcard" style="position:relative;${window._edit?'border-radius:0 0 var(--r) var(--r);overflow:hidden;':''}"><video src="${l.url}" controls playsinline preload="none"></video>${lockBadge}${editBtn}</div></div>`;
+    return `<div class="mcard" style="position:relative;"><video src="${l.url}" controls playsinline preload="none"></video>${lockBadge}${editBtn}</div>`;
   }
   if(l.type==='location')return buildLocCard(l,gi,ii)+editBtn;
   if(locked)return `<div style="position:relative;"><div class="lcard gc" style="cursor:pointer;" onclick="onPwItem(${gi},${ii},'link')">&#128274; ${escHtml(l.title)}</div>${editBtn}</div>`;
@@ -1139,26 +1138,6 @@ function buildAlbumCard(l,i){
     coverHtml=`<div class="album-no-cover" onclick="openAlbumViewer(${i})"><div style="text-align:center;color:#333;"><div style="font-size:36px;margin-bottom:8px;">&#128193;</div><div style="font-size:.78rem;letter-spacing:1px;">NO COVER &mdash; TAP TO OPEN</div><div style="font-size:.68rem;margin-top:4px;color:#2a2a2a;">${items.length} items</div></div></div>`;
   }
   return `<div class="album-card">${coverHtml}<div class="album-card-footer"><span class="album-card-name">&#128193; ${escHtml(l.name||'Album')}</span>${addBtn}${editBtn}</div></div>`;
-}
-
-
-/* ===== UPDATE ALBUM CARD COUNT (no full re-render) ===== */
-function updateAlbumCardCount(gi){
-  const alb=window.S.links[gi];if(!alb)return;
-  const count=(alb.items||[]).length;
-  /* Update the count badge inside the album cover overlay */
-  const cards=document.querySelectorAll('#lsec .album-cover-wrap, #lsec .album-no-cover');
-  cards.forEach(wrap=>{
-    const onclick=wrap.getAttribute('onclick')||'';
-    if(onclick.includes('openAlbumViewer('+gi+')')){
-      /* cover overlay count */
-      const badge=wrap.querySelector('.album-cover-overlay div:last-child');
-      if(badge)badge.innerText=count+' ITEMS';
-      /* no-cover count text */
-      const sub=wrap.querySelector('div>div:last-child');
-      if(sub&&sub.innerText.includes('item'))sub.innerText=count+' items';
-    }
-  });
 }
 
 function renderLinks(){
@@ -1279,26 +1258,26 @@ window.saveEdit=function(){
     const paperEl=document.getElementById('edit-env-paper');if(paperEl)item.envPaper=paperEl.value;
     const pwOn=document.getElementById('edit-pw-on').checked,pw=document.getElementById('edit-pw').value.trim();item.password=pwOn&&pw?pw:null;
     if(!item.password)item._unlocked=false;
-    save();renderLinks();closeModals();toast('Updated \u2713','s');return;
+    saveNow();renderLinks();closeModals();toast('Updated \u2713','s');return;
   }
   const t=document.getElementById('edit-title').value.trim();if(!t){toast('Name required','e');return;}
   item.title=t;const r=document.getElementById('edit-url').value.trim();
   if(r&&(item.type==='link'||item.type==='photobtn'))item.url=smartPrefix(t,r);
   if(item.type==='link'){const ic=document.getElementById('edit-icon-color');const ib=document.getElementById('edit-icon-bg');const lc=document.getElementById('edit-label-color');if(ic)item.iconColor=ic.value;if(ib)item.iconBg=ib.value;if(lc)item.labelColor=lc.value;}
   const pwOn=document.getElementById('edit-pw-on').checked,pw=document.getElementById('edit-pw').value.trim();item.password=pwOn&&pw?pw:null;
-  save();renderLinks();closeModals();toast('Updated \u2713','s');
+  saveNow();renderLinks();closeModals();toast('Updated \u2713','s');
 };
 window.moveItem=function(dir){
   closeCtx();if(ctxIi>=0){const arr=(window.S.links[ctxGi].items||[]),ni=ctxIi+dir;if(ni<0||ni>=arr.length)return;[arr[ctxIi],arr[ni]]=[arr[ni],arr[ctxIi]];}
   else{const arr=window.S.links,ni=ctxGi+dir;if(ni<0||ni>=arr.length)return;[arr[ctxGi],arr[ni]]=[arr[ni],arr[ctxGi]];}
-  save();renderLinks();
+  saveNow();renderLinks();
 };
 window.ctxDelete=()=>ctxIi>=0?delItemInGrp(ctxGi,ctxIi):delItem(ctxGi);
 window.askConfirm=(msg,cb)=>{_confirmCb=cb;document.getElementById('confirm-msg').innerText=msg;document.getElementById('confirm-box').classList.add('on');};
 window.doConfirmYes=()=>{const cb=_confirmCb;closeConfirm();if(typeof cb==='function')cb();};
 window.closeConfirm=()=>{document.getElementById('confirm-box').classList.remove('on');_confirmCb=null;};
-window.delItem=i=>{window.S.links.splice(i,1);save();renderLinks();};
-window.delItemInGrp=(gi,ii)=>{window.S.links[gi].items.splice(ii,1);save();renderLinks();};
+window.delItem=i=>{window.S.links.splice(i,1);saveNow();renderLinks();};
+window.delItemInGrp=(gi,ii)=>{window.S.links[gi].items.splice(ii,1);saveNow();renderLinks();};
 window.askDelGroup=gi=>{askConfirm(`Delete "${window.S.links[gi]?.name||'Item'}"?`,()=>delItem(gi));};
 window.togglePreview=function(){window._edit=!window._edit;document.getElementById('exprev').classList.toggle('hidden',window._edit);document.querySelectorAll('.edit-only').forEach(e=>e.classList.toggle('hidden',!window._edit));document.getElementById('pname').contentEditable=window._edit;document.getElementById('pbio').contentEditable=window._edit;renderLinks();};
 
@@ -1402,33 +1381,35 @@ window.onImgPick=inp=>{
 };
 window.onVidPick=inp=>{
   const files=Array.from(inp.files);inp.value='';if(!files.length)return;
+  /* إضافة مباشرة للألبوم لو إحنا جوا ألبوم */
   if(addToGrpIdx>=0&&window.S.links[addToGrpIdx]&&window.S.links[addToGrpIdx].type==='album'){
     onAlbumMediaPick_direct(files);return;
   }
+  /* فيديو مفرد للبروفايل — بنستخدم أول ملف بس */
   const f=files[0];
-  if(!_checkVidSize(f))return;
+  const _VID_MAX=50*1024*1024;
+  if(f.size>_VID_MAX){toast('Video too large — max 50MB per video','e');return;}
   toast('Reading video\u2026','s');const r=new FileReader();r.onload=e=>{pendMedia={type:'video',url:e.target.result};document.getElementById('vidprev').src=e.target.result;document.getElementById('vidprev').style.display='block';document.getElementById('vidbox').style.display='none';toast('Video ready \u2713','s');};r.readAsDataURL(f);
 };
 let _pendPbStyle='full';
 window.setPbStyle=function(s){if(s!=='full'&&s!=='small')s='full';_pendPbStyle=s;['full','small'].forEach(k=>{const el=document.getElementById('pbs-'+k);if(el)el.classList.toggle('selected',k===s);});};
 window.onPhotoBtnPick=inp=>{const f=inp.files[0];inp.value='';if(!f)return;resizeImg(f,900,.82,d64=>{_pendPhotoBtnImg=d64;const prev=document.getElementById('photobtn-prev');if(prev){prev.src=d64;prev.style.display='block';}const box=document.getElementById('photobtnbox');if(box)box.style.display='none';toast('Image ready \u2713','s');});};
-async function onAlbumMediaPick_direct(files){
+function onAlbumMediaPick_direct(files){
   const gi=addToGrpIdx>=0?addToGrpIdx:-1;if(gi<0||!window.S.links[gi]||window.S.links[gi].type!=='album'){toast('Select an album first','e');return;}
   const alb=window.S.links[gi];if(!alb.items)alb.items=[];
   if(!files.length)return;
-  const filtered=Array.from(files).filter(f=>{if(f.type.startsWith('video/')&&!_checkVidSize(f))return false;return true;});
-  if(!filtered.length)return;
-  toast('Adding '+filtered.length+' item(s)\u2026','s');
-  for(const f of filtered){
-    await new Promise(resolve=>{
-      if(f.type.startsWith('image/')){resizeImg(f,1200,.85,d64=>{alb.items.push({type:'image',url:d64,title:'Photo'});resolve();});}
-      else if(f.type.startsWith('video/')){const r=new FileReader();r.onload=ev=>{alb.items.push({type:'video',url:ev.target.result,title:'Video'});resolve();};r.onerror=()=>resolve();r.readAsDataURL(f);}
-      else resolve();
-    });
-    updateAlbumCardCount(gi);
-  }
-  await saveNow();
-  renderLinks();closeModals();openAlbumViewer(gi);toast('Added '+filtered.length+' item(s) \u2713','s');
+  const _VID_MAX=50*1024*1024;
+  const validFiles=files.filter(f=>{
+    if(f.type.startsWith('video/')&&f.size>_VID_MAX){toast('Skipped "'+f.name+'" — max 50MB per video','e');return false;}
+    return true;
+  });
+  if(!validFiles.length)return;
+  toast('Adding '+validFiles.length+' item(s)\u2026','s');let done=0;
+  validFiles.forEach(f=>{
+    if(f.type.startsWith('image/')){resizeImg(f,1200,.85,d64=>{alb.items.push({type:'image',url:d64,title:'Photo'});done++;if(done===validFiles.length){saveNow();renderLinks();closeModals();openAlbumViewer(gi);toast('Added '+validFiles.length+' item(s) \u2713','s');}});}
+    else if(f.type.startsWith('video/')){const r=new FileReader();r.onload=ev=>{alb.items.push({type:'video',url:ev.target.result,title:'Video'});done++;if(done===validFiles.length){saveNow();renderLinks();closeModals();openAlbumViewer(gi);toast('Added '+validFiles.length+' item(s) \u2713','s');}};r.readAsDataURL(f);}
+    else done++;
+  });
 }
 window.onAlbumMediaPick=inp=>{
   const files=Array.from(inp.files);inp.value='';if(!files.length)return;
@@ -1440,7 +1421,7 @@ function pushItem(item){
   const gi=_pendLocGrpIdx>=0?_pendLocGrpIdx:addToGrpIdx;
   if(gi>=0){if(!window.S.links[gi].items)window.S.links[gi].items=[];window.S.links[gi].items.push(item);}
   else window.S.links.push(item);
-  save();renderLinks();closeModals();toast('Added! \u2713','s');
+  saveNow();renderLinks();closeModals();toast('Added! \u2713','s');
   _pendLocGrpIdx=-1;
 }
 window.addItem=function(){
@@ -1489,7 +1470,7 @@ window.saveGroupEdit=function(){
   g.labelColor=document.getElementById('eg-label-color').value;
   const pwOn=document.getElementById('eg-pw-on').checked,pw=document.getElementById('eg-pw').value.trim();g.password=pwOn&&pw?pw:null;
   g.linkStyle=_egGrpStyle;
-  save();renderLinks();closeModals();toast('Updated \u2713','s');
+  saveNow();renderLinks();closeModals();toast('Updated \u2713','s');
 };
 window.openEditAlbum=gi=>{
   _albumGi=gi;_editAlbCover=null;const a=window.S.links[gi];document.getElementById('ealb-name').value=a.name||'';
@@ -1498,7 +1479,7 @@ window.openEditAlbum=gi=>{
   const hasPw=!!a.password;document.getElementById('ealb-pw-on').checked=hasPw;togglePwInput('ealb-pw-field',hasPw);document.getElementById('ealb-pw').value=a.password||'';
   document.getElementById('ealbmod').classList.remove('hidden');
 };
-window.saveAlbumEdit=async function(){const a=window.S.links[_albumGi];if(!a)return;a.name=document.getElementById('ealb-name').value.trim()||a.name;a.albumTheme=_editAlbTheme;if(_editAlbCover)a.coverUrl=_editAlbCover;const pwOn=document.getElementById('ealb-pw-on').checked,pw=document.getElementById('ealb-pw').value.trim();a.password=pwOn&&pw?pw:null;await saveNow();renderLinks();closeModals();toast('Saved \u2713','s');_editAlbCover=null;};
+window.saveAlbumEdit=function(){const a=window.S.links[_albumGi];if(!a)return;a.name=document.getElementById('ealb-name').value.trim()||a.name;a.albumTheme=_editAlbTheme;if(_editAlbCover)a.coverUrl=_editAlbCover;const pwOn=document.getElementById('ealb-pw-on').checked,pw=document.getElementById('ealb-pw').value.trim();a.password=pwOn&&pw?pw:null;saveNow();renderLinks();closeModals();toast('Updated \u2713','s');_editAlbCover=null;};
 
 let _avEditMode=false;
 /* ===== ALBUM VIEWER ===== */
@@ -1514,14 +1495,7 @@ window.openAlbumViewer=function(gi){
   bar.classList.add('hidden');bar.innerHTML='';
   const mode=alb.albumTheme||'snap';renderAlbumContent(mode);
 };
-window.closeAlbumViewer=function(){
-  if(_avEditMode){
-    _avEditMode=false;
-    saveNow().catch(()=>{});
-  }
-  document.getElementById('album-viewer').classList.remove('on');
-  _avEditMode=false;
-};
+window.closeAlbumViewer=function(){document.getElementById('album-viewer').classList.remove('on');_avEditMode=false;};
 
 window.toggleAlbumEditMode=function(){
   _avEditMode=!_avEditMode;
@@ -1529,7 +1503,7 @@ window.toggleAlbumEditMode=function(){
   tog.innerText=_avEditMode?'\u2713 Done':'\u270E Edit';
   tog.classList.toggle('active',_avEditMode);
   if(_avEditMode){bar.classList.remove('hidden');renderAvEditBar();}
-  else{bar.classList.add('hidden');bar.innerHTML='';saveNow().then(()=>toast('Saved \u2713','s')).catch(()=>toast('Save failed','e'));}
+  else{bar.classList.add('hidden');bar.innerHTML='';saveNow();toast('Saved \u2713','s');}
 };
 
 function renderAvEditBar(){
@@ -1537,41 +1511,52 @@ function renderAvEditBar(){
   const alb=window.S.links[_albumGi];const items=(alb&&alb.items)||[];
   bar.innerHTML='';
   /* Add button */
-  const addEl=document.createElement('div');addEl.className='av-edit-add';addEl.title='Add media (video max 15 MB)';addEl.innerHTML='+';addEl.onclick=()=>triggerUpload('av-add-input');bar.appendChild(addEl);
-  /* 15MB video warning label */
-  const warnEl=document.createElement('div');warnEl.style.cssText='display:flex;align-items:center;gap:5px;padding:0 10px;font-size:.68rem;color:#f5a623;font-weight:600;white-space:nowrap;flex-shrink:0;';warnEl.innerHTML='<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Video max 15 MB';bar.appendChild(warnEl);
+  const addEl=document.createElement('div');addEl.className='av-edit-add';addEl.title='Add media';addEl.innerHTML='+';addEl.onclick=()=>triggerUpload('av-add-input');bar.appendChild(addEl);
   /* Thumbnails with delete + drag-to-reorder */
   items.forEach((it,idx)=>{
     const th=document.createElement('div');th.className='av-edit-thumb';th.draggable=true;th.dataset.idx=idx;
     if(it.type==='video'){th.innerHTML=`<video src="${it.url}" preload="metadata" style="width:100%;height:100%;object-fit:cover;display:block;" muted></video>`;}
     else{th.innerHTML=`<img src="${it.url}" loading="lazy" alt="">`;}
-    /* delete */
-    const del=document.createElement('div');del.className='av-edit-del';del.innerHTML='&#x2715;';del.onclick=async e=>{e.stopPropagation();alb.items.splice(idx,1);const mode=alb.albumTheme||'snap';renderAlbumContent(mode);renderAvEditBar();updateAlbumCardCount(_albumGi);await saveNow();};th.appendChild(del);
-    /* drag reorder */
+    /* delete — use pointerdown for reliable touch+mouse */
+    const del=document.createElement('div');del.className='av-edit-del';del.innerHTML='&#x2715;';del.draggable=false;
+    del.addEventListener('pointerdown',e=>{
+      e.stopPropagation();e.preventDefault();
+      alb.items.splice(idx,1);
+      saveNow();
+      toast('Removed \u2713','s');
+      const mode=alb.albumTheme||'snap';
+      renderAlbumContent(mode);
+      renderAvEditBar();
+    });
+    th.appendChild(del);
+    /* desktop drag reorder */
     th.addEventListener('dragstart',e=>{e.dataTransfer.setData('text/plain',idx);th.style.opacity='.4';});
     th.addEventListener('dragend',()=>{th.style.opacity='1';});
     th.addEventListener('dragover',e=>{e.preventDefault();th.classList.add('drag-over');});
     th.addEventListener('dragleave',()=>th.classList.remove('drag-over'));
-    th.addEventListener('drop',async e=>{e.preventDefault();th.classList.remove('drag-over');const from=parseInt(e.dataTransfer.getData('text/plain'));const to=idx;if(from===to)return;const arr=alb.items;arr.splice(to,0,...arr.splice(from,1));const mode=alb.albumTheme||'snap';renderAlbumContent(mode);renderAvEditBar();await saveNow();});
+    th.addEventListener('drop',e=>{e.preventDefault();th.classList.remove('drag-over');const from=parseInt(e.dataTransfer.getData('text/plain'));const to=idx;if(from===to)return;const arr=alb.items;arr.splice(to,0,...arr.splice(from,1));saveNow();const mode=alb.albumTheme||'snap';renderAlbumContent(mode);renderAvEditBar();});
+    /* touch drag reorder */
+    let _tDragFrom=null;
+    th.addEventListener('touchstart',e=>{if(e.target.classList.contains('av-edit-del'))return;_tDragFrom=idx;th.style.opacity='.5';},{passive:true});
+    th.addEventListener('touchend',e=>{
+      th.style.opacity='1';
+      if(_tDragFrom===null||_tDragFrom===idx){_tDragFrom=null;return;}
+      const arr=alb.items;arr.splice(idx,0,...arr.splice(_tDragFrom,1));_tDragFrom=null;
+      saveNow();const mode=alb.albumTheme||'snap';renderAlbumContent(mode);renderAvEditBar();
+    },{passive:true});
     bar.appendChild(th);
   });
 }
 
-window.onAvAddPick=async function(inp){
+window.onAvAddPick=function(inp){
   const files=Array.from(inp.files);inp.value='';if(!files.length)return;
   const alb=window.S.links[_albumGi];if(!alb)return;if(!alb.items)alb.items=[];
-  const filtered=files.filter(f=>{if(f.type.startsWith('video/')&&!_checkVidSize(f))return false;return true;});
-  if(!filtered.length)return;
-  toast('Adding '+filtered.length+' item(s)\u2026','s');
-  for(const f of filtered){
-    await new Promise(resolve=>{
-      if(f.type.startsWith('image/')){resizeImg(f,1200,.85,d64=>{alb.items.push({type:'image',url:d64,title:'Photo'});resolve();});}
-      else if(f.type.startsWith('video/')){const r=new FileReader();r.onload=ev=>{alb.items.push({type:'video',url:ev.target.result,title:'Video'});resolve();};r.onerror=()=>resolve();r.readAsDataURL(f);}
-      else resolve();
-    });
-    const mode=alb.albumTheme||'snap';renderAlbumContent(mode);if(_avEditMode)renderAvEditBar();updateAlbumCardCount(_albumGi);
-  }
-  await saveNow();toast('Added \u2713','s');
+  toast('Adding '+files.length+' item(s)\u2026','s');let done=0;
+  files.forEach(f=>{
+    if(f.type.startsWith('image/')){resizeImg(f,1200,.85,d64=>{alb.items.push({type:'image',url:d64,title:'Photo'});done++;if(done===files.length){save();const mode=alb.albumTheme||'snap';renderAlbumContent(mode);if(_avEditMode)renderAvEditBar();toast('Added \u2713','s');}});}
+    else if(f.type.startsWith('video/')){const r=new FileReader();r.onload=ev=>{alb.items.push({type:'video',url:ev.target.result,title:'Video'});done++;if(done===files.length){save();const mode=alb.albumTheme||'snap';renderAlbumContent(mode);if(_avEditMode)renderAvEditBar();toast('Added \u2713','s');}};r.readAsDataURL(f);}
+    else done++;
+  });
 };
 
 function mediaEl(it,style){
@@ -1605,64 +1590,37 @@ function buildSnap(items,cont){
   const vids=cont.querySelectorAll('video');vids.forEach(v=>{v.muted=true;v.play().catch(()=>{});});
 }
 
-/* CAROUSEL — نافذة متحركة من 10 كروت دايماً */
-const _CAR_WIN=10; /* حجم النافذة */
-function _carWindow(items){
-  const n=items.length,w=Math.min(_CAR_WIN,n);
-  const win=[];
-  for(let i=0;i<w;i++)win.push({item:items[(_carIdx+i)%n],globalIdx:(_carIdx+i)%n});
-  return win;
-}
+/* CAROUSEL — tap أو swipe للتنقل */
 function buildCarousel(items,cont){
-  _carIdx=0;
+  _carIdx=0;const n=items.length;
+  /* أبعاد أصغر وثابتة عشان الكاروسيل يبقا أنيق */
+  const cardW=160;const cardH=200;
+  /* المسافة بين الكروت تتحسب أوتوماتيك على حسب عدد الصور */
+  const angle=360/n;
+  const radius=Math.max(110,Math.round((cardW*n)/(2*Math.PI))+20);
+  /* badge الحجم يظهر في التعديل فقط */
   const sizeBadge=window._edit?`<div class="anim-size-badge">&#128247; Ideal: 310&times;372px</div>`:'';
-  cont.innerHTML=`<div class="carousel-wrap">${sizeBadge}<div class="carousel-scene" id="car-scene"><div class="carousel-rotor" id="car-rotor"></div></div><div class="carousel-idx" id="car-idx">1 / ${items.length}</div><div class="carousel-hint">&#10094; Swipe or tap &#10095;</div></div>`;
-  _renderCarWindow(items);
+  let html=`<div class="carousel-wrap">${sizeBadge}<div class="carousel-scene" id="car-scene"><div class="carousel-rotor" id="car-rotor">`;
+  items.forEach((it,i)=>{
+    html+=`<div class="car-card" style="transform:rotateY(${i*angle}deg) translateZ(${radius}px);">${mediaEl(it,'style="width:100%;height:100%;object-fit:cover;display:block;"')}</div>`;
+  });
+  html+=`</div></div><div class="carousel-idx" id="car-idx">1 / ${n}</div><div class="carousel-hint">&#10094; Swipe or tap &#10095;</div></div>`;
+  cont.innerHTML=html;
+  applyCarRot(n);
   autoPlayVisible(cont);
   const scene=document.getElementById('car-scene');
   if(scene){
-    scene.addEventListener('click',e=>{const rect=scene.getBoundingClientRect();e.clientX-rect.left>rect.width/2?carNext():carPrev();});
+    scene.addEventListener('click',e=>{
+      const rect=scene.getBoundingClientRect();
+      e.clientX-rect.left>rect.width/2?carNext():carPrev();
+    });
     addSwipe(scene,carNext,carPrev);
   }
 }
-function _renderCarWindow(items){
-  const rotor=document.getElementById('car-rotor');if(!rotor)return;
-  const win=_carWindow(items);const w=win.length;
-  const angle=360/w;
-  /* r = (cardW/2)/sin(π/w) — يضمن ما تتداخلش الكروت */
-  const cardW=150,cardH=190;
-  const r=w===1?0:Math.ceil((cardW/2)/Math.sin(Math.PI/w))+6;
-  rotor.innerHTML='';
-  win.forEach((slot,i)=>{
-    const div=document.createElement('div');div.className='car-card';
-    div.style.cssText=`width:${cardW}px;height:${cardH}px;transform:rotateY(${i*angle}deg) translateZ(${r}px);`;
-    div.innerHTML=mediaEl(slot.item,'style="width:100%;height:100%;object-fit:cover;display:block;"');
-    rotor.appendChild(div);
-  });
-  /* الكرت الأول في النافذة دايماً يكون في المقدمة */
-  rotor.style.transition='none';
-  rotor.style.transform='rotateY(0deg)';
-}
-window.carNext=function(){
-  const alb=window.S.links[_albumGi];const items=(alb&&alb.items)||[];const n=items.length;if(n<2)return;
-  _carIdx=(_carIdx+1)%n;
-  _renderCarWindow(items);
-  const el=document.getElementById('car-idx');if(el)el.innerText=(_carIdx+1)+' / '+n;
-  /* انيميشن خفيف على الـ rotor */
-  const rotor=document.getElementById('car-rotor');
-  if(rotor){rotor.style.transition='none';rotor.style.transform='rotateY(15deg)';requestAnimationFrame(()=>{rotor.style.transition='transform .45s cubic-bezier(.25,.8,.25,1)';rotor.style.transform='rotateY(0deg)';});}
-  autoPlayVisible(rotor);
-};
-window.carPrev=function(){
-  const alb=window.S.links[_albumGi];const items=(alb&&alb.items)||[];const n=items.length;if(n<2)return;
-  _carIdx=(_carIdx-1+n)%n;
-  _renderCarWindow(items);
-  const el=document.getElementById('car-idx');if(el)el.innerText=(_carIdx+1)+' / '+n;
-  const rotor=document.getElementById('car-rotor');
-  if(rotor){rotor.style.transition='none';rotor.style.transform='rotateY(-15deg)';requestAnimationFrame(()=>{rotor.style.transition='transform .45s cubic-bezier(.25,.8,.25,1)';rotor.style.transform='rotateY(0deg)';});}
-  autoPlayVisible(rotor);
-};
-function applyCarRot(){/* no-op: window rebuilds instead */}
+window.carNext=function(){const alb=window.S.links[_albumGi];const n=(alb&&alb.items||[]).length;if(!n)return;_carIdx=(_carIdx+1)%n;applyCarRot(n);const el=document.getElementById('car-idx');if(el)el.innerText=(_carIdx+1)+' / '+n;};
+window.carPrev=function(){const alb=window.S.links[_albumGi];const n=(alb&&alb.items||[]).length;if(!n)return;_carIdx=(_carIdx-1+n)%n;applyCarRot(n);const el=document.getElementById('car-idx');if(el)el.innerText=(_carIdx+1)+' / '+n;};
+/* لما نضغط يمين → الأسطوانة تلف يمين (سالب) عشان الكرت التالي يجي للأمام */
+function applyCarRot(n){const r=document.getElementById('car-rotor');if(!r)return;const angle=360/(n||1);r.style.transform=`rotateY(${-_carIdx*angle}deg)`;}
 
 /* FLOATING — swipe أو tap للتنقل */
 function buildFloating(items,cont){
