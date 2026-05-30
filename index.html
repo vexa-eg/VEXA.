@@ -112,10 +112,17 @@ body.no-bgimg::before{display:none;}
 .snap-item img,.snap-item video{width:100%;max-height:60vh;object-fit:cover;display:block;}
 /* CAROUSEL */
 .carousel-wrap{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;overflow:visible;}
-.carousel-scene{perspective:900px;width:160px;height:200px;position:relative;cursor:pointer;overflow:visible;margin:0 auto;}
-.carousel-rotor{width:160px;height:200px;position:absolute;top:0;left:0;transform-style:preserve-3d;transition:transform .5s cubic-bezier(.25,.8,.25,1);}
-.car-card{position:absolute;width:160px;height:200px;border-radius:14px;overflow:hidden;background:#1a1a1a;box-shadow:0 8px 32px rgba(0,0,0,.8);}
+.carousel-scene{perspective:900px;width:150px;height:190px;position:relative;cursor:pointer;overflow:visible;margin:0 auto;}
+.carousel-rotor{width:150px;height:190px;position:absolute;top:0;left:0;transform-style:preserve-3d;transition:transform .5s cubic-bezier(.25,.8,.25,1);}
+.car-card{position:absolute;width:150px;height:190px;border-radius:14px;overflow:hidden;background:#1a1a1a;box-shadow:0 8px 32px rgba(0,0,0,.8);}
 .car-card img,.car-card video{width:100%;height:100%;object-fit:cover;display:block;}
+/* pseudo-3D (8+ items) */
+.car-pseudo-stage{position:relative;width:200px;height:240px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.cps-card{position:absolute;border-radius:14px;overflow:hidden;background:#1a1a1a;box-shadow:0 8px 32px rgba(0,0,0,.8);transition:transform .35s cubic-bezier(.25,.8,.25,1),opacity .35s;}
+.cps-card img,.cps-card video{width:100%;height:100%;object-fit:cover;display:block;}
+.cps-cur{width:160px;height:200px;transform:translateX(0) scale(1);z-index:3;opacity:1;}
+.cps-prev{width:120px;height:155px;transform:translateX(-106px) rotateY(35deg) scale(.9);z-index:2;opacity:.55;}
+.cps-next{width:120px;height:155px;transform:translateX(106px) rotateY(-35deg) scale(.9);z-index:2;opacity:.55;}
 .carousel-idx{font-size:.75rem;color:#555;letter-spacing:2px;}
 .carousel-hint{font-size:.68rem;color:#444;letter-spacing:1px;}
 .anim-size-badge{font-size:.62rem;color:#555;letter-spacing:1.5px;text-transform:uppercase;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:4px 12px;}
@@ -914,8 +921,11 @@ let _pendPhotoBtnImg=null,_egGrpStyle='list',_newGrpStyle='list';
 function hideLs(){const l=document.getElementById('ls');l.classList.add('out');setTimeout(()=>l.classList.add('hidden'),300);}
 function escHtml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function save(){if(!window._uid||window._pub)return;clearTimeout(_saveTimer);_saveTimer=setTimeout(async()=>{try{await _FBSave(window._uid,window.S);}catch(e){console.warn(e);}},800);}
+function saveNow(){if(!window._uid||window._pub)return;clearTimeout(_saveTimer);_FBSave(window._uid,window.S).catch(e=>console.warn(e));}
 function toast(msg,type){const t=document.getElementById('toast');t.innerText=msg;t.className=type||'s';t.style.display='block';clearTimeout(t._t);t._t=setTimeout(()=>t.style.display='none',2500);}
 window.triggerUpload=id=>document.getElementById(id).click();
+function _currentProfileBytes(){try{return new Blob([JSON.stringify(window.S)]).size;}catch(_){return 0;}}
+function _checkAddSize(extraBytes){const cur=_currentProfileBytes();if(cur+extraBytes>_MAX_BYTES){toast('Cannot add — profile would exceed 100 MB limit','e');return false;}return true;}
 function resizeImg(file,maxW,quality,cb){const r=new FileReader();r.onload=ev=>{const img=new Image();img.onload=()=>{const ratio=Math.min(maxW/img.width,maxW/img.height,1),w=Math.round(img.width*ratio),h=Math.round(img.height*ratio),cv=document.createElement('canvas');cv.width=w;cv.height=h;cv.getContext('2d').drawImage(img,0,0,w,h);cb(cv.toDataURL('image/jpeg',quality));};img.onerror=()=>cb(ev.target.result);img.src=ev.target.result;};r.readAsDataURL(file);}
 
 
@@ -1383,7 +1393,9 @@ window.onVidPick=inp=>{
     onAlbumMediaPick_direct(files);return;
   }
   /* فيديو مفرد للبروفايل — بنستخدم أول ملف بس */
-  const f=files[0];toast('Reading video\u2026','s');const r=new FileReader();r.onload=e=>{pendMedia={type:'video',url:e.target.result};document.getElementById('vidprev').src=e.target.result;document.getElementById('vidprev').style.display='block';document.getElementById('vidbox').style.display='none';toast('Video ready \u2713','s');};r.readAsDataURL(f);
+  const f=files[0];
+  if(!_checkAddSize(f.size*1.37))return;
+  toast('Reading video\u2026','s');const r=new FileReader();r.onload=e=>{pendMedia={type:'video',url:e.target.result};document.getElementById('vidprev').src=e.target.result;document.getElementById('vidprev').style.display='block';document.getElementById('vidbox').style.display='none';toast('Video ready \u2713','s');};r.readAsDataURL(f);
 };
 let _pendPbStyle='full';
 window.setPbStyle=function(s){if(s!=='full'&&s!=='small')s='full';_pendPbStyle=s;['full','small'].forEach(k=>{const el=document.getElementById('pbs-'+k);if(el)el.classList.toggle('selected',k===s);});};
@@ -1392,6 +1404,9 @@ function onAlbumMediaPick_direct(files){
   const gi=addToGrpIdx>=0?addToGrpIdx:-1;if(gi<0||!window.S.links[gi]||window.S.links[gi].type!=='album'){toast('Select an album first','e');return;}
   const alb=window.S.links[gi];if(!alb.items)alb.items=[];
   if(!files.length)return;
+  /* حساب الحجم الكلي للملفات الجديدة (base64 ≈ ×1.37 حجم الملف) */
+  const totalNew=Array.from(files).reduce((s,f)=>s+f.size*1.37,0);
+  if(!_checkAddSize(totalNew))return;
   toast('Adding '+files.length+' item(s)\u2026','s');let done=0;
   files.forEach(f=>{
     if(f.type.startsWith('image/')){resizeImg(f,1200,.85,d64=>{alb.items.push({type:'image',url:d64,title:'Photo'});done++;if(done===files.length){save();renderLinks();closeModals();openAlbumViewer(gi);toast('Added '+files.length+' item(s) \u2713','s');}});}
@@ -1506,7 +1521,7 @@ function renderAvEditBar(){
     if(it.type==='video'){th.innerHTML=`<video src="${it.url}" preload="metadata" style="width:100%;height:100%;object-fit:cover;display:block;" muted></video>`;}
     else{th.innerHTML=`<img src="${it.url}" loading="lazy" alt="">`;}
     /* delete */
-    const del=document.createElement('div');del.className='av-edit-del';del.innerHTML='&#x2715;';del.onclick=e=>{e.stopPropagation();alb.items.splice(idx,1);save();const mode=alb.albumTheme||'snap';renderAlbumContent(mode);renderAvEditBar();};th.appendChild(del);
+    const del=document.createElement('div');del.className='av-edit-del';del.innerHTML='&#x2715;';del.onclick=e=>{e.stopPropagation();alb.items.splice(idx,1);saveNow();const mode=alb.albumTheme||'snap';renderAlbumContent(mode);renderAvEditBar();};th.appendChild(del);
     /* drag reorder */
     th.addEventListener('dragstart',e=>{e.dataTransfer.setData('text/plain',idx);th.style.opacity='.4';});
     th.addEventListener('dragend',()=>{th.style.opacity='1';});
@@ -1520,6 +1535,8 @@ function renderAvEditBar(){
 window.onAvAddPick=function(inp){
   const files=Array.from(inp.files);inp.value='';if(!files.length)return;
   const alb=window.S.links[_albumGi];if(!alb)return;if(!alb.items)alb.items=[];
+  const totalNew=files.reduce((s,f)=>s+f.size*1.37,0);
+  if(!_checkAddSize(totalNew))return;
   toast('Adding '+files.length+' item(s)\u2026','s');let done=0;
   files.forEach(f=>{
     if(f.type.startsWith('image/')){resizeImg(f,1200,.85,d64=>{alb.items.push({type:'image',url:d64,title:'Photo'});done++;if(done===files.length){save();const mode=alb.albumTheme||'snap';renderAlbumContent(mode);if(_avEditMode)renderAvEditBar();toast('Added \u2713','s');}});}
@@ -1559,36 +1576,54 @@ function buildSnap(items,cont){
   const vids=cont.querySelectorAll('video');vids.forEach(v=>{v.muted=true;v.play().catch(()=>{});});
 }
 
-/* CAROUSEL — tap أو swipe للتنقل */
+/* CAROUSEL — 3D حقيقي لـ ≤7 صور، pseudo-3D للأكتر */
 function buildCarousel(items,cont){
   _carIdx=0;const n=items.length;
-  /* أبعاد أصغر وثابتة عشان الكاروسيل يبقا أنيق */
-  const cardW=160;const cardH=200;
-  /* المسافة بين الكروت تتحسب أوتوماتيك على حسب عدد الصور */
-  const angle=360/n;
-  const radius=Math.max(110,Math.round((cardW*n)/(2*Math.PI))+20);
-  /* badge الحجم يظهر في التعديل فقط */
   const sizeBadge=window._edit?`<div class="anim-size-badge">&#128247; Ideal: 310&times;372px</div>`:'';
-  let html=`<div class="carousel-wrap">${sizeBadge}<div class="carousel-scene" id="car-scene"><div class="carousel-rotor" id="car-rotor">`;
-  items.forEach((it,i)=>{
-    html+=`<div class="car-card" style="transform:rotateY(${i*angle}deg) translateZ(${radius}px);">${mediaEl(it,'style="width:100%;height:100%;object-fit:cover;display:block;"')}</div>`;
-  });
-  html+=`</div></div><div class="carousel-idx" id="car-idx">1 / ${n}</div><div class="carousel-hint">&#10094; Swipe or tap &#10095;</div></div>`;
-  cont.innerHTML=html;
-  applyCarRot(n);
+  if(n<=7){
+    /* ====== 3D CYLINDER ====== */
+    const cardW=150;const cardH=190;
+    const angle=360/n;
+    /* radius يضمن الكروت ما تتداخلش: r = cardW/(2*sin(π/n)) */
+    const radius=n===1?0:Math.ceil((cardW/2)/Math.sin(Math.PI/n))+8;
+    let html=`<div class="carousel-wrap">${sizeBadge}<div class="carousel-scene" id="car-scene" style="width:${cardW}px;height:${cardH}px;"><div class="carousel-rotor" id="car-rotor" style="width:${cardW}px;height:${cardH}px;">`;
+    items.forEach((it,i)=>{
+      html+=`<div class="car-card" style="width:${cardW}px;height:${cardH}px;transform:rotateY(${i*angle}deg) translateZ(${radius}px);">${mediaEl(it,'style="width:100%;height:100%;object-fit:cover;display:block;"')}</div>`;
+    });
+    html+=`</div></div><div class="carousel-idx" id="car-idx">1 / ${n}</div><div class="carousel-hint">&#10094; Swipe or tap &#10095;</div></div>`;
+    cont.innerHTML=html;
+    applyCarRot(n);
+  } else {
+    /* ====== PSEUDO-3D: بس 3 كروت ظاهرة في وقت واحد ====== */
+    let html=`<div class="carousel-wrap">${sizeBadge}<div class="car-pseudo-stage" id="car-stage"></div><div class="carousel-idx" id="car-idx">1 / ${n}</div><div class="carousel-hint">&#10094; Swipe or tap &#10095;</div></div>`;
+    cont.innerHTML=html;
+    applyPseudoCar(items);
+    const stage=document.getElementById('car-stage');
+    if(stage)addSwipe(stage,carNext,carPrev);
+  }
   autoPlayVisible(cont);
-  const scene=document.getElementById('car-scene');
-  if(scene){
+  const scene=document.getElementById('car-scene')||document.getElementById('car-stage');
+  if(scene&&!scene._carClick){
+    scene._carClick=true;
     scene.addEventListener('click',e=>{
       const rect=scene.getBoundingClientRect();
       e.clientX-rect.left>rect.width/2?carNext():carPrev();
     });
-    addSwipe(scene,carNext,carPrev);
+    if(scene.id==='car-scene')addSwipe(scene,carNext,carPrev);
   }
 }
-window.carNext=function(){const alb=window.S.links[_albumGi];const n=(alb&&alb.items||[]).length;if(!n)return;_carIdx=(_carIdx+1)%n;applyCarRot(n);const el=document.getElementById('car-idx');if(el)el.innerText=(_carIdx+1)+' / '+n;};
-window.carPrev=function(){const alb=window.S.links[_albumGi];const n=(alb&&alb.items||[]).length;if(!n)return;_carIdx=(_carIdx-1+n)%n;applyCarRot(n);const el=document.getElementById('car-idx');if(el)el.innerText=(_carIdx+1)+' / '+n;};
-/* لما نضغط يمين → الأسطوانة تلف يمين (سالب) عشان الكرت التالي يجي للأمام */
+function applyPseudoCar(items){
+  const stage=document.getElementById('car-stage');if(!stage)return;
+  const n=items.length;
+  const prev=items[(_carIdx-1+n)%n],cur=items[_carIdx],next=items[(_carIdx+1)%n];
+  stage.innerHTML=`
+    <div class="cps-card cps-prev">${mediaEl(prev,'style="width:100%;height:100%;object-fit:cover;display:block;"')}</div>
+    <div class="cps-card cps-cur">${mediaEl(cur,'style="width:100%;height:100%;object-fit:cover;display:block;"')}</div>
+    <div class="cps-card cps-next">${mediaEl(next,'style="width:100%;height:100%;object-fit:cover;display:block;"')}</div>`;
+  autoPlayVisible(stage);
+}
+window.carNext=function(){const alb=window.S.links[_albumGi];const items=(alb&&alb.items)||[];const n=items.length;if(!n)return;_carIdx=(_carIdx+1)%n;applyCarRot(n);applyPseudoCar(items);const el=document.getElementById('car-idx');if(el)el.innerText=(_carIdx+1)+' / '+n;};
+window.carPrev=function(){const alb=window.S.links[_albumGi];const items=(alb&&alb.items)||[];const n=items.length;if(!n)return;_carIdx=(_carIdx-1+n)%n;applyCarRot(n);applyPseudoCar(items);const el=document.getElementById('car-idx');if(el)el.innerText=(_carIdx+1)+' / '+n;};
 function applyCarRot(n){const r=document.getElementById('car-rotor');if(!r)return;const angle=360/(n||1);r.style.transform=`rotateY(${-_carIdx*angle}deg)`;}
 
 /* FLOATING — swipe أو tap للتنقل */
