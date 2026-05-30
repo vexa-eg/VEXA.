@@ -1087,7 +1087,8 @@ function buildItem(l,gi,ii,forceStyle,grpDefs){
   if(l.type==='video'){
     if(locked)return `<div style="position:relative;"><div class="lcard gc" style="cursor:pointer;" onclick="onPwItem(${gi},${ii},'video')">&#128274; ${escHtml(l.title||'Protected Video')}</div>${editBtn}</div>`;
     if(window._pub){const eid='med_'+gi+'_'+ii;return `<div class="mcard" id="${eid}" style="position:relative;"><button class="media-tap-btn" onclick="revealMedia('${eid}',${gi},${ii},'video')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>${escHtml(l.title||'Tap to play video')}</button>${lockBadge}</div>`;}
-    return `<div class="mcard" style="position:relative;"><video src="${l.url}" controls playsinline preload="none"></video>${lockBadge}${editBtn}</div>`;
+    const vidWarn=window._edit?`<div style="display:flex;align-items:center;gap:6px;padding:6px 12px;background:rgba(255,180,0,.08);border:1px solid rgba(255,180,0,.2);border-radius:10px 10px 0 0;font-size:.72rem;color:#f5a623;font-weight:600;letter-spacing:.3px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>&#9888; Max video size: 15 MB</div>`:'';
+    return `<div style="position:relative;">${vidWarn}<div class="mcard" style="position:relative;${window._edit?'border-radius:0 0 var(--r) var(--r);overflow:hidden;':''}"><video src="${l.url}" controls playsinline preload="none"></video>${lockBadge}${editBtn}</div></div>`;
   }
   if(l.type==='location')return buildLocCard(l,gi,ii)+editBtn;
   if(locked)return `<div style="position:relative;"><div class="lcard gc" style="cursor:pointer;" onclick="onPwItem(${gi},${ii},'link')">&#128274; ${escHtml(l.title)}</div>${editBtn}</div>`;
@@ -1500,7 +1501,7 @@ window.toggleAlbumEditMode=function(){
   tog.innerText=_avEditMode?'\u2713 Done':'\u270E Edit';
   tog.classList.toggle('active',_avEditMode);
   if(_avEditMode){bar.classList.remove('hidden');renderAvEditBar();}
-  else{bar.classList.add('hidden');bar.innerHTML='';}
+  else{bar.classList.add('hidden');bar.innerHTML='';saveNow().then(()=>toast('Saved \u2713','s')).catch(()=>toast('Save failed','e'));}
 };
 
 function renderAvEditBar(){
