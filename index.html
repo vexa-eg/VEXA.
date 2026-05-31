@@ -19,6 +19,16 @@
 body{min-height:100vh;background:var(--bg);background-size:cover;background-position:center;background-attachment:fixed;color:#fff;}
 body::before{content:'';position:fixed;inset:0;z-index:0;background-image:inherit;background-size:cover;background-position:center;filter:blur(var(--bg-blur));transform:scale(1.08);pointer-events:none;}
 body.no-bgimg::before{display:none;}
+/* SKELETON LOADING — shows immediately on QR scan before Firebase data arrives */
+.skel-pulse{animation:skelPulse 1.6s ease-in-out infinite;}
+@keyframes skelPulse{0%,100%{opacity:.25;}50%{opacity:.5;}}
+#pub-skeleton{position:fixed;inset:0;z-index:100;background:#0a0a0a;padding:44px 18px 100px;display:none;flex-direction:column;align-items:center;overflow-y:auto;}
+#pub-skeleton.on{display:flex;}
+.sk-av{width:88px;height:88px;border-radius:50%;background:#1a1a1a;margin-bottom:14px;}
+.sk-name{width:130px;height:22px;border-radius:8px;background:#1a1a1a;margin-bottom:10px;}
+.sk-bio{width:180px;height:14px;border-radius:6px;background:#1a1a1a;margin-bottom:28px;}
+.sk-card{width:100%;height:52px;border-radius:16px;background:#1a1a1a;margin-bottom:10px;}
+.sk-album{width:100%;height:200px;border-radius:16px;background:#1a1a1a;margin-bottom:10px;}
 .hidden{display:none!important;}
 /* Z layers */
 #ls{position:fixed;inset:0;z-index:9999;background:#000;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;transition:opacity .3s;}
@@ -83,13 +93,19 @@ body.no-bgimg::before{display:none;}
 .media-tap-btn{width:100%;min-height:80px;background:rgba(255,255,255,.04);border:none;display:flex;align-items:center;justify-content:center;gap:10px;cursor:pointer;padding:20px;color:#555;font-size:.88rem;font-weight:600;font-family:'Inter',sans-serif;transition:background .15s;}
 .media-tap-btn:hover{background:rgba(255,255,255,.08);color:#999;}
 .vid-size-info{font-size:.72rem;color:#666;text-align:center;padding:6px 10px;background:rgba(255,200,0,.06);border:1px solid rgba(255,200,0,.12);border-radius:8px;margin-bottom:8px;}
+.vid-limit-info{display:flex;align-items:center;gap:10px;padding:11px 14px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:12px;margin-bottom:10px;}
+.vid-limit-icon{width:32px;height:32px;flex-shrink:0;border-radius:9px;background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;color:#444;}
+.vid-limit-text{display:flex;flex-direction:column;gap:2px;}
+.vid-limit-title{font-size:.68rem;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:#555;}
+.vid-limit-sub{font-size:.66rem;color:#333;letter-spacing:.2px;}
 /* grp-wrap defined in 3D section */
 .grp-header{display:flex;align-items:center;gap:10px;padding:8px 14px;border-radius:14px 14px 0 0;}
 .grp-title-left{font-size:.7rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;opacity:.7;}
 .grp-inner{display:flex;flex-direction:column;gap:8px;padding:10px;border-radius:0 0 14px 14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-top:none;}
 /* album-card defined in 3D section */
 .album-cover-wrap{position:relative;width:100%;aspect-ratio:16/9;overflow:hidden;cursor:pointer;}
-.album-cover-img{width:100%;height:100%;object-fit:cover;display:block;filter:blur(6px);transform:scale(1.05);}
+.album-cover-img{width:100%;height:100%;object-fit:cover;display:block;transition:filter .35s ease,transform .35s ease;filter:blur(8px);transform:scale(1.04);}
+.album-cover-img.loaded{filter:none;transform:scale(1);}
 .album-cover-overlay{position:absolute;inset:0;background:rgba(0,0,0,.35);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;}
 .album-tap-badge{background:rgba(255,255,255,.15);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.3);border-radius:30px;padding:9px 22px;color:#fff;font-size:.82rem;font-weight:800;letter-spacing:2px;animation:tapVibe 2s ease-in-out infinite;}
 @keyframes tapVibe{0%,40%,100%{transform:scale(1) rotate(0deg);}42%{transform:scale(1.06) rotate(-1.5deg);}44%{transform:scale(1.06) rotate(1.5deg);}46%{transform:scale(1.06) rotate(-1.5deg);}48%{transform:scale(1.06) rotate(1.5deg);}50%{transform:scale(1) rotate(0deg);}}
@@ -496,20 +512,39 @@ body.no-bgimg::before{display:none;}
 .forgot-msg{font-size:.78rem;text-align:center;display:none;padding:8px 12px;border-radius:10px;}
 .forgot-msg.ok{background:rgba(0,200,80,.1);color:#4c8;border:1px solid rgba(0,200,80,.2);}
 .forgot-msg.er{background:rgba(255,60,60,.1);color:#f66;border:1px solid rgba(255,60,60,.2);}
-/* STORAGE METER */
-.storage-meter-wrap{margin-top:14px;padding:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:14px;}
-.storage-meter-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
-.storage-meter-title{font-size:.69rem;color:#444;letter-spacing:1.5px;text-transform:uppercase;font-weight:700;}
-.storage-meter-val{font-size:.75rem;color:#666;font-weight:700;font-family:'Bebas Neue',sans-serif;letter-spacing:1px;}
-.storage-bar-bg{width:100%;height:5px;background:rgba(255,255,255,.06);border-radius:10px;overflow:hidden;}
-.storage-bar-fill{height:100%;border-radius:10px;transition:width .5s ease,background .3s;min-width:3px;}
-.storage-bar-hint{font-size:.65rem;color:#333;margin-top:6px;text-align:center;letter-spacing:.3px;}
+/* QR STORAGE METER */
+.qr-storage-meter{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:14px 16px;margin-bottom:14px;}
+.qr-sm-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px;}
+.qr-sm-title{font-size:.67rem;color:#333;letter-spacing:2px;text-transform:uppercase;font-weight:800;}
+.qr-sm-val{font-size:.78rem;font-family:'Bebas Neue',sans-serif;letter-spacing:1.5px;color:#555;transition:color .3s;}
+.qr-sm-bg{width:100%;height:6px;background:rgba(255,255,255,.05);border-radius:10px;overflow:hidden;}
+.storage-bar-fill{height:100%;border-radius:10px;transition:width .6s ease,background .4s;min-width:4px;}
+.qr-sm-hint{font-size:.63rem;color:#2a2a2a;margin-top:7px;text-align:center;letter-spacing:.4px;}
+/* PROCESSING OVERLAY */
+#proc-overlay{position:fixed;inset:0;z-index:9998;background:rgba(0,0,0,.92);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;backdrop-filter:blur(8px);}
+#proc-overlay.hidden{display:none!important;}
+.proc-icon{font-size:2.4rem;animation:procSpin 1.2s linear infinite;}
+@keyframes procSpin{to{transform:rotate(360deg);}}
+.proc-msg{font-size:.95rem;color:#ccc;letter-spacing:2px;text-transform:uppercase;font-weight:700;text-align:center;}
+.proc-sub{font-size:.75rem;color:#444;letter-spacing:1px;text-align:center;}
+.proc-bar-bg{width:220px;height:5px;background:rgba(255,255,255,.08);border-radius:10px;overflow:hidden;}
+.proc-bar-fill{height:100%;background:#4cf;border-radius:10px;transition:width .2s;width:0%;}
 /* RESET PASSWORD BOX */
 #reset-box{gap:16px;}
 .reset-ok{color:#4c8;font-size:.82rem;background:rgba(0,200,80,.08);border:1px solid rgba(0,200,80,.2);border-radius:12px;padding:10px 14px;text-align:center;display:none;}
 </style>
 </head>
 <body class="no-bgimg">
+<!-- PUBLIC SKELETON — visible immediately on QR scan before Firebase data -->
+<div id="pub-skeleton">
+  <div class="sk-av skel-pulse"></div>
+  <div class="sk-name skel-pulse"></div>
+  <div class="sk-bio skel-pulse"></div>
+  <div class="sk-album skel-pulse"></div>
+  <div class="sk-card skel-pulse"></div>
+  <div class="sk-card skel-pulse" style="width:85%;opacity:.7;"></div>
+  <div class="sk-card skel-pulse" style="width:70%;opacity:.5;"></div>
+</div>
 <script>
 /* ======================================================
    EARLY INIT — runs immediately, before Firebase loads
@@ -526,9 +561,12 @@ body.no-bgimg::before{display:none;}
 
   if(pid){
     /* ── PUBLIC PROFILE ──
-       1. Check localStorage for instant cached render.
-       2. Start REST fetch immediately (before Firebase loads).
+       1. Show skeleton immediately so user sees UI at once.
+       2. Check localStorage for instant cached render.
+       3. Start REST fetch immediately (before Firebase loads).
           The preconnect in <head> means TCP is already ready. */
+    /* Show skeleton right away */
+    var sk=document.getElementById('pub-skeleton');if(sk)sk.classList.add('on');
     try{
       var c=localStorage.getItem('vexa_pub_'+pid);
       if(c){var d=JSON.parse(c);if(d&&d.publicId)window._pubCached=d;}
@@ -628,7 +666,14 @@ body.no-bgimg::before{display:none;}
   <div id="qrcode"></div>
   <div class="qlinkbox"><span class="qlinktext" id="qlink"></span><button class="cpbtn" onclick="copyLink()">Copy</button></div>
   <button onclick="downloadQR()" style="background:#1a1a1a;color:#ccc;border:1px solid rgba(255,255,255,.12);padding:10px 22px;border-radius:100px;font-size:.82rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:7px;margin-bottom:6px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Download QR</button>
-  <div class="analytics-wrap edit-only"><div class="an-header"><div class="an-title">Analytics</div><button class="an-reset-btn" onclick="askResetAnalytics()">RESET</button></div><div class="an-top-row"><div class="an-stat"><div class="an-num" id="an-visits">-</div><div class="an-lbl">Views</div></div><div class="an-stat"><div class="an-num" id="an-today">-</div><div class="an-lbl">Today</div></div><div class="an-stat"><div class="an-num" id="an-clicks-total">-</div><div class="an-lbl">Taps</div></div></div><div style="height:1px;background:rgba(255,255,255,.06);"></div><div class="an-clicks-title" style="font-size:.68rem;letter-spacing:2px;text-transform:uppercase;color:#444;font-weight:700;margin-bottom:6px;">Most Tapped</div><div id="an-clicks-list"><div class="an-empty">Loading&#8230;</div></div></div>
+  <div class="analytics-wrap edit-only">
+    <!-- Storage Meter — above analytics -->
+    <div class="qr-storage-meter" id="qr-storage-outer">
+      <div class="qr-sm-top"><span class="qr-sm-title">&#128190; Profile Storage</span><span class="qr-sm-val" id="storage-meter-val">0 MB / 100 MB</span></div>
+      <div class="qr-sm-bg"><div class="storage-bar-fill" id="storage-bar-fill" style="width:0%;background:#4cf;"></div></div>
+      <div class="qr-sm-hint" id="storage-bar-hint">Calculating&#8230;</div>
+    </div>
+    <div class="an-header"><div class="an-title">Analytics</div><button class="an-reset-btn" onclick="askResetAnalytics()">RESET</button></div><div class="an-top-row"><div class="an-stat"><div class="an-num" id="an-visits">-</div><div class="an-lbl">Views</div></div><div class="an-stat"><div class="an-num" id="an-today">-</div><div class="an-lbl">Today</div></div><div class="an-stat"><div class="an-num" id="an-clicks-total">-</div><div class="an-lbl">Taps</div></div></div><div style="height:1px;background:rgba(255,255,255,.06);"></div><div class="an-clicks-title" style="font-size:.68rem;letter-spacing:2px;text-transform:uppercase;color:#444;font-weight:700;margin-bottom:6px;">Most Tapped</div><div id="an-clicks-list"><div class="an-empty">Loading&#8230;</div></div></div>
 </div>
 
 <!-- DESIGN MODAL -->
@@ -654,11 +699,6 @@ body.no-bgimg::before{display:none;}
   <div class="img-hint">&#9432; Best size: 1200 &times; 800 px</div>
   <button id="rmbg" style="width:100%;background:none;border:none;color:#f66;margin-top:4px;cursor:pointer;font-size:.8rem;display:none;" onclick="removeBg()">Remove background image</button>
   <div id="blur-section" style="display:none;"><p class="clabel" style="margin-top:14px;">Background Blur</p><div class="blur-row"><span style="font-size:.7rem;color:#444;">None</span><input type="range" id="bgblur" min="0" max="20" step="1" value="0" oninput="applyBlur(this.value)"><span style="font-size:.72rem;color:#444;min-width:30px;text-align:right;" id="blur-val">0px</span></div></div>
-  <div class="storage-meter-wrap">
-    <div class="storage-meter-top"><span class="storage-meter-title">&#128190; Profile Storage</span><span class="storage-meter-val" id="storage-meter-val">0 MB / 100 MB</span></div>
-    <div class="storage-bar-bg"><div class="storage-bar-fill" id="storage-bar-fill" style="width:0%;background:#fff;"></div></div>
-    <div class="storage-bar-hint" id="storage-bar-hint">Profile size shown here</div>
-  </div>
   <button class="abtn msbtn" onclick="closeModals()">Done</button>
 </div></div>
 
@@ -694,7 +734,7 @@ body.no-bgimg::before{display:none;}
     <div id="photobtn-pw-field" style="display:none;"><input type="text" id="photobtn-pw" class="mi" placeholder="Set password&#8230;"></div>
   </div>
   <div id="tp-image" class="hidden"><input type="text" id="img-title" class="mi" placeholder="Label (e.g. My Photos)"><div class="upbox" id="imgbox" onclick="triggerUpload('imginput')"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>Select image</div><div class="img-hint">&#9432; Best size: 900 &times; 600 px</div><img id="imgprev" src="" style="display:none;width:100%;border-radius:12px;margin-top:10px;max-height:220px;object-fit:cover;"><p class="clabel">Password (optional)</p><div class="pw-row"><label class="pw-toggle"><input type="checkbox" id="img-pw-on" onchange="togglePwInput('img-pw-field',this.checked)"><span class="pw-track"></span><span class="pw-thumb"></span></label><span class="pw-lbl">Protect with password</span></div><div id="img-pw-field" style="display:none;"><input type="text" id="img-pw" class="mi" placeholder="Set password&#8230;"></div></div>
-  <div id="tp-video" class="hidden"><input type="text" id="vid-title" class="mi" placeholder="Label (e.g. Promo Video)"><div class="vid-limit-info">&#127910; Max 50MB per video file</div><div class="upbox" id="vidbox" onclick="triggerUpload('vidinput')"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>Select video</div><video id="vidprev" style="display:none;width:100%;border-radius:12px;margin-top:10px;max-height:220px;" controls playsinline></video><p class="clabel">Password (optional)</p><div class="pw-row"><label class="pw-toggle"><input type="checkbox" id="vid-pw-on" onchange="togglePwInput('vid-pw-field',this.checked)"><span class="pw-track"></span><span class="pw-thumb"></span></label><span class="pw-lbl">Protect with password</span></div><div id="vid-pw-field" style="display:none;"><input type="text" id="vid-pw" class="mi" placeholder="Set password&#8230;"></div></div>
+  <div id="tp-video" class="hidden"><input type="text" id="vid-title" class="mi" placeholder="Label (e.g. Promo Video)"><div class="vid-limit-info"><div class="vid-limit-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></div><div class="vid-limit-text"><div class="vid-limit-title">Video Upload Limit</div><div class="vid-limit-sub">Max 50 MB per video &nbsp;&middot;&nbsp; Remove old videos to free space</div></div></div><div class="upbox" id="vidbox" onclick="triggerUpload('vidinput')"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>Select video</div><video id="vidprev" style="display:none;width:100%;border-radius:12px;margin-top:10px;max-height:220px;" controls playsinline></video><p class="clabel">Password (optional)</p><div class="pw-row"><label class="pw-toggle"><input type="checkbox" id="vid-pw-on" onchange="togglePwInput('vid-pw-field',this.checked)"><span class="pw-track"></span><span class="pw-thumb"></span></label><span class="pw-lbl">Protect with password</span></div><div id="vid-pw-field" style="display:none;"><input type="text" id="vid-pw" class="mi" placeholder="Set password&#8230;"></div></div>
   <div id="tp-location" class="hidden"><input type="text" id="loc-label-input" class="mi" placeholder="Label (e.g. Our Shop)"><p class="clabel">Password (optional)</p><div class="pw-row"><label class="pw-toggle"><input type="checkbox" id="loc-pw-on" onchange="togglePwInput('loc-pw-field',this.checked)"><span class="pw-track"></span><span class="pw-thumb"></span></label><span class="pw-lbl">Protect with password</span></div><div id="loc-pw-field" style="display:none;"><input type="text" id="loc-pw" class="mi" placeholder="Set password&#8230;"></div></div>
   <div id="tp-group" class="hidden"><input type="text" id="grp-name" class="mi" placeholder="Group name (e.g. Social Media)"><p class="clabel">Layout</p><div class="layout-toggle"><div class="layout-opt on" id="grplo-list" onclick="setNewGrpLayout('list')">&#9776; List</div><div class="layout-opt" id="grplo-grid" onclick="setNewGrpLayout('grid')">&#8857; Grid</div></div><p class="clabel">Group Colors</p><div class="grp-color-row"><div class="ci">Header BG<input type="color" id="grp-hbg" value="#1a1a1a"></div><div class="ci">Header Text<input type="color" id="grp-htxt" value="#ffffff"></div><div class="ci">Cards BG<input type="color" id="grp-cbg" value="#111111"></div></div><p class="clabel">Link Colors (List &amp; Grid)</p><div class="grp-color-row"><div class="ci">Icon Color<input type="color" id="grp-icon-color" value="#ffffff"></div><div class="ci">Card BG<input type="color" id="grp-icon-bg" value="#1e1e1e"></div><div class="ci">Label Color<input type="color" id="grp-label-color" value="#ffffff"></div></div><p class="clabel">Password (optional)</p><div class="pw-row"><label class="pw-toggle"><input type="checkbox" id="grp-pw-on" onchange="togglePwInput('grp-pw-field',this.checked)"><span class="pw-track"></span><span class="pw-thumb"></span></label><span class="pw-lbl">Lock group with password</span></div><div id="grp-pw-field" style="display:none;"><input type="text" id="grp-pw" class="mi" placeholder="Set password&#8230;"></div></div>
   <div id="tp-album" class="hidden">
@@ -743,6 +783,14 @@ body.no-bgimg::before{display:none;}
 <div id="album-viewer"><div class="av-header"><button class="av-close" onclick="closeAlbumViewer()">&#x2715;</button><div class="av-title" id="av-title">Album</div><button class="av-edit-toggle edit-only hidden" id="av-edit-toggle" onclick="toggleAlbumEditMode()">&#9998; Edit</button></div><div class="av-edit-bar edit-only hidden" id="av-edit-bar"></div><div class="av-content" id="av-content"></div></div>
 
 <input type="file" id="av-add-input" class="hidden" accept="image/*,video/*" multiple onchange="onAvAddPick(this)">
+
+<!-- PROCESSING OVERLAY — shown during heavy file reads -->
+<div id="proc-overlay" class="hidden">
+  <div class="proc-icon">&#9881;</div>
+  <div class="proc-msg" id="proc-msg">Processing&#8230;</div>
+  <div class="proc-bar-bg"><div class="proc-bar-fill" id="proc-bar-fill"></div></div>
+  <div class="proc-sub" id="proc-sub">Please wait&nbsp;&#8212;&nbsp;do not close the app</div>
+</div>
 
 <input type="file" id="avinput" class="hidden" accept="image/*" onchange="onAvatarPick(this)">
 <input type="file" id="bginput" class="hidden" accept="image/*" onchange="onBgPick(this)">
@@ -956,9 +1004,9 @@ let _pendAlbCover=null,_editAlbCover=null;
 let _carIdx=0,_floatIdx=0,_flipIdx=0,_carN=1,_carRadius=140;
 let _pendPhotoBtnImg=null,_egGrpStyle='list',_newGrpStyle='list';
 
-function hideLs(){const l=document.getElementById('ls');l.classList.add('out');setTimeout(()=>l.classList.add('hidden'),300);}
+function hideLs(){const l=document.getElementById('ls');l.classList.add('out');setTimeout(()=>l.classList.add('hidden'),300);const sk=document.getElementById('pub-skeleton');if(sk)sk.classList.remove('on');}
 function escHtml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-function save(){if(!window._uid||window._pub)return;clearTimeout(_saveTimer);_saveTimer=setTimeout(async()=>{try{await _FBSave(window._uid,window.S);}catch(e){console.warn(e);}},800);}
+function save(){if(!window._uid||window._pub)return;clearTimeout(_saveTimer);_saveTimer=setTimeout(async()=>{try{await _FBSave(window._uid,window.S);}catch(e){console.warn(e);}updateStorageMeter();},800);}
 function toast(msg,type){const t=document.getElementById('toast');t.innerText=msg;t.className=type||'s';t.style.display='block';clearTimeout(t._t);t._t=setTimeout(()=>t.style.display='none',2500);}
 window.triggerUpload=id=>document.getElementById(id).click();
 function resizeImg(file,maxW,quality,cb){const r=new FileReader();r.onload=ev=>{const img=new Image();img.onload=()=>{const ratio=Math.min(maxW/img.width,maxW/img.height,1),w=Math.round(img.width*ratio),h=Math.round(img.height*ratio),cv=document.createElement('canvas');cv.width=w;cv.height=h;cv.getContext('2d').drawImage(img,0,0,w,h);cb(cv.toDataURL('image/jpeg',quality));};img.onerror=()=>cb(ev.target.result);img.src=ev.target.result;};r.readAsDataURL(file);}
@@ -1175,7 +1223,8 @@ function buildAlbumCard(l,i){
   const addBtn=window._edit?`<button class="album-add-btn" onclick="openAddToGroup(${i})">+ ADD MEDIA</button>`:'';
   let coverHtml;
   if(l.coverUrl){
-    coverHtml=`<div class="album-cover-wrap" onclick="openAlbumViewer(${i})"><img class="album-cover-img" src="${l.coverUrl}" loading="lazy" alt=""><div class="album-cover-overlay"><div class="album-tap-badge">TAP HERE</div><div style="font-size:.68rem;color:rgba(255,255,255,.5);letter-spacing:1px;">${items.length} ITEMS</div></div></div>`;
+    /* eager loading + decoding async for instant cover display on QR scan */
+    coverHtml=`<div class="album-cover-wrap" onclick="openAlbumViewer(${i})"><img class="album-cover-img" src="${l.coverUrl}" loading="eager" decoding="async" fetchpriority="high" alt="" onload="this.classList.add('loaded')"><div class="album-cover-overlay"><div class="album-tap-badge">TAP HERE</div><div style="font-size:.68rem;color:rgba(255,255,255,.5);letter-spacing:1px;">${items.length} ITEMS</div></div></div>`;
   }else{
     coverHtml=`<div class="album-no-cover" onclick="openAlbumViewer(${i})"><div style="text-align:center;color:#333;"><div style="font-size:36px;margin-bottom:8px;">&#128193;</div><div style="font-size:.78rem;letter-spacing:1px;">NO COVER &mdash; TAP TO OPEN</div><div style="font-size:.68rem;margin-top:4px;color:#2a2a2a;">${items.length} items</div></div></div>`;
   }
@@ -1424,16 +1473,26 @@ window.onImgPick=inp=>{
 };
 window.onVidPick=inp=>{
   const files=Array.from(inp.files);inp.value='';if(!files.length)return;
-  /* إضافة مباشرة للألبوم لو إحنا جوا ألبوم */
+  /* Add directly to album if inside album */
   if(addToGrpIdx>=0&&window.S.links[addToGrpIdx]&&window.S.links[addToGrpIdx].type==='album'){
     onAlbumMediaPick_direct(files);return;
   }
-  /* فيديو مفرد للبروفايل — بنستخدم أول ملف بس */
+  /* Single video on profile */
   const f=files[0];
-  /* ── Video size check ── */
-  if(f.size>_MAX_VIDEO_MB*1024*1024){toast('Video too large — max '+_MAX_VIDEO_MB+'MB per video','e');return;}
-  if(!checkStorageBeforeAdd(f.size*1.37)){return;}/* base64 overhead ~37% */
-  toast('Reading video\u2026','s');const r=new FileReader();r.onload=e=>{pendMedia={type:'video',url:e.target.result};document.getElementById('vidprev').src=e.target.result;document.getElementById('vidprev').style.display='block';document.getElementById('vidbox').style.display='none';toast('Video ready \u2713','s');};r.readAsDataURL(f);
+  if(f.size>_MAX_VIDEO_MB*1024*1024){toast('Video too large \u2014 max '+_MAX_VIDEO_MB+'MB per video','e');return;}
+  if(!checkStorageBeforeAdd(f.size*1.37)){return;}
+  showProcessing('Reading video\u2026','This may take a moment for large files');
+  readFileAsync(f,p=>setProcessingProgress(p,'Reading video: '+p+'%'))
+    .then(url=>{
+      pendMedia={type:'video',url};
+      const vp=document.getElementById('vidprev');
+      if(vp){vp.src=url;vp.style.display='block';}
+      const vb=document.getElementById('vidbox');
+      if(vb)vb.style.display='none';
+      hideProcessing();
+      toast('Video ready \u2713','s');
+    })
+    .catch(err=>{hideProcessing();toast('Failed to read video: '+err.message,'e');});
 };
 let _pendPbStyle='full';
 window.setPbStyle=function(s){if(s!=='full'&&s!=='small')s='full';_pendPbStyle=s;['full','small'].forEach(k=>{const el=document.getElementById('pbs-'+k);if(el)el.classList.toggle('selected',k===s);});};
@@ -1444,16 +1503,16 @@ function onAlbumMediaPick_direct(filesIn){
   const alb=window.S.links[gi];if(!alb.items)alb.items=[];
   if(!files.length)return;
   /* ── Size checks ── */
-  const oversizedVids=files.filter(f=>f.type.startsWith('video/')&&f.size>_MAX_VIDEO_MB*1024*1024);
-  if(oversizedVids.length){toast(oversizedVids.length+' video(s) exceed '+_MAX_VIDEO_MB+'MB limit — skipped','e');files=files.filter(f=>!(f.type.startsWith('video/')&&f.size>_MAX_VIDEO_MB*1024*1024));}
+  const oversized=files.filter(f=>f.type.startsWith('video/')&&f.size>_MAX_VIDEO_MB*1024*1024);
+  if(oversized.length){toast(oversized.length+' video(s) exceed '+_MAX_VIDEO_MB+'MB — skipped','e');files=files.filter(f=>!(f.type.startsWith('video/')&&f.size>_MAX_VIDEO_MB*1024*1024));}
   if(!files.length)return;
   if(getProfileBytes()>=_MAX_BYTES){toast('Profile at 100MB limit — remove some media first','e');return;}
-  toast('Adding '+files.length+' item(s)\u2026','s');let done=0;
-  files.forEach(f=>{
-    if(f.type.startsWith('image/')){resizeImg(f,1200,.85,d64=>{alb.items.push({type:'image',url:d64,title:'Photo'});done++;if(done===files.length){save();renderLinks();closeModals();openAlbumViewer(gi);toast('Added '+files.length+' item(s) \u2713','s');}});}
-    else if(f.type.startsWith('video/')){const r=new FileReader();r.onload=ev=>{alb.items.push({type:'video',url:ev.target.result,title:'Video'});done++;if(done===files.length){save();renderLinks();closeModals();openAlbumViewer(gi);toast('Added '+files.length+' item(s) \u2713','s');}};r.readAsDataURL(f);}
-    else done++;
-  });
+  showProcessing('Adding '+files.length+' file(s)\u2026','Do not close or navigate away');
+  processMediaFiles(
+    files,
+    item=>alb.items.push(item),
+    ()=>{save();renderLinks();closeModals();openAlbumViewer(gi);toast('Added '+files.length+' file(s) \u2713','s');}
+  ).catch(err=>{hideProcessing();toast('Error: '+err.message,'e');});
 }
 window.onAlbumMediaPick=inp=>{
   const files=Array.from(inp.files);inp.value='';if(!files.length)return;
@@ -1526,6 +1585,36 @@ window.openEditAlbum=gi=>{
 window.saveAlbumEdit=function(){const a=window.S.links[_albumGi];if(!a)return;a.name=document.getElementById('ealb-name').value.trim()||a.name;a.albumTheme=_editAlbTheme;if(_editAlbCover)a.coverUrl=_editAlbCover;const pwOn=document.getElementById('ealb-pw-on').checked,pw=document.getElementById('ealb-pw').value.trim();a.password=pwOn&&pw?pw:null;save();renderLinks();closeModals();toast('Updated \u2713','s');_editAlbCover=null;};
 
 let _avEditMode=false;
+/* ── Processing overlay helpers — prevents browser from appearing frozen ── */
+function showProcessing(msg,sub){const ov=document.getElementById('proc-overlay');if(!ov)return;document.getElementById('proc-msg').innerText=msg||'Processing\u2026';document.getElementById('proc-sub').innerText=sub||'Please wait \u2014 do not close the app';document.getElementById('proc-bar-fill').style.width='0%';ov.classList.remove('hidden');}
+function setProcessingProgress(pct,msg){const f=document.getElementById('proc-bar-fill');if(f)f.style.width=Math.min(100,pct)+'%';const m=document.getElementById('proc-msg');if(m&&msg)m.innerText=msg;}
+function hideProcessing(){const ov=document.getElementById('proc-overlay');if(ov)ov.classList.add('hidden');}
+function readFileAsync(file,onProgress){return new Promise((resolve,reject)=>{const r=new FileReader();if(onProgress){r.onprogress=e=>{if(e.lengthComputable)onProgress(Math.round(e.loaded/e.total*100));};}r.onload=e=>resolve(e.target.result);r.onerror=()=>reject(new Error('read failed'));r.readAsDataURL(file);});}
+function resizeImgAsync(file,maxPx,q){return new Promise(res=>resizeImg(file,maxPx,q,res));}
+/* Sequential processor: one file at a time to prevent browser memory crash */
+async function processMediaFiles(files,onItem,onDone){
+  const total=files.length;
+  for(let i=0;i<total;i++){
+    const f=files[i];const pct=Math.round((i/total)*85);
+    if(f.type.startsWith('image/')){
+      setProcessingProgress(pct,'Resizing image '+(i+1)+' / '+total+'\u2026');
+      await new Promise(r=>setTimeout(r,12));
+      const d64=await resizeImgAsync(f,1200,.85);
+      onItem({type:'image',url:d64,title:'Photo'});
+    } else if(f.type.startsWith('video/')){
+      setProcessingProgress(pct,'Reading video '+(i+1)+' / '+total+'\u2026');
+      const d64=await readFileAsync(f,p=>setProcessingProgress(pct+Math.round(p*(.85/total)),'Video '+(i+1)+': '+p+'%'));
+      onItem({type:'video',url:d64,title:'Video'});
+    }
+    await new Promise(r=>setTimeout(r,25));
+  }
+  setProcessingProgress(95,'Saving to cloud\u2026');
+  await new Promise(r=>setTimeout(r,60));
+  onDone();
+  setProcessingProgress(100,'Done \u2713');
+  await new Promise(r=>setTimeout(r,500));
+  hideProcessing();
+}
 /* ===== ALBUM VIEWER ===== */
 window.openAlbumViewer=function(gi){
   _albumGi=gi;const alb=window.S.links[gi];if(!alb)return;
@@ -1549,8 +1638,9 @@ window.toggleAlbumEditMode=function(){
   if(_avEditMode){bar.classList.remove('hidden');renderAvEditBar();}
   else{
     bar.classList.add('hidden');bar.innerHTML='';
-    /* Save all changes (deletions + reorders) when Done is pressed */
+    /* Save changes + re-render profile cards so item count on album cover updates immediately */
     save();
+    renderLinks();
     toast('Saved \u2713','s');
   }
 };
@@ -1600,12 +1690,12 @@ window.onAvAddPick=function(inp){
   if(oversized.length){toast(oversized.length+' video(s) over '+_MAX_VIDEO_MB+'MB — skipped','e');files=files.filter(f=>!(f.type.startsWith('video/')&&f.size>_MAX_VIDEO_MB*1024*1024));}
   if(!files.length)return;
   if(getProfileBytes()>=_MAX_BYTES){toast('Profile at 100MB limit — remove some media first','e');return;}
-  toast('Adding '+files.length+' item(s)\u2026','s');let done=0;
-  files.forEach(f=>{
-    if(f.type.startsWith('image/')){resizeImg(f,1200,.85,d64=>{alb.items.push({type:'image',url:d64,title:'Photo'});done++;if(done===files.length){save();const mode=alb.albumTheme||'snap';renderAlbumContent(mode);if(_avEditMode)renderAvEditBar();toast('Added \u2713','s');}});}
-    else if(f.type.startsWith('video/')){const r=new FileReader();r.onload=ev=>{alb.items.push({type:'video',url:ev.target.result,title:'Video'});done++;if(done===files.length){save();const mode=alb.albumTheme||'snap';renderAlbumContent(mode);if(_avEditMode)renderAvEditBar();toast('Added \u2713','s');}};r.readAsDataURL(f);}
-    else done++;
-  });
+  showProcessing('Adding '+files.length+' file(s)\u2026','Do not close or navigate away');
+  processMediaFiles(
+    files,
+    item=>alb.items.push(item),
+    ()=>{save();const mode=alb.albumTheme||'snap';renderAlbumContent(mode);if(_avEditMode)renderAvEditBar();toast('Added \u2713','s');}
+  ).catch(err=>{hideProcessing();toast('Error: '+err.message,'e');});
 };
 
 function mediaEl(it,style){
@@ -1769,14 +1859,15 @@ window.askResetAnalytics=()=>askConfirm('Reset all analytics?',async()=>{if(!win
 
 /* ===== QR ===== */
 function profileUrl(){return location.origin+location.pathname+'?id='+window.S.publicId;}
-window.openQR=function(){const url=profileUrl();document.getElementById('qlink').innerText=url;document.getElementById('qrs').classList.add('on');if(!qrInst){const tryQR=()=>{if(typeof QRCode!=='undefined'){qrInst=new QRCode(document.getElementById('qrcode'),{text:url,width:200,height:200,correctLevel:QRCode.CorrectLevel.H});}else setTimeout(tryQR,200);};tryQR();}if(window.S?.publicId)_FBAnalytics(window.S.publicId).then(renderAnalytics).catch(()=>{});};
+window.openQR=function(){const url=profileUrl();document.getElementById('qlink').innerText=url;document.getElementById('qrs').classList.add('on');if(!qrInst){const tryQR=()=>{if(typeof QRCode!=='undefined'){qrInst=new QRCode(document.getElementById('qrcode'),{text:url,width:200,height:200,correctLevel:QRCode.CorrectLevel.H});}else setTimeout(tryQR,200);};tryQR();}if(window.S?.publicId)_FBAnalytics(window.S.publicId).then(renderAnalytics).catch(()=>{});setTimeout(updateStorageMeter,200);};
 window.closeQR=()=>document.getElementById('qrs').classList.remove('on');
 window.copyLink=function(){const url=profileUrl();if(navigator.clipboard)navigator.clipboard.writeText(url).then(()=>toast('Copied!','s')).catch(()=>fbCopy(url));else fbCopy(url);};
 function fbCopy(t){const ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);toast('Copied!','s');}
 window.downloadQR=function(){const url=profileUrl(),size=1200,tmp=document.createElement('div');tmp.style.cssText='position:fixed;left:-9999px;top:-9999px;';document.body.appendChild(tmp);try{new QRCode(tmp,{text:url,width:size,height:size,correctLevel:QRCode.CorrectLevel.H});setTimeout(()=>{const img=tmp.querySelector('img')||tmp.querySelector('canvas');if(!img){toast('QR not ready','e');document.body.removeChild(tmp);return;}let src;if(img.tagName==='CANVAS'){src=img.toDataURL('image/png');}else{const cv=document.createElement('canvas');cv.width=size;cv.height=size;const ctx=cv.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,size,size);ctx.drawImage(img,0,0,size,size);src=cv.toDataURL('image/png');}const a=document.createElement('a');a.href=src;a.download='VEXA-QR.png';a.click();document.body.removeChild(tmp);toast('Downloaded \u2713','s');},300);}catch(e){document.body.removeChild(tmp);toast('Download failed','e');}};
 
 /* ===== MODALS ===== */
-window.openDesign=()=>{document.getElementById('dmod').classList.remove('hidden');updateStorageMeter();};
+window.openDesign=()=>{document.getElementById('dmod').classList.remove('hidden');};
+
 window.closeModals=function(){['dmod','lmod','emod','egmod','ealbmod'].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.add('hidden');});addToGrpIdx=-1;};
 window.bgClose=(e,id)=>{if(e.target.id===id)closeModals();};
 window.applyColors=function(){window.S.colors={bg:document.getElementById('cbg').value,card:document.getElementById('ccard').value,name:document.getElementById('cname').value,bio:document.getElementById('cbio').value,iconColor:document.getElementById('ciconcolor').value,labelColor:document.getElementById('clabelcolor').value};render();save();};
