@@ -129,9 +129,10 @@ body.no-bgimg::before{display:none;}
 /* CAROUSEL */
 .carousel-wrap{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;overflow:hidden;}
 .carousel-scene{position:relative;cursor:pointer;overflow:visible;margin:0 auto;flex-shrink:0;}
-.carousel-rotor{width:100%;height:100%;position:absolute;top:0;left:0;transform-style:preserve-3d;transition:transform .55s cubic-bezier(.25,.8,.25,1);}
-.car-card{position:absolute;top:0;left:0;border-radius:16px;overflow:hidden;background:#1a1a1a;box-shadow:0 10px 40px rgba(0,0,0,.85);transition:opacity .3s;}
-.car-card img,.car-card video{width:100%;height:100%;object-fit:cover;display:block;}
+.carousel-rotor{width:100%;height:100%;position:absolute;top:0;left:0;transform-style:preserve-3d;-webkit-transform-style:preserve-3d;transition:transform .55s cubic-bezier(.25,.8,.25,1);-webkit-transition:-webkit-transform .55s cubic-bezier(.25,.8,.25,1);}
+/* overflow:hidden REMOVED — it breaks 3D rendering on Safari mobile. border-radius on img/video instead */
+.car-card{position:absolute;top:0;left:0;border-radius:16px;background:#111;box-shadow:0 10px 40px rgba(0,0,0,.85);-webkit-transform-style:preserve-3d;}
+.car-card img,.car-card video{width:100%;height:100%;display:block;}
 .carousel-idx{font-size:.75rem;color:#555;letter-spacing:2px;}
 .carousel-hint{font-size:.68rem;color:#444;letter-spacing:1px;}
 .anim-size-badge{font-size:.62rem;color:#555;letter-spacing:1.5px;text-transform:uppercase;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:4px 12px;}
@@ -734,7 +735,7 @@ body.no-bgimg::before{display:none;}
     <div id="photobtn-pw-field" style="display:none;"><input type="text" id="photobtn-pw" class="mi" placeholder="Set password&#8230;"></div>
   </div>
   <div id="tp-image" class="hidden"><input type="text" id="img-title" class="mi" placeholder="Label (e.g. My Photos)"><div class="upbox" id="imgbox" onclick="triggerUpload('imginput')"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>Select image</div><div class="img-hint">&#9432; Best size: 900 &times; 600 px</div><img id="imgprev" src="" style="display:none;width:100%;border-radius:12px;margin-top:10px;max-height:220px;object-fit:cover;"><p class="clabel">Password (optional)</p><div class="pw-row"><label class="pw-toggle"><input type="checkbox" id="img-pw-on" onchange="togglePwInput('img-pw-field',this.checked)"><span class="pw-track"></span><span class="pw-thumb"></span></label><span class="pw-lbl">Protect with password</span></div><div id="img-pw-field" style="display:none;"><input type="text" id="img-pw" class="mi" placeholder="Set password&#8230;"></div></div>
-  <div id="tp-video" class="hidden"><input type="text" id="vid-title" class="mi" placeholder="Label (e.g. Promo Video)"><div class="vid-limit-info"><div class="vid-limit-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></div><div class="vid-limit-text"><div class="vid-limit-title">Video Upload Limit</div><div class="vid-limit-sub">Max 50 MB per video &nbsp;&middot;&nbsp; Remove old videos to free space</div></div></div><div class="upbox" id="vidbox" onclick="triggerUpload('vidinput')"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>Select video</div><video id="vidprev" style="display:none;width:100%;border-radius:12px;margin-top:10px;max-height:220px;" controls playsinline></video><p class="clabel">Password (optional)</p><div class="pw-row"><label class="pw-toggle"><input type="checkbox" id="vid-pw-on" onchange="togglePwInput('vid-pw-field',this.checked)"><span class="pw-track"></span><span class="pw-thumb"></span></label><span class="pw-lbl">Protect with password</span></div><div id="vid-pw-field" style="display:none;"><input type="text" id="vid-pw" class="mi" placeholder="Set password&#8230;"></div></div>
+  <div id="tp-video" class="hidden"><input type="text" id="vid-title" class="mi" placeholder="Label (e.g. Promo Video)"><div class="vid-limit-info"><div class="vid-limit-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></div><div class="vid-limit-text"><div class="vid-limit-title">Video Upload Limit</div><div class="vid-limit-sub">Max 10 MB per video &nbsp;&middot;&nbsp; Keeps the app fast on mobile</div></div></div><div class="upbox" id="vidbox" onclick="triggerUpload('vidinput')"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>Select video</div><video id="vidprev" style="display:none;width:100%;border-radius:12px;margin-top:10px;max-height:220px;" controls playsinline></video><p class="clabel">Password (optional)</p><div class="pw-row"><label class="pw-toggle"><input type="checkbox" id="vid-pw-on" onchange="togglePwInput('vid-pw-field',this.checked)"><span class="pw-track"></span><span class="pw-thumb"></span></label><span class="pw-lbl">Protect with password</span></div><div id="vid-pw-field" style="display:none;"><input type="text" id="vid-pw" class="mi" placeholder="Set password&#8230;"></div></div>
   <div id="tp-location" class="hidden"><input type="text" id="loc-label-input" class="mi" placeholder="Label (e.g. Our Shop)"><p class="clabel">Password (optional)</p><div class="pw-row"><label class="pw-toggle"><input type="checkbox" id="loc-pw-on" onchange="togglePwInput('loc-pw-field',this.checked)"><span class="pw-track"></span><span class="pw-thumb"></span></label><span class="pw-lbl">Protect with password</span></div><div id="loc-pw-field" style="display:none;"><input type="text" id="loc-pw" class="mi" placeholder="Set password&#8230;"></div></div>
   <div id="tp-group" class="hidden"><input type="text" id="grp-name" class="mi" placeholder="Group name (e.g. Social Media)"><p class="clabel">Layout</p><div class="layout-toggle"><div class="layout-opt on" id="grplo-list" onclick="setNewGrpLayout('list')">&#9776; List</div><div class="layout-opt" id="grplo-grid" onclick="setNewGrpLayout('grid')">&#8857; Grid</div></div><p class="clabel">Group Colors</p><div class="grp-color-row"><div class="ci">Header BG<input type="color" id="grp-hbg" value="#1a1a1a"></div><div class="ci">Header Text<input type="color" id="grp-htxt" value="#ffffff"></div><div class="ci">Cards BG<input type="color" id="grp-cbg" value="#111111"></div></div><p class="clabel">Link Colors (List &amp; Grid)</p><div class="grp-color-row"><div class="ci">Icon Color<input type="color" id="grp-icon-color" value="#ffffff"></div><div class="ci">Card BG<input type="color" id="grp-icon-bg" value="#1e1e1e"></div><div class="ci">Label Color<input type="color" id="grp-label-color" value="#ffffff"></div></div><p class="clabel">Password (optional)</p><div class="pw-row"><label class="pw-toggle"><input type="checkbox" id="grp-pw-on" onchange="togglePwInput('grp-pw-field',this.checked)"><span class="pw-track"></span><span class="pw-thumb"></span></label><span class="pw-lbl">Lock group with password</span></div><div id="grp-pw-field" style="display:none;"><input type="text" id="grp-pw" class="mi" placeholder="Set password&#8230;"></div></div>
   <div id="tp-album" class="hidden">
@@ -819,14 +820,26 @@ const _auth=typeof firebase.auth==='function'?firebase.auth():{
 };
 const _db=firebase.database();
 const _MAX_BYTES=100*1024*1024;
-const _MAX_VIDEO_MB=50;
+const _MAX_VIDEO_MB=10;/* 10MB → 14MB base64 — safe for iOS Safari memory limits */
 const _WARN_BYTES=90*1024*1024;
 
-/* ── Storage helpers ── */
+/* ── Memory-safe profile size: sums string lengths WITHOUT JSON.stringify copies ── */
 function getProfileBytes(){
   if(!window.S)return 0;
-  function stripU(links){return(links||[]).map(l=>{const c={...l};delete c._unlocked;if(c.items)c.items=stripU(c.items);return c;});}
-  try{const s={...JSON.parse(JSON.stringify(window.S)),links:stripU(window.S.links)};return new Blob([JSON.stringify(s)]).size;}catch(_){return 0;}
+  let total=0;
+  try{total+=JSON.stringify({...window.S,links:[]}).length;}catch(_){return 0;}
+  (window.S.links||[]).forEach(l=>{
+    try{
+      total+=JSON.stringify({...l,items:undefined,url:undefined,coverUrl:undefined}).length;
+      if(l.url)total+=l.url.length;
+      if(l.coverUrl)total+=l.coverUrl.length;
+      (l.items||[]).forEach(item=>{
+        total+=JSON.stringify({...item,url:undefined}).length;
+        if(item.url)total+=item.url.length;
+      });
+    }catch(_){}
+  });
+  return total;
 }
 function updateStorageMeter(){
   const fill=document.getElementById('storage-bar-fill');
@@ -1511,7 +1524,7 @@ function onAlbumMediaPick_direct(filesIn){
   processMediaFiles(
     files,
     item=>alb.items.push(item),
-    ()=>{save();renderLinks();closeModals();openAlbumViewer(gi);toast('Added '+files.length+' file(s) \u2713','s');}
+    ()=>{renderLinks();closeModals();openAlbumViewer(gi);toast('Added '+files.length+' file(s) \u2713','s');}
   ).catch(err=>{hideProcessing();toast('Error: '+err.message,'e');});
 }
 window.onAlbumMediaPick=inp=>{
@@ -1595,7 +1608,7 @@ function resizeImgAsync(file,maxPx,q){return new Promise(res=>resizeImg(file,max
 async function processMediaFiles(files,onItem,onDone){
   const total=files.length;
   for(let i=0;i<total;i++){
-    const f=files[i];const pct=Math.round((i/total)*85);
+    const f=files[i];const pct=Math.round((i/total)*80);
     if(f.type.startsWith('image/')){
       setProcessingProgress(pct,'Resizing image '+(i+1)+' / '+total+'\u2026');
       await new Promise(r=>setTimeout(r,12));
@@ -1603,17 +1616,29 @@ async function processMediaFiles(files,onItem,onDone){
       onItem({type:'image',url:d64,title:'Photo'});
     } else if(f.type.startsWith('video/')){
       setProcessingProgress(pct,'Reading video '+(i+1)+' / '+total+'\u2026');
-      const d64=await readFileAsync(f,p=>setProcessingProgress(pct+Math.round(p*(.85/total)),'Video '+(i+1)+': '+p+'%'));
+      const d64=await readFileAsync(f,p=>setProcessingProgress(pct+Math.round(p*(.8/total)),'Video '+(i+1)+': '+p+'%'));
       onItem({type:'video',url:d64,title:'Video'});
     }
-    await new Promise(r=>setTimeout(r,25));
+    await new Promise(r=>setTimeout(r,30));/* yield after each file */
   }
-  setProcessingProgress(95,'Saving to cloud\u2026');
-  await new Promise(r=>setTimeout(r,60));
-  onDone();
+  /* ── Direct Firebase save BEFORE updating UI ──
+     If browser crashes after save, data is safe in Firebase.
+     Debounced save() skips here to prevent double-write. */
+  setProcessingProgress(88,'Saving to cloud\u2026');
+  await new Promise(r=>setTimeout(r,40));
+  if(window._uid&&!window._pub){
+    try{
+      await _FBSave(window._uid,window.S);
+    }catch(err){
+      hideProcessing();
+      toast('Save failed \u2014 check connection','e');
+      return;/* Don't update UI if save failed */
+    }
+  }
   setProcessingProgress(100,'Done \u2713');
-  await new Promise(r=>setTimeout(r,500));
+  await new Promise(r=>setTimeout(r,450));
   hideProcessing();
+  onDone();/* UI update only — data already saved */
 }
 /* ===== ALBUM VIEWER ===== */
 window.openAlbumViewer=function(gi){
@@ -1694,13 +1719,14 @@ window.onAvAddPick=function(inp){
   processMediaFiles(
     files,
     item=>alb.items.push(item),
-    ()=>{save();const mode=alb.albumTheme||'snap';renderAlbumContent(mode);if(_avEditMode)renderAvEditBar();toast('Added \u2713','s');}
+    ()=>{const mode=alb.albumTheme||'snap';renderAlbumContent(mode);renderLinks();if(_avEditMode)renderAvEditBar();toast('Added \u2713','s');}
   ).catch(err=>{hideProcessing();toast('Error: '+err.message,'e');});
 };
 
-function mediaEl(it,style){
-  if(it.type==='video')return `<video src="${it.url}" playsinline preload="none" ${style} autoplay muted loop></video>`;
-  return `<img src="${it.url}" loading="lazy" alt="" ${style}>`;
+function mediaEl(it,style,eager){
+  /* eager=true forces immediate load — needed for 3D carousel on Safari */
+  if(it.type==='video')return `<video src="${it.url}" playsinline preload="${eager?'metadata':'none'}" ${style} ${eager?'autoplay':''} muted loop></video>`;
+  return `<img src="${it.url}" loading="${eager?'eager':'lazy'}" decoding="${eager?'async':'auto'}" alt="" ${style}>`;
 }
 
 function renderAlbumContent(mode){
@@ -1755,7 +1781,7 @@ function buildCarousel(items,cont){
   let html=`<div class="carousel-wrap">${sizeBadge}<div class="carousel-scene" id="car-scene" style="width:${cardW}px;height:${cardH}px;perspective:${perspective}px;"><div class="carousel-rotor" id="car-rotor" style="width:${cardW}px;height:${cardH}px;">`;
   items.forEach((it,i)=>{
     const ang=i*(360/n);
-    html+=`<div class="car-card" style="width:${cardW}px;height:${cardH}px;transform:rotateY(${ang}deg) translateZ(${radius}px);">${mediaEl(it,'style="width:100%;height:100%;object-fit:cover;display:block;"')}</div>`;
+    html+=`<div class="car-card" style="width:${cardW}px;height:${cardH}px;transform:rotateY(${ang}deg) translateZ(${radius}px);">${mediaEl(it,`style="width:100%;height:100%;object-fit:cover;display:block;border-radius:14px;"`,true)}</div>`;
   });
   html+=`</div></div><div class="carousel-idx" id="car-idx">1 / ${n}</div><div class="carousel-hint">&#10094; Swipe or tap &#10095;</div></div>`;
   cont.innerHTML=html;
