@@ -900,6 +900,12 @@ const _uploadVideoToStorage=function(file,uid,onProgress){
   return new Promise(function(resolve,reject){
     if(!_hasStorageSDK()){reject(new Error('Storage SDK not loaded'));return;}
     var unsubscribe=null;
+    /* Safety timeout — videos can be large; allow 5 minutes max */
+    var _timeout=setTimeout(function(){
+      if(unsubscribe)try{unsubscribe();}catch(_){}
+      reject(new Error('Video upload timed out — check your connection'));
+    },300000);
+    function _done(){clearTimeout(_timeout);if(unsubscribe)try{unsubscribe();}catch(_){}}
     try{
       var storage=firebase.storage();
       var ts=Date.now();
@@ -910,13 +916,10 @@ const _uploadVideoToStorage=function(file,uid,onProgress){
       unsubscribe=uploadTask.on(
         'state_changed',
         function(snap){if(onProgress)onProgress(Math.round(snap.bytesTransferred/snap.totalBytes*100));},
-        function(err){if(unsubscribe)unsubscribe();reject(err);},
-        function(){
-          if(unsubscribe)unsubscribe();
-          storageRef.getDownloadURL().then(resolve).catch(reject);
-        }
+        function(err){_done();reject(err);},
+        function(){_done();storageRef.getDownloadURL().then(resolve).catch(reject);}
       );
-    }catch(e){reject(e);}
+    }catch(e){_done();reject(e);}
   });
 };
 /* ================================================================
@@ -951,27 +954,35 @@ function resizeImgToBlob(file, maxW, quality){
   });
 }
 
-/* Upload any image Blob to Firebase Storage, return Download URL */
+/* Upload any image Blob to Firebase Storage, return Download URL.
+   Path: users/{uid}/albums/{ts}_{hint}.jpg — same bucket as videos,
+   covered by the EXISTING Storage security rule:
+     match /users/{uid}/albums/{allPaths=**} { allow write: if request.auth.uid == uid; }
+   A 60-second timeout rejects the promise so the spinner never hangs forever. */
 const _uploadImageToStorage=function(blob,uid,pathHint,onProgress){
   return new Promise(function(resolve,reject){
     if(!_hasStorageSDK()){reject(new Error('Storage SDK not loaded'));return;}
     var unsubscribe=null;
+    /* Safety: reject after 60s so the UI never freezes */
+    var _timeout=setTimeout(function(){
+      if(unsubscribe)try{unsubscribe();}catch(_){}
+      reject(new Error('Upload timed out — check your connection or Firebase Storage rules'));
+    },60000);
+    function _done(){clearTimeout(_timeout);if(unsubscribe)try{unsubscribe();}catch(_){}}
     try{
       var storage=firebase.storage();
       var ts=Date.now();
       var safeName=(pathHint||'image').replace(/[^a-zA-Z0-9._-]/g,'_').slice(0,40);
-      var storageRef=storage.ref('users/'+uid+'/images/'+ts+'_'+safeName+'.jpg');
+      /* *** Use albums/ path — matches existing Storage security rules *** */
+      var storageRef=storage.ref('users/'+uid+'/albums/'+ts+'_'+safeName+'.jpg');
       var uploadTask=storageRef.put(blob,{contentType:'image/jpeg'});
       unsubscribe=uploadTask.on(
         'state_changed',
         function(snap){if(onProgress)onProgress(Math.round(snap.bytesTransferred/snap.totalBytes*100));},
-        function(err){if(unsubscribe)unsubscribe();reject(err);},
-        function(){
-          if(unsubscribe)unsubscribe();
-          storageRef.getDownloadURL().then(resolve).catch(reject);
-        }
+        function(err){_done();reject(err);},
+        function(){_done();storageRef.getDownloadURL().then(resolve).catch(reject);}
       );
-    }catch(e){reject(e);}
+    }catch(e){_done();reject(e);}
   });
 };
 
