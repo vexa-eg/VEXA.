@@ -735,7 +735,7 @@ body.no-bgimg::before{display:none;}
     <div id="photobtn-pw-field" style="display:none;"><input type="text" id="photobtn-pw" class="mi" placeholder="Set password&#8230;"></div>
   </div>
   <div id="tp-image" class="hidden"><input type="text" id="img-title" class="mi" placeholder="Label (e.g. My Photos)"><div class="upbox" id="imgbox" onclick="triggerUpload('imginput')"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>Select image</div><div class="img-hint">&#9432; Best size: 900 &times; 600 px</div><img id="imgprev" src="" style="display:none;width:100%;border-radius:12px;margin-top:10px;max-height:220px;object-fit:cover;"><p class="clabel">Password (optional)</p><div class="pw-row"><label class="pw-toggle"><input type="checkbox" id="img-pw-on" onchange="togglePwInput('img-pw-field',this.checked)"><span class="pw-track"></span><span class="pw-thumb"></span></label><span class="pw-lbl">Protect with password</span></div><div id="img-pw-field" style="display:none;"><input type="text" id="img-pw" class="mi" placeholder="Set password&#8230;"></div></div>
-  <div id="tp-video" class="hidden"><input type="text" id="vid-title" class="mi" placeholder="Label (e.g. Promo Video)"><div class="vid-limit-info"><div class="vid-limit-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></div><div class="vid-limit-text"><div class="vid-limit-title">Video Upload Limit</div><div class="vid-limit-sub">Max 20 MB per video &nbsp;&middot;&nbsp; Keeps the app fast on mobile</div></div></div><div class="upbox" id="vidbox" onclick="triggerUpload('vidinput')"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>Select video</div><video id="vidprev" style="display:none;width:100%;border-radius:12px;margin-top:10px;max-height:220px;" controls playsinline></video><p class="clabel">Password (optional)</p><div class="pw-row"><label class="pw-toggle"><input type="checkbox" id="vid-pw-on" onchange="togglePwInput('vid-pw-field',this.checked)"><span class="pw-track"></span><span class="pw-thumb"></span></label><span class="pw-lbl">Protect with password</span></div><div id="vid-pw-field" style="display:none;"><input type="text" id="vid-pw" class="mi" placeholder="Set password&#8230;"></div></div>
+  <div id="tp-video" class="hidden"><input type="text" id="vid-title" class="mi" placeholder="Label (e.g. Promo Video)"><div class="vid-limit-info"><div class="vid-limit-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></div><div class="vid-limit-text"><div class="vid-limit-title">Video Upload Limit</div><div class="vid-limit-sub">Max 100 MB per video &nbsp;&middot;&nbsp; Uploaded securely to cloud storage</div></div></div><div class="upbox" id="vidbox" onclick="triggerUpload('vidinput')"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>Select video</div><video id="vidprev" style="display:none;width:100%;border-radius:12px;margin-top:10px;max-height:220px;" controls playsinline></video><p class="clabel">Password (optional)</p><div class="pw-row"><label class="pw-toggle"><input type="checkbox" id="vid-pw-on" onchange="togglePwInput('vid-pw-field',this.checked)"><span class="pw-track"></span><span class="pw-thumb"></span></label><span class="pw-lbl">Protect with password</span></div><div id="vid-pw-field" style="display:none;"><input type="text" id="vid-pw" class="mi" placeholder="Set password&#8230;"></div></div>
   <div id="tp-location" class="hidden"><input type="text" id="loc-label-input" class="mi" placeholder="Label (e.g. Our Shop)"><p class="clabel">Password (optional)</p><div class="pw-row"><label class="pw-toggle"><input type="checkbox" id="loc-pw-on" onchange="togglePwInput('loc-pw-field',this.checked)"><span class="pw-track"></span><span class="pw-thumb"></span></label><span class="pw-lbl">Protect with password</span></div><div id="loc-pw-field" style="display:none;"><input type="text" id="loc-pw" class="mi" placeholder="Set password&#8230;"></div></div>
   <div id="tp-group" class="hidden"><input type="text" id="grp-name" class="mi" placeholder="Group name (e.g. Social Media)"><p class="clabel">Layout</p><div class="layout-toggle"><div class="layout-opt on" id="grplo-list" onclick="setNewGrpLayout('list')">&#9776; List</div><div class="layout-opt" id="grplo-grid" onclick="setNewGrpLayout('grid')">&#8857; Grid</div></div><p class="clabel">Group Colors</p><div class="grp-color-row"><div class="ci">Header BG<input type="color" id="grp-hbg" value="#1a1a1a"></div><div class="ci">Header Text<input type="color" id="grp-htxt" value="#ffffff"></div><div class="ci">Cards BG<input type="color" id="grp-cbg" value="#111111"></div></div><p class="clabel">Link Colors (List &amp; Grid)</p><div class="grp-color-row"><div class="ci">Icon Color<input type="color" id="grp-icon-color" value="#ffffff"></div><div class="ci">Card BG<input type="color" id="grp-icon-bg" value="#1e1e1e"></div><div class="ci">Label Color<input type="color" id="grp-label-color" value="#ffffff"></div></div><p class="clabel">Password (optional)</p><div class="pw-row"><label class="pw-toggle"><input type="checkbox" id="grp-pw-on" onchange="togglePwInput('grp-pw-field',this.checked)"><span class="pw-track"></span><span class="pw-thumb"></span></label><span class="pw-lbl">Lock group with password</span></div><div id="grp-pw-field" style="display:none;"><input type="text" id="grp-pw" class="mi" placeholder="Set password&#8230;"></div></div>
   <div id="tp-album" class="hidden">
@@ -809,6 +809,8 @@ body.no-bgimg::before{display:none;}
      document.write() is safe here — this is a synchronous inline script during HTML parsing. -->
 <script>if(!new URLSearchParams(location.search).get('id')){document.write('\x3Cscript src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"\x3E\x3C\/script\x3E');}</script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js" crossorigin="anonymous"></script>
+<!-- firebase-storage: loaded ONLY for owners (no ?id= param). Provides direct CDN upload → no base64 in RTDB -->
+<script>if(!new URLSearchParams(location.search).get('id')){document.write('\x3Cscript src="https://www.gstatic.com/firebasejs/10.12.0/firebase-storage-compat.js" crossorigin="anonymous"\x3E\x3C\/script\x3E');}</script>
 <script>
 /* ===== FIREBASE ===== */
 firebase.initializeApp({apiKey:"AIzaSyBDM5mBSTW8g3VlGusFWFdgN14hpqi3-zs",authDomain:"vexa-1234.firebaseapp.com",databaseURL:"https://vexa-1234-default-rtdb.firebaseio.com",projectId:"vexa-1234",storageBucket:"vexa-1234.firebasestorage.app",messagingSenderId:"362188399240",appId:"1:362188399240:web:fd6c50ae6ed3647bc8753d"});
@@ -819,10 +821,13 @@ const _auth=typeof firebase.auth==='function'?firebase.auth():{
   confirmPasswordReset:async function(c,p){return firebase.auth().confirmPasswordReset(c,p);}
 };
 const _db=firebase.database();
-const _MAX_BYTES=100*1024*1024;
-const _MAX_VIDEO_MB=20;/* 20MB → 27MB base64 — safe on modern mobile */
-const _WARN_BYTES=90*1024*1024;
-const _SAVE_BATCH=15;/* Save to Firebase every N files during bulk upload */
+/* Firebase Storage — only available on owner pages (auth SDK loaded), null on public QR pages */
+const _storage=(typeof firebase.storage==='function')?firebase.storage():null;
+/* With Storage, RTDB only holds metadata + URLs (tiny). Limits are now for RTDB metadata only. */
+const _MAX_BYTES=10*1024*1024;/* 10MB RTDB safety limit — effectively never reached with Storage */
+const _MAX_VIDEO_MB=100;/* Firebase Storage handles large files — 100MB per video */
+const _WARN_BYTES=8*1024*1024;/* warn at 8MB RTDB (won't happen normally) */
+const _SAVE_BATCH=15;
 
 /* ── Memory-safe profile size: sums string lengths WITHOUT JSON.stringify copies ── */
 function getProfileBytes(){
@@ -841,6 +846,52 @@ function getProfileBytes(){
     }catch(_){}
   });
   return total;
+}
+
+/* ── Resize image → Blob (NO base64 — no RAM pressure) ── */
+function resizeImgToBlob(file,maxPx,quality){
+  return new Promise((resolve,reject)=>{
+    const img=new Image();
+    const objUrl=URL.createObjectURL(file);
+    img.onload=()=>{
+      URL.revokeObjectURL(objUrl);
+      let w=img.naturalWidth,h=img.naturalHeight;
+      if(w>maxPx||h>maxPx){
+        if(w>=h){h=Math.round(h*maxPx/w);w=maxPx;}
+        else{w=Math.round(w*maxPx/h);h=maxPx;}
+      }
+      const cv=document.createElement('canvas');cv.width=w;cv.height=h;
+      cv.getContext('2d').drawImage(img,0,0,w,h);
+      cv.toBlob(blob=>blob?resolve(blob):reject(new Error('toBlob failed')),'image/jpeg',quality);
+    };
+    img.onerror=()=>{URL.revokeObjectURL(objUrl);reject(new Error('Image load failed'));};
+    img.src=objUrl;
+  });
+}
+
+/* ── Upload Blob/File to Firebase Storage → returns {url, storagePath} ──
+   Download URLs with tokens are publicly readable — safe for QR scan visitors ── */
+function uploadToStorage(fileOrBlob,uid,onProgress,mimeType){
+  return new Promise((resolve,reject)=>{
+    if(!_storage||!uid){reject(new Error('Storage not available'));return;}
+    const mt=mimeType||(fileOrBlob.type)||'application/octet-stream';
+    const ext=mt.split('/')[1]||'bin';
+    const name=Date.now()+'_'+Math.random().toString(36).slice(2,8)+'.'+ext;
+    const path='profiles/'+uid+'/'+name;
+    const ref=_storage.ref(path);
+    const task=ref.put(fileOrBlob,{contentType:mt});
+    task.on('state_changed',
+      snap=>{if(onProgress)onProgress(Math.round(snap.bytesTransferred/snap.totalBytes*100));},
+      reject,
+      ()=>task.snapshot.ref.getDownloadURL().then(url=>resolve({url,storagePath:path})).catch(reject)
+    );
+  });
+}
+
+/* ── Delete a Storage file (fire-and-forget, safe to fail) ── */
+function deleteFromStorage(storagePath){
+  if(!storagePath||!_storage)return;
+  _storage.ref(storagePath).delete().catch(e=>console.warn('Storage delete skipped:',e));
 }
 
 /* ── Lite localStorage cache: stores profile WITH covers but WITHOUT album items ──
@@ -1499,18 +1550,40 @@ window.openAddToGroup=gi=>{
 window.openAddLink=()=>{addToGrpIdx=-1;document.getElementById('lmod-title').innerText='Add to Profile';ALL_TABS.forEach(x=>{const el=document.getElementById('tab-'+x);if(el)el.classList.remove('hidden');});setTab('link');document.getElementById('ltitle').value='';document.getElementById('lurl').value='';document.getElementById('url-hint').innerText='';document.getElementById('lmod').classList.remove('hidden');};
 window.selectAlbTheme=function(t){_selectedAlbTheme=t;['snap','carousel','floating','flipbook'].forEach(k=>{const el=document.getElementById('albt-'+k);if(el)el.classList.toggle('selected',k===t);});};
 window.selectEditAlbTheme=function(t){_editAlbTheme=t;['snap','carousel','floating','flipbook'].forEach(k=>{const el=document.getElementById('ealbt-'+k);if(el)el.classList.toggle('selected',k===t);});};
-window.onAlbCoverPick=function(inp,prevId){const f=inp.files[0];inp.value='';if(!f)return;resizeImg(f,900,.82,d64=>{if(prevId==='alb-cover-prev')_pendAlbCover=d64;else _editAlbCover=d64;const prev=document.getElementById(prevId);if(prev){prev.src=d64;prev.style.display='block';}const box=document.getElementById(prevId==='alb-cover-prev'?'alb-cover-box':'alb-cover-box2');if(box)box.style.display='none';toast('Cover ready \u2713','s');});};
+window.onAlbCoverPick=function(inp,prevId){
+  const f=inp.files[0];inp.value='';if(!f)return;
+  showProcessing('Uploading cover\u2026','');
+  resizeImgToBlob(f,900,.85)
+    .then(blob=>uploadToStorage(blob,window._uid,p=>setProcessingProgress(p,'Cover: '+p+'%'),'image/jpeg'))
+    .then(result=>{
+      if(prevId==='alb-cover-prev')_pendAlbCover=result.url;
+      else _editAlbCover=result.url;
+      const prev=document.getElementById(prevId);
+      if(prev){prev.src=result.url;prev.style.display='block';}
+      const box=document.getElementById(prevId==='alb-cover-prev'?'alb-cover-box':'alb-cover-box2');
+      if(box)box.style.display='none';
+      hideProcessing();toast('Cover ready \u2713','s');
+    })
+    .catch(err=>{hideProcessing();toast('Upload failed: '+err.message,'e');});
+};
 
 /* ===== MEDIA PICK ===== */
 window.onImgPick=inp=>{
   const files=Array.from(inp.files);inp.value='';if(!files.length)return;
-  /* إضافة مباشرة للألبوم لو إحنا جوا ألبوم */
   if(addToGrpIdx>=0&&window.S.links[addToGrpIdx]&&window.S.links[addToGrpIdx].type==='album'){
     onAlbumMediaPick_direct(files);return;
   }
-  /* صورة مفردة للبروفايل — check storage then resize */
-  if(getProfileBytes()>=_MAX_BYTES){toast('Profile at 100MB limit — remove some media first','e');return;}
-  const f=files[0];resizeImg(f,900,.82,d64=>{pendMedia={type:'image',url:d64};document.getElementById('imgprev').src=d64;document.getElementById('imgprev').style.display='block';document.getElementById('imgbox').style.display='none';});
+  const f=files[0];
+  showProcessing('Uploading image\u2026','');
+  resizeImgToBlob(f,900,.85)
+    .then(blob=>uploadToStorage(blob,window._uid,p=>setProcessingProgress(p,'Uploading: '+p+'%'),'image/jpeg'))
+    .then(result=>{
+      pendMedia={type:'image',url:result.url,storagePath:result.storagePath};
+      const ip=document.getElementById('imgprev');if(ip){ip.src=result.url;ip.style.display='block';}
+      const ib=document.getElementById('imgbox');if(ib)ib.style.display='none';
+      hideProcessing();toast('Image ready \u2713','s');
+    })
+    .catch(err=>{hideProcessing();toast('Upload failed: '+err.message,'e');});
 };
 window.onVidPick=inp=>{
   const files=Array.from(inp.files);inp.value='';if(!files.length)return;
@@ -1518,19 +1591,17 @@ window.onVidPick=inp=>{
     onAlbumMediaPick_direct(files);return;
   }
   const f=files[0];
-  if(f.size>_MAX_VIDEO_MB*1024*1024){toast('Video too large \u2014 max '+_MAX_VIDEO_MB+'MB per video','e');return;}
-  if(!checkStorageBeforeAdd(f.size*1.37)){return;}
-  showProcessing('Reading video\u2026','Large files may take a moment');
-  readFileAsync(f,p=>setProcessingProgress(p,'Reading video: '+p+'%'))
-    .then(async url=>{
-      pendMedia={type:'video',url};
+  if(f.size>_MAX_VIDEO_MB*1024*1024){toast('Video too large \u2014 max '+_MAX_VIDEO_MB+'MB','e');return;}
+  showProcessing('Uploading video\u2026','Please wait \u2014 do not close the app');
+  uploadToStorage(f,window._uid,p=>{setProcessingProgress(p,'Uploading: '+p+'%');},f.type)
+    .then(result=>{
+      pendMedia={type:'video',url:result.url,storagePath:result.storagePath};
       const vp=document.getElementById('vidprev');
-      if(vp){vp.src=url;vp.style.display='block';}
+      if(vp){vp.src=result.url;vp.style.display='block';}
       const vb=document.getElementById('vidbox');if(vb)vb.style.display='none';
-      hideProcessing();
-      toast('Video ready \u2713','s');
+      hideProcessing();toast('Video ready \u2713','s');
     })
-    .catch(err=>{hideProcessing();toast('Failed to read video: '+err.message,'e');});
+    .catch(err=>{hideProcessing();toast('Upload failed: '+err.message,'e');});
 };
 let _pendPbStyle='full';
 window.setPbStyle=function(s){if(s!=='full'&&s!=='small')s='full';_pendPbStyle=s;['full','small'].forEach(k=>{const el=document.getElementById('pbs-'+k);if(el)el.classList.toggle('selected',k===s);});};
@@ -1632,63 +1703,51 @@ function setProcessingProgress(pct,msg){const f=document.getElementById('proc-ba
 function hideProcessing(){const ov=document.getElementById('proc-overlay');if(ov)ov.classList.add('hidden');}
 function readFileAsync(file,onProgress){return new Promise((resolve,reject)=>{const r=new FileReader();if(onProgress){r.onprogress=e=>{if(e.lengthComputable)onProgress(Math.round(e.loaded/e.total*100));};}r.onload=e=>resolve(e.target.result);r.onerror=()=>reject(new Error('read failed'));r.readAsDataURL(file);});}
 function resizeImgAsync(file,maxPx,q){return new Promise(res=>resizeImg(file,maxPx,q,res));}
-/* Sequential processor: one file at a time to prevent browser memory crash */
+/* Sequential processor — uploads to Firebase Storage (no base64, no RAM crash, real progress) */
 async function processMediaFiles(files,onItem,onDone){
   const total=files.length;
   let added=0,skipped=0;
 
   for(let i=0;i<total;i++){
     const f=files[i];
-    const pct=Math.round((i/total)*80);
+    const basePct=Math.round((i/total)*90);
+    setProcessingProgress(basePct,'Uploading '+(i+1)+' / '+total+'\u2026');
 
-    /* ── Storage limit check BEFORE processing each file ── */
-    const curBytes=getProfileBytes();
-    if(curBytes>=_MAX_BYTES*0.97){
-      skipped=total-i;
-      toast(added+' file(s) added \u2014 '+skipped+' skipped (storage almost full)','e');
-      break;
-    }
-
-    if(f.type.startsWith('image/')){
-      setProcessingProgress(pct,'Resizing image '+(i+1)+' / '+total+'\u2026');
-      await new Promise(r=>setTimeout(r,15));
-      try{
-        const d64=await resizeImgAsync(f,1200,.82);
-        onItem({type:'image',url:d64,title:'Photo'});
-        added++;
-      }catch(e){skipped++;continue;}
-    }else if(f.type.startsWith('video/')){
-      setProcessingProgress(pct,'Reading video '+(i+1)+' / '+total+'\u2026');
-      try{
-        const d64=await readFileAsync(f,p=>setProcessingProgress(pct+Math.round(p*(.8/total)),'Video '+(i+1)+': '+p+'%'));
-        onItem({type:'video',url:d64,title:'Video'});
-        added++;
-      }catch(e){skipped++;continue;}
-    }
-
-    await new Promise(r=>setTimeout(r,20));/* yield to browser */
-
-    /* ── Batch save every _SAVE_BATCH files to prevent data loss + keep saves small ── */
-    const isBatchEnd=(((i+1)%_SAVE_BATCH===0)||(i===total-1));
-    if(isBatchEnd&&added>0&&window._uid&&!window._pub){
-      const batchNum=Math.ceil((i+1)/_SAVE_BATCH);
-      const totalBatches=Math.ceil(total/_SAVE_BATCH);
-      setProcessingProgress(82+Math.round((batchNum/totalBatches)*15),'Saving ('+batchNum+'/'+totalBatches+')\u2026');
-      try{
-        await saveWithTimeout(window._uid,window.S);
-      }catch(err){
-        hideProcessing();
-        toast('Save failed \u2014 check connection','e');
-        return;
+    try{
+      let result;
+      if(f.type.startsWith('image/')){
+        /* Resize → Blob (no base64 in memory) → upload to Storage */
+        const blob=await resizeImgToBlob(f,1200,.85);
+        result=await uploadToStorage(blob,window._uid,
+          p=>setProcessingProgress(basePct+Math.round(p*(90/total)/100),'Image '+(i+1)+': '+p+'%'),
+          'image/jpeg');
+        onItem({type:'image',url:result.url,storagePath:result.storagePath,title:'Photo'});
+      }else if(f.type.startsWith('video/')){
+        /* Upload video directly to Storage */
+        result=await uploadToStorage(f,window._uid,
+          p=>setProcessingProgress(basePct+Math.round(p*(90/total)/100),'Video '+(i+1)+': '+p+'%'),
+          f.type);
+        onItem({type:'video',url:result.url,storagePath:result.storagePath,title:'Video'});
       }
-      await new Promise(r=>setTimeout(r,30));
+      added++;
+    }catch(err){
+      console.warn('Upload failed for',f.name,err);
+      skipped++;
     }
+
+    await new Promise(r=>setTimeout(r,8));
   }
 
+  /* Final RTDB save — tiny now (just URLs + metadata, no base64) → completes in <1s */
+  setProcessingProgress(93,'Saving\u2026');
+  if(window._uid&&!window._pub){
+    try{await saveWithTimeout(window._uid,window.S);}
+    catch(err){hideProcessing();toast('Save failed \u2014 check connection','e');return;}
+  }
   setProcessingProgress(100,'Done \u2713');
-  await new Promise(r=>setTimeout(r,380));
+  await new Promise(r=>setTimeout(r,350));
   hideProcessing();
-  onDone(added,skipped);/* pass counts for toast */
+  onDone(added,skipped);
 }
 /* ===== ALBUM VIEWER ===== */
 window.openAlbumViewer=function(gi){
@@ -1754,9 +1813,12 @@ function renderAvEditBar(){
     const th=document.createElement('div');th.className='av-edit-thumb';th.draggable=true;th.dataset.idx=idx;
     if(it.type==='video'){th.innerHTML=`<video src="${it.url}" preload="metadata" style="width:100%;height:100%;object-fit:cover;display:block;" muted></video>`;}
     else{th.innerHTML=`<img src="${it.url}" loading="lazy" alt="">`;}
-    /* delete — removes immediately from memory; saved on Done */
+    /* delete — removes immediately from memory; saved on Done; cleans up Storage file */
     const del=document.createElement('div');del.className='av-edit-del';del.innerHTML='&#x2715;';del.onclick=e=>{
       e.stopPropagation();
+      const item=alb.items[idx];
+      /* Clean up Storage file if it was uploaded to Storage (has storagePath) */
+      if(item&&item.storagePath)deleteFromStorage(item.storagePath);
       alb.items.splice(idx,1);
       const mode=alb.albumTheme||'snap';
       renderAlbumContent(mode);
@@ -2012,7 +2074,25 @@ window.bgClose=(e,id)=>{if(e.target.id===id)closeModals();};
 window.applyColors=function(){window.S.colors={bg:document.getElementById('cbg').value,card:document.getElementById('ccard').value,name:document.getElementById('cname').value,bio:document.getElementById('cbio').value,iconColor:document.getElementById('ciconcolor').value,labelColor:document.getElementById('clabelcolor').value};render();save();};
 window.applyBlur=v=>{v=parseInt(v);document.documentElement.style.setProperty('--bg-blur',v+'px');document.getElementById('blur-val').innerText=v+'px';window.S.bgBlur=v;save();};
 window.setLinkStyle=function(style){if(!window.S)return;window.S.linkStyle=style;document.getElementById('lo-list').classList.toggle('on',style==='list');document.getElementById('lo-grid').classList.toggle('on',style==='grid');save();renderLinks();};
-window.onBgPick=inp=>{const f=inp.files[0];inp.value='';if(!f)return;resizeImg(f,1200,.78,d64=>{window.S.bgImage=d64;window.S.bgBlur=window.S.bgBlur||0;document.body.classList.remove('no-bgimg');document.body.style.backgroundImage='url('+d64+')';document.getElementById('rmbg').style.display='block';document.getElementById('blur-section').style.display='block';document.getElementById('bgblur').value=window.S.bgBlur;document.getElementById('blur-val').innerText=window.S.bgBlur+'px';document.documentElement.style.setProperty('--bg-blur',window.S.bgBlur+'px');save();toast('Background updated \u2713','s');});};
+window.onBgPick=inp=>{
+  const f=inp.files[0];inp.value='';if(!f)return;
+  showProcessing('Uploading background\u2026','');
+  resizeImgToBlob(f,1400,.82)
+    .then(blob=>uploadToStorage(blob,window._uid,p=>setProcessingProgress(p,'Background: '+p+'%'),'image/jpeg'))
+    .then(result=>{
+      window.S.bgImage=result.url;window.S.bgImagePath=result.storagePath;
+      window.S.bgBlur=window.S.bgBlur||0;
+      document.body.classList.remove('no-bgimg');
+      document.body.style.backgroundImage='url('+result.url+')';
+      document.getElementById('rmbg').style.display='block';
+      document.getElementById('blur-section').style.display='block';
+      document.getElementById('bgblur').value=window.S.bgBlur;
+      document.getElementById('blur-val').innerText=window.S.bgBlur+'px';
+      document.documentElement.style.setProperty('--bg-blur',window.S.bgBlur+'px');
+      hideProcessing();save();toast('Background updated \u2713','s');
+    })
+    .catch(err=>{hideProcessing();toast('Upload failed: '+err.message,'e');});
+};
 window.removeBg=()=>{window.S.bgImage='';window.S.bgBlur=0;document.body.classList.add('no-bgimg');document.body.style.backgroundImage='none';document.documentElement.style.setProperty('--bg-blur','0px');document.getElementById('rmbg').style.display='none';document.getElementById('blur-section').style.display='none';save();toast('Background removed','s');};
 
 /* THEMES */
@@ -2051,7 +2131,18 @@ window.saveCrop=function(){
   const img=document.getElementById('crop-img'),ratio=size/_crop.stageSize;
   const dW=img.naturalWidth*_crop.scale*ratio,dH=img.naturalHeight*_crop.scale*ratio;
   ctx.drawImage(img,size/2+_crop.ox*ratio-dW/2,size/2+_crop.oy*ratio-dH/2,dW,dH);
-  window.S.avatar=cv.toDataURL('image/jpeg',.9);document.getElementById('avimg').src=window.S.avatar;save();closeCrop();toast('Photo updated \u2713','s');
+  closeCrop();
+  showProcessing('Uploading photo\u2026','');
+  new Promise((res,rej)=>cv.toBlob(b=>b?res(b):rej(new Error('toBlob failed')),'image/jpeg',.9))
+    .then(blob=>uploadToStorage(blob,window._uid,p=>setProcessingProgress(p,'Photo: '+p+'%'),'image/jpeg'))
+    .then(result=>{
+      /* Delete old avatar from Storage if it was a Storage file */
+      if(window.S.avatarPath)deleteFromStorage(window.S.avatarPath);
+      window.S.avatar=result.url;window.S.avatarPath=result.storagePath;
+      document.getElementById('avimg').src=result.url;
+      hideProcessing();save();toast('Photo updated \u2713','s');
+    })
+    .catch(err=>{hideProcessing();toast('Upload failed: '+err.message,'e');});
 };
 window.openLightbox=function(gi,ii){const src=ii<0?(window.S.links[gi]||{}).url||'':((window.S.links[gi]?.items||[])[ii]||{}).url||'';if(!src)return;document.getElementById('lb-img').src=src;document.getElementById('lightbox').classList.add('on');document.body.style.overflow='hidden';};
 window.closeLightbox=()=>{document.getElementById('lightbox').classList.remove('on');document.body.style.overflow='';setTimeout(()=>document.getElementById('lb-img').src='',300);};
