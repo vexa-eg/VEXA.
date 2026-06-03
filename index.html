@@ -19,6 +19,16 @@
 body{min-height:100vh;background:var(--bg);background-size:cover;background-position:center;background-attachment:fixed;color:#fff;}
 body::before{content:'';position:fixed;inset:0;z-index:0;background-image:inherit;background-size:cover;background-position:center;filter:blur(var(--bg-blur));transform:scale(1.08);pointer-events:none;}
 body.no-bgimg::before{display:none;}
+/* SKELETON LOADING — shows immediately on QR scan before Firebase data arrives */
+.skel-pulse{animation:skelPulse 1.6s ease-in-out infinite;}
+@keyframes skelPulse{0%,100%{opacity:.25;}50%{opacity:.5;}}
+#pub-skeleton{position:fixed;inset:0;z-index:100;background:#0a0a0a;padding:44px 18px 100px;display:none;flex-direction:column;align-items:center;overflow-y:auto;}
+#pub-skeleton.on{display:flex;}
+.sk-av{width:88px;height:88px;border-radius:50%;background:#1a1a1a;margin-bottom:14px;}
+.sk-name{width:130px;height:22px;border-radius:8px;background:#1a1a1a;margin-bottom:10px;}
+.sk-bio{width:180px;height:14px;border-radius:6px;background:#1a1a1a;margin-bottom:28px;}
+.sk-card{width:100%;height:52px;border-radius:16px;background:#1a1a1a;margin-bottom:10px;}
+.sk-album{width:100%;height:200px;border-radius:16px;background:#1a1a1a;margin-bottom:10px;}
 .hidden{display:none!important;}
 /* Z layers */
 #ls{position:fixed;inset:0;z-index:9999;background:#000;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;transition:opacity .3s;}
@@ -83,13 +93,19 @@ body.no-bgimg::before{display:none;}
 .media-tap-btn{width:100%;min-height:80px;background:rgba(255,255,255,.04);border:none;display:flex;align-items:center;justify-content:center;gap:10px;cursor:pointer;padding:20px;color:#555;font-size:.88rem;font-weight:600;font-family:'Inter',sans-serif;transition:background .15s;}
 .media-tap-btn:hover{background:rgba(255,255,255,.08);color:#999;}
 .vid-size-info{font-size:.72rem;color:#666;text-align:center;padding:6px 10px;background:rgba(255,200,0,.06);border:1px solid rgba(255,200,0,.12);border-radius:8px;margin-bottom:8px;}
+.vid-limit-info{display:flex;align-items:center;gap:10px;padding:11px 14px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:12px;margin-bottom:10px;}
+.vid-limit-icon{width:32px;height:32px;flex-shrink:0;border-radius:9px;background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;color:#444;}
+.vid-limit-text{display:flex;flex-direction:column;gap:2px;}
+.vid-limit-title{font-size:.68rem;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:#555;}
+.vid-limit-sub{font-size:.66rem;color:#333;letter-spacing:.2px;}
 /* grp-wrap defined in 3D section */
 .grp-header{display:flex;align-items:center;gap:10px;padding:8px 14px;border-radius:14px 14px 0 0;}
 .grp-title-left{font-size:.7rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;opacity:.7;}
 .grp-inner{display:flex;flex-direction:column;gap:8px;padding:10px;border-radius:0 0 14px 14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-top:none;}
 /* album-card defined in 3D section */
 .album-cover-wrap{position:relative;width:100%;aspect-ratio:16/9;overflow:hidden;cursor:pointer;}
-.album-cover-img{width:100%;height:100%;object-fit:cover;display:block;filter:blur(6px);transform:scale(1.05);}
+.album-cover-img{width:100%;height:100%;object-fit:cover;display:block;transition:filter .35s ease,transform .35s ease;filter:blur(8px);transform:scale(1.04);}
+.album-cover-img.loaded{filter:none;transform:scale(1);}
 .album-cover-overlay{position:absolute;inset:0;background:rgba(0,0,0,.35);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;}
 .album-tap-badge{background:rgba(255,255,255,.15);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.3);border-radius:30px;padding:9px 22px;color:#fff;font-size:.82rem;font-weight:800;letter-spacing:2px;animation:tapVibe 2s ease-in-out infinite;}
 @keyframes tapVibe{0%,40%,100%{transform:scale(1) rotate(0deg);}42%{transform:scale(1.06) rotate(-1.5deg);}44%{transform:scale(1.06) rotate(1.5deg);}46%{transform:scale(1.06) rotate(-1.5deg);}48%{transform:scale(1.06) rotate(1.5deg);}50%{transform:scale(1) rotate(0deg);}}
@@ -104,20 +120,22 @@ body.no-bgimg::before{display:none;}
 .av-header{display:flex;align-items:center;padding:16px 20px;border-bottom:1px solid rgba(255,255,255,.08);flex-shrink:0;gap:12px;}
 .av-title{flex:1;font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:3px;}
 .av-close{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);color:#fff;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;}
-.av-content{flex:1;overflow:hidden;position:relative;}
+.av-content{flex:1;overflow:visible;position:relative;}
 /* SNAP */
 .snap-track{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;height:100%;scrollbar-width:none;padding:16px 8%;gap:14px;align-items:center;}
 .snap-track::-webkit-scrollbar{display:none;}
 .snap-item{scroll-snap-align:center;min-width:75vw;max-width:320px;border-radius:18px;overflow:hidden;background:#111;flex-shrink:0;box-shadow:0 8px 32px rgba(0,0,0,.6);}
 .snap-item img,.snap-item video{width:100%;max-height:60vh;object-fit:cover;display:block;}
 /* CAROUSEL */
-.carousel-wrap{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;overflow:hidden;}
-.carousel-scene{perspective:900px;width:220px;height:280px;position:relative;cursor:pointer;}
-.carousel-rotor{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform .45s cubic-bezier(.25,.8,.25,1);}
-.car-card{position:absolute;width:220px;height:280px;border-radius:18px;overflow:hidden;background:#1a1a1a;box-shadow:0 10px 40px rgba(0,0,0,.7);}
-.car-card img,.car-card video{width:100%;height:100%;object-fit:cover;display:block;}
-.carousel-idx{font-size:.75rem;color:#444;letter-spacing:2px;}
-.carousel-hint{font-size:.68rem;color:#333;letter-spacing:1px;}
+.carousel-wrap{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;overflow:hidden;}
+.carousel-scene{position:relative;cursor:pointer;overflow:visible;margin:0 auto;flex-shrink:0;}
+.carousel-rotor{width:100%;height:100%;position:absolute;top:0;left:0;transform-style:preserve-3d;-webkit-transform-style:preserve-3d;transition:transform .55s cubic-bezier(.25,.8,.25,1);-webkit-transition:-webkit-transform .55s cubic-bezier(.25,.8,.25,1);}
+/* overflow:hidden REMOVED — it breaks 3D rendering on Safari mobile. border-radius on img/video instead */
+.car-card{position:absolute;top:0;left:0;border-radius:16px;background:#111;box-shadow:0 10px 40px rgba(0,0,0,.85);-webkit-transform-style:preserve-3d;}
+.car-card img,.car-card video{width:100%;height:100%;display:block;}
+.carousel-idx{font-size:.75rem;color:#555;letter-spacing:2px;}
+.carousel-hint{font-size:.68rem;color:#444;letter-spacing:1px;}
+.anim-size-badge{font-size:.62rem;color:#555;letter-spacing:1.5px;text-transform:uppercase;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:4px 12px;}
 /* FLOATING DECK */
 .float-deck-wrap{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;}
 .float-deck{position:relative;width:min(280px,78vw);height:min(360px,68vh);cursor:pointer;}
@@ -475,7 +493,18 @@ body.no-bgimg::before{display:none;}
 #env-overlay-close{position:fixed;top:16px;right:16px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:#fff;width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;z-index:7300;}
 #env-overlay-paper{background:linear-gradient(155deg,#1c1828,#2a1f14);border-radius:16px;padding:32px 26px;max-width:460px;width:100%;max-height:80vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);animation:envOverlayIn .4s cubic-bezier(.16,1,.3,1);}
 #env-overlay-text{font-size:.96rem;line-height:1.7;white-space:pre-wrap;word-break:break-word;color:#fff;}
-/* FORGOT PW */
+/* ALBUM VIEWER EDIT MODE */
+.av-edit-bar{display:flex;align-items:center;gap:8px;padding:8px 16px;border-bottom:1px solid rgba(255,255,255,.08);flex-shrink:0;overflow-x:auto;scrollbar-width:none;}
+.av-edit-bar::-webkit-scrollbar{display:none;}
+.av-edit-thumb{position:relative;width:56px;height:56px;border-radius:10px;overflow:hidden;flex-shrink:0;cursor:grab;border:2px solid transparent;transition:border-color .18s;}
+.av-edit-thumb.drag-over{border-color:#fff;}
+.av-edit-thumb img,.av-edit-thumb video{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none;}
+.av-edit-del{position:absolute;top:2px;right:2px;width:18px;height:18px;background:rgba(255,40,40,.85);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff;cursor:pointer;z-index:2;}
+.av-edit-add{width:56px;height:56px;border-radius:10px;border:1px dashed rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;color:#555;font-size:22px;cursor:pointer;flex-shrink:0;}
+.av-edit-add:hover{border-color:#fff;color:#fff;}
+.av-edit-toggle{padding:6px 14px;border-radius:20px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:#fff;font-size:.72rem;font-weight:700;cursor:pointer;white-space:nowrap;letter-spacing:.5px;}
+.av-edit-toggle.active{background:rgba(255,255,255,.2);border-color:rgba(255,255,255,.5);}
+
 #forgot-modal{position:fixed;inset:0;background:rgba(0,0,0,.92);display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;pointer-events:none;transition:opacity .22s;backdrop-filter:blur(8px);z-index:7600;}
 #forgot-modal.on{opacity:1;pointer-events:all;}
 .forgot-box{background:#161616;border:1px solid rgba(255,255,255,.12);border-radius:22px;padding:28px 24px;width:100%;max-width:320px;display:flex;flex-direction:column;gap:14px;}
@@ -484,12 +513,39 @@ body.no-bgimg::before{display:none;}
 .forgot-msg{font-size:.78rem;text-align:center;display:none;padding:8px 12px;border-radius:10px;}
 .forgot-msg.ok{background:rgba(0,200,80,.1);color:#4c8;border:1px solid rgba(0,200,80,.2);}
 .forgot-msg.er{background:rgba(255,60,60,.1);color:#f66;border:1px solid rgba(255,60,60,.2);}
+/* QR STORAGE METER */
+.qr-storage-meter{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:14px 16px;margin-bottom:14px;}
+.qr-sm-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px;}
+.qr-sm-title{font-size:.67rem;color:#333;letter-spacing:2px;text-transform:uppercase;font-weight:800;}
+.qr-sm-val{font-size:.78rem;font-family:'Bebas Neue',sans-serif;letter-spacing:1.5px;color:#555;transition:color .3s;}
+.qr-sm-bg{width:100%;height:6px;background:rgba(255,255,255,.05);border-radius:10px;overflow:hidden;}
+.storage-bar-fill{height:100%;border-radius:10px;transition:width .6s ease,background .4s;min-width:4px;}
+.qr-sm-hint{font-size:.63rem;color:#2a2a2a;margin-top:7px;text-align:center;letter-spacing:.4px;}
+/* PROCESSING OVERLAY */
+#proc-overlay{position:fixed;inset:0;z-index:9998;background:rgba(0,0,0,.92);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;backdrop-filter:blur(8px);}
+#proc-overlay.hidden{display:none!important;}
+.proc-icon{font-size:2.4rem;animation:procSpin 1.2s linear infinite;}
+@keyframes procSpin{to{transform:rotate(360deg);}}
+.proc-msg{font-size:.95rem;color:#ccc;letter-spacing:2px;text-transform:uppercase;font-weight:700;text-align:center;}
+.proc-sub{font-size:.75rem;color:#444;letter-spacing:1px;text-align:center;}
+.proc-bar-bg{width:220px;height:5px;background:rgba(255,255,255,.08);border-radius:10px;overflow:hidden;}
+.proc-bar-fill{height:100%;background:#4cf;border-radius:10px;transition:width .2s;width:0%;}
 /* RESET PASSWORD BOX */
 #reset-box{gap:16px;}
 .reset-ok{color:#4c8;font-size:.82rem;background:rgba(0,200,80,.08);border:1px solid rgba(0,200,80,.2);border-radius:12px;padding:10px 14px;text-align:center;display:none;}
 </style>
 </head>
 <body class="no-bgimg">
+<!-- PUBLIC SKELETON — visible immediately on QR scan before Firebase data -->
+<div id="pub-skeleton">
+  <div class="sk-av skel-pulse"></div>
+  <div class="sk-name skel-pulse"></div>
+  <div class="sk-bio skel-pulse"></div>
+  <div class="sk-album skel-pulse"></div>
+  <div class="sk-card skel-pulse"></div>
+  <div class="sk-card skel-pulse" style="width:85%;opacity:.7;"></div>
+  <div class="sk-card skel-pulse" style="width:70%;opacity:.5;"></div>
+</div>
 <script>
 /* ======================================================
    EARLY INIT — runs immediately, before Firebase loads
@@ -506,9 +562,12 @@ body.no-bgimg::before{display:none;}
 
   if(pid){
     /* ── PUBLIC PROFILE ──
-       1. Check localStorage for instant cached render.
-       2. Start REST fetch immediately (before Firebase loads).
+       1. Show skeleton immediately so user sees UI at once.
+       2. Check localStorage for instant cached render.
+       3. Start REST fetch immediately (before Firebase loads).
           The preconnect in <head> means TCP is already ready. */
+    /* Show skeleton right away */
+    var sk=document.getElementById('pub-skeleton');if(sk)sk.classList.add('on');
     try{
       var c=localStorage.getItem('vexa_pub_'+pid);
       if(c){var d=JSON.parse(c);if(d&&d.publicId)window._pubCached=d;}
@@ -608,7 +667,14 @@ body.no-bgimg::before{display:none;}
   <div id="qrcode"></div>
   <div class="qlinkbox"><span class="qlinktext" id="qlink"></span><button class="cpbtn" onclick="copyLink()">Copy</button></div>
   <button onclick="downloadQR()" style="background:#1a1a1a;color:#ccc;border:1px solid rgba(255,255,255,.12);padding:10px 22px;border-radius:100px;font-size:.82rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:7px;margin-bottom:6px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Download QR</button>
-  <div class="analytics-wrap edit-only"><div class="an-header"><div class="an-title">Analytics</div><button class="an-reset-btn" onclick="askResetAnalytics()">RESET</button></div><div class="an-top-row"><div class="an-stat"><div class="an-num" id="an-visits">-</div><div class="an-lbl">Views</div></div><div class="an-stat"><div class="an-num" id="an-today">-</div><div class="an-lbl">Today</div></div><div class="an-stat"><div class="an-num" id="an-clicks-total">-</div><div class="an-lbl">Taps</div></div></div><div style="height:1px;background:rgba(255,255,255,.06);"></div><div class="an-clicks-title" style="font-size:.68rem;letter-spacing:2px;text-transform:uppercase;color:#444;font-weight:700;margin-bottom:6px;">Most Tapped</div><div id="an-clicks-list"><div class="an-empty">Loading&#8230;</div></div></div>
+  <div class="analytics-wrap edit-only">
+    <!-- Storage Meter — above analytics -->
+    <div class="qr-storage-meter" id="qr-storage-outer">
+      <div class="qr-sm-top"><span class="qr-sm-title">&#128190; Profile Storage</span><span class="qr-sm-val" id="storage-meter-val">0 MB / 100 MB</span></div>
+      <div class="qr-sm-bg"><div class="storage-bar-fill" id="storage-bar-fill" style="width:0%;background:#4cf;"></div></div>
+      <div class="qr-sm-hint" id="storage-bar-hint">Calculating&#8230;</div>
+    </div>
+    <div class="an-header"><div class="an-title">Analytics</div><button class="an-reset-btn" onclick="askResetAnalytics()">RESET</button></div><div class="an-top-row"><div class="an-stat"><div class="an-num" id="an-visits">-</div><div class="an-lbl">Views</div></div><div class="an-stat"><div class="an-num" id="an-today">-</div><div class="an-lbl">Today</div></div><div class="an-stat"><div class="an-num" id="an-clicks-total">-</div><div class="an-lbl">Taps</div></div></div><div style="height:1px;background:rgba(255,255,255,.06);"></div><div class="an-clicks-title" style="font-size:.68rem;letter-spacing:2px;text-transform:uppercase;color:#444;font-weight:700;margin-bottom:6px;">Most Tapped</div><div id="an-clicks-list"><div class="an-empty">Loading&#8230;</div></div></div>
 </div>
 
 <!-- DESIGN MODAL -->
@@ -669,7 +735,7 @@ body.no-bgimg::before{display:none;}
     <div id="photobtn-pw-field" style="display:none;"><input type="text" id="photobtn-pw" class="mi" placeholder="Set password&#8230;"></div>
   </div>
   <div id="tp-image" class="hidden"><input type="text" id="img-title" class="mi" placeholder="Label (e.g. My Photos)"><div class="upbox" id="imgbox" onclick="triggerUpload('imginput')"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>Select image</div><div class="img-hint">&#9432; Best size: 900 &times; 600 px</div><img id="imgprev" src="" style="display:none;width:100%;border-radius:12px;margin-top:10px;max-height:220px;object-fit:cover;"><p class="clabel">Password (optional)</p><div class="pw-row"><label class="pw-toggle"><input type="checkbox" id="img-pw-on" onchange="togglePwInput('img-pw-field',this.checked)"><span class="pw-track"></span><span class="pw-thumb"></span></label><span class="pw-lbl">Protect with password</span></div><div id="img-pw-field" style="display:none;"><input type="text" id="img-pw" class="mi" placeholder="Set password&#8230;"></div></div>
-  <div id="tp-video" class="hidden"><input type="text" id="vid-title" class="mi" placeholder="Label (e.g. Promo Video)"><div class="vid-size-info">&#9888;&#65039; Max video size: <strong>10 MB</strong> &mdash; Compress before uploading</div><div class="upbox" id="vidbox" onclick="triggerUpload('vidinput')"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>Select video</div><video id="vidprev" style="display:none;width:100%;border-radius:12px;margin-top:10px;max-height:220px;" controls playsinline></video><p class="clabel">Password (optional)</p><div class="pw-row"><label class="pw-toggle"><input type="checkbox" id="vid-pw-on" onchange="togglePwInput('vid-pw-field',this.checked)"><span class="pw-track"></span><span class="pw-thumb"></span></label><span class="pw-lbl">Protect with password</span></div><div id="vid-pw-field" style="display:none;"><input type="text" id="vid-pw" class="mi" placeholder="Set password&#8230;"></div></div>
+  <div id="tp-video" class="hidden"><input type="text" id="vid-title" class="mi" placeholder="Label (e.g. Promo Video)"><div class="vid-limit-info"><div class="vid-limit-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></div><div class="vid-limit-text"><div class="vid-limit-title">Video Upload Limit</div><div class="vid-limit-sub">Max 20 MB per video &nbsp;&middot;&nbsp; Uploaded to cloud, not stored in profile</div></div></div><div class="upbox" id="vidbox" onclick="triggerUpload('vidinput')"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>Select video</div><video id="vidprev" style="display:none;width:100%;border-radius:12px;margin-top:10px;max-height:220px;" controls playsinline></video><p class="clabel">Password (optional)</p><div class="pw-row"><label class="pw-toggle"><input type="checkbox" id="vid-pw-on" onchange="togglePwInput('vid-pw-field',this.checked)"><span class="pw-track"></span><span class="pw-thumb"></span></label><span class="pw-lbl">Protect with password</span></div><div id="vid-pw-field" style="display:none;"><input type="text" id="vid-pw" class="mi" placeholder="Set password&#8230;"></div></div>
   <div id="tp-location" class="hidden"><input type="text" id="loc-label-input" class="mi" placeholder="Label (e.g. Our Shop)"><p class="clabel">Password (optional)</p><div class="pw-row"><label class="pw-toggle"><input type="checkbox" id="loc-pw-on" onchange="togglePwInput('loc-pw-field',this.checked)"><span class="pw-track"></span><span class="pw-thumb"></span></label><span class="pw-lbl">Protect with password</span></div><div id="loc-pw-field" style="display:none;"><input type="text" id="loc-pw" class="mi" placeholder="Set password&#8230;"></div></div>
   <div id="tp-group" class="hidden"><input type="text" id="grp-name" class="mi" placeholder="Group name (e.g. Social Media)"><p class="clabel">Layout</p><div class="layout-toggle"><div class="layout-opt on" id="grplo-list" onclick="setNewGrpLayout('list')">&#9776; List</div><div class="layout-opt" id="grplo-grid" onclick="setNewGrpLayout('grid')">&#8857; Grid</div></div><p class="clabel">Group Colors</p><div class="grp-color-row"><div class="ci">Header BG<input type="color" id="grp-hbg" value="#1a1a1a"></div><div class="ci">Header Text<input type="color" id="grp-htxt" value="#ffffff"></div><div class="ci">Cards BG<input type="color" id="grp-cbg" value="#111111"></div></div><p class="clabel">Link Colors (List &amp; Grid)</p><div class="grp-color-row"><div class="ci">Icon Color<input type="color" id="grp-icon-color" value="#ffffff"></div><div class="ci">Card BG<input type="color" id="grp-icon-bg" value="#1e1e1e"></div><div class="ci">Label Color<input type="color" id="grp-label-color" value="#ffffff"></div></div><p class="clabel">Password (optional)</p><div class="pw-row"><label class="pw-toggle"><input type="checkbox" id="grp-pw-on" onchange="togglePwInput('grp-pw-field',this.checked)"><span class="pw-track"></span><span class="pw-thumb"></span></label><span class="pw-lbl">Lock group with password</span></div><div id="grp-pw-field" style="display:none;"><input type="text" id="grp-pw" class="mi" placeholder="Set password&#8230;"></div></div>
   <div id="tp-album" class="hidden">
@@ -715,12 +781,22 @@ body.no-bgimg::before{display:none;}
 </div>
 
 <!-- ALBUM VIEWER -->
-<div id="album-viewer"><div class="av-header"><button class="av-close" onclick="closeAlbumViewer()">&#x2715;</button><div class="av-title" id="av-title">Album</div></div><div class="av-content" id="av-content"></div></div>
+<div id="album-viewer"><div class="av-header"><button class="av-close" onclick="closeAlbumViewer()">&#x2715;</button><div class="av-title" id="av-title">Album</div><button class="av-edit-toggle edit-only hidden" id="av-edit-toggle" onclick="toggleAlbumEditMode()">&#9998; Edit</button></div><div class="av-edit-bar edit-only hidden" id="av-edit-bar"></div><div class="av-content" id="av-content"></div></div>
+
+<input type="file" id="av-add-input" class="hidden" accept="image/*,video/*" multiple onchange="onAvAddPick(this)">
+
+<!-- PROCESSING OVERLAY — shown during heavy file reads -->
+<div id="proc-overlay" class="hidden">
+  <div class="proc-icon">&#9881;</div>
+  <div class="proc-msg" id="proc-msg">Processing&#8230;</div>
+  <div class="proc-bar-bg"><div class="proc-bar-fill" id="proc-bar-fill"></div></div>
+  <div class="proc-sub" id="proc-sub">Please wait&nbsp;&#8212;&nbsp;do not close the app</div>
+</div>
 
 <input type="file" id="avinput" class="hidden" accept="image/*" onchange="onAvatarPick(this)">
 <input type="file" id="bginput" class="hidden" accept="image/*" onchange="onBgPick(this)">
-<input type="file" id="imginput" class="hidden" accept="image/*" onchange="onImgPick(this)">
-<input type="file" id="vidinput" class="hidden" accept="video/*" onchange="onVidPick(this)">
+<input type="file" id="imginput" class="hidden" accept="image/*" multiple onchange="onImgPick(this)">
+<input type="file" id="vidinput" class="hidden" accept="video/*" multiple onchange="onVidPick(this)">
 <input type="file" id="photobtn-img-input" class="hidden" accept="image/*" onchange="onPhotoBtnPick(this)">
 <input type="file" id="albcoverinput" class="hidden" accept="image/*" onchange="onAlbCoverPick(this,'alb-cover-prev')">
 <input type="file" id="ealb-cover-input" class="hidden" accept="image/*" onchange="onAlbCoverPick(this,'ealb-cover-prev')">
@@ -733,6 +809,8 @@ body.no-bgimg::before{display:none;}
      document.write() is safe here — this is a synchronous inline script during HTML parsing. -->
 <script>if(!new URLSearchParams(location.search).get('id')){document.write('\x3Cscript src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"\x3E\x3C\/script\x3E');}</script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js" crossorigin="anonymous"></script>
+<!-- firebase-storage: loaded ONLY for owners (no ?id= param). Provides direct CDN upload → no base64 in RTDB -->
+<script>if(!new URLSearchParams(location.search).get('id')){document.write('\x3Cscript src="https://www.gstatic.com/firebasejs/10.12.0/firebase-storage-compat.js" crossorigin="anonymous"\x3E\x3C\/script\x3E');}</script>
 <script>
 /* ===== FIREBASE ===== */
 firebase.initializeApp({apiKey:"AIzaSyBDM5mBSTW8g3VlGusFWFdgN14hpqi3-zs",authDomain:"vexa-1234.firebaseapp.com",databaseURL:"https://vexa-1234-default-rtdb.firebaseio.com",projectId:"vexa-1234",storageBucket:"vexa-1234.firebasestorage.app",messagingSenderId:"362188399240",appId:"1:362188399240:web:fd6c50ae6ed3647bc8753d"});
@@ -743,12 +821,147 @@ const _auth=typeof firebase.auth==='function'?firebase.auth():{
   confirmPasswordReset:async function(c,p){return firebase.auth().confirmPasswordReset(c,p);}
 };
 const _db=firebase.database();
-const _MAX_BYTES=8*1024*1024,_MAX_VID=10*1024*1024;
+/* Firebase Storage — only available on owner pages (auth SDK loaded), null on public QR pages */
+const _storage=(typeof firebase.storage==='function')?firebase.storage():null;
+/* Media stored in Firebase Storage (CDN), RTDB holds only metadata+URLs.
+   _MAX_BYTES tracks RTDB metadata size (tiny with Storage).
+   Effective per-user storage quota = Firebase Storage plan limit.     */
+const _MAX_BYTES=100*1024*1024;/* 100MB — shown in UI as total quota */
+const _MAX_VIDEO_MB=20;        /* 20MB per video file — user-requested limit */
+const _WARN_BYTES=90*1024*1024;/* warn at 90MB */
+const _SAVE_BATCH=15;
+
+/* ── Memory-safe profile size: sums string lengths WITHOUT JSON.stringify copies ── */
+function getProfileBytes(){
+  if(!window.S)return 0;
+  let total=0;
+  try{total+=JSON.stringify({...window.S,links:[]}).length;}catch(_){return 0;}
+  (window.S.links||[]).forEach(l=>{
+    try{
+      total+=JSON.stringify({...l,items:undefined,url:undefined,coverUrl:undefined}).length;
+      if(l.url)total+=l.url.length;
+      if(l.coverUrl)total+=l.coverUrl.length;
+      (l.items||[]).forEach(item=>{
+        total+=JSON.stringify({...item,url:undefined}).length;
+        if(item.url)total+=item.url.length;
+      });
+    }catch(_){}
+  });
+  return total;
+}
+
+/* ── Resize image → Blob (NO base64 — no RAM pressure) ── */
+function resizeImgToBlob(file,maxPx,quality){
+  return new Promise((resolve,reject)=>{
+    const img=new Image();
+    const objUrl=URL.createObjectURL(file);
+    img.onload=()=>{
+      URL.revokeObjectURL(objUrl);
+      let w=img.naturalWidth,h=img.naturalHeight;
+      if(w>maxPx||h>maxPx){
+        if(w>=h){h=Math.round(h*maxPx/w);w=maxPx;}
+        else{w=Math.round(w*maxPx/h);h=maxPx;}
+      }
+      const cv=document.createElement('canvas');cv.width=w;cv.height=h;
+      cv.getContext('2d').drawImage(img,0,0,w,h);
+      cv.toBlob(blob=>blob?resolve(blob):reject(new Error('toBlob failed')),'image/jpeg',quality);
+    };
+    img.onerror=()=>{URL.revokeObjectURL(objUrl);reject(new Error('Image load failed'));};
+    img.src=objUrl;
+  });
+}
+
+/* ── Upload Blob/File to Firebase Storage → returns {url, storagePath} ──
+   Download URLs with tokens are publicly readable — safe for QR scan visitors ── */
+function uploadToStorage(fileOrBlob,uid,onProgress,mimeType){
+  return new Promise((resolve,reject)=>{
+    if(!_storage||!uid){reject(new Error('Storage not available'));return;}
+    const mt=mimeType||(fileOrBlob.type)||'application/octet-stream';
+    const ext=mt.split('/')[1]||'bin';
+    const name=Date.now()+'_'+Math.random().toString(36).slice(2,8)+'.'+ext;
+    const path='profiles/'+uid+'/'+name;
+    const ref=_storage.ref(path);
+    const task=ref.put(fileOrBlob,{contentType:mt});
+    task.on('state_changed',
+      snap=>{if(onProgress)onProgress(Math.round(snap.bytesTransferred/snap.totalBytes*100));},
+      reject,
+      ()=>task.snapshot.ref.getDownloadURL().then(url=>resolve({url,storagePath:path})).catch(reject)
+    );
+  });
+}
+
+/* ── Delete a Storage file (fire-and-forget, safe to fail) ── */
+function deleteFromStorage(storagePath){
+  if(!storagePath||!_storage)return;
+  _storage.ref(storagePath).delete().catch(e=>console.warn('Storage delete skipped:',e));
+}
+
+/* ── Lite localStorage cache: stores profile WITH covers but WITHOUT album items ──
+   Allows instant rendering on QR scan even for large profiles > localStorage 5MB limit ── */
+function saveLiteCache(pid,profile){
+  /* With Firebase Storage, album items are URLs (tiny), so try full profile first.
+     Fall back to lite only if full doesn't fit in localStorage (5MB limit). */
+  try{
+    /* Attempt 1: full profile */
+    localStorage.setItem('vexa_pub_'+pid,JSON.stringify(profile));
+    return;
+  }catch(e){}
+  try{
+    /* Attempt 2: lite — strip ONLY album media items, KEEP group items (they're link metadata) */
+    const lite={...profile,links:(profile.links||[]).map(l=>(
+      l.type==='album'?{...l,items:[]}:{...l}
+    ))};
+    localStorage.setItem('vexa_pub_'+pid,JSON.stringify(lite));
+    return;
+  }catch(e){}
+  try{
+    /* Attempt 3: strip avatar too */
+    const mini={...profile,avatar:'',links:(profile.links||[]).map(l=>(
+      l.type==='album'?{...l,items:[]}:{...l}
+    ))};
+    localStorage.setItem('vexa_pub_'+pid,JSON.stringify(mini));
+  }catch(e){}
+}
+
+/* ── Firebase save with 25s timeout — prevents stuck overlay on slow connections ── */
+async function saveWithTimeout(uid,state){
+  return Promise.race([
+    _FBSave(uid,state),
+    new Promise(resolve=>setTimeout(()=>{
+      console.warn('Firebase save timeout — still syncing in background');
+      resolve();/* Don't block UI — Firebase retries internally */
+    },25000))
+  ]);
+}
+function updateStorageMeter(){
+  const fill=document.getElementById('storage-bar-fill');
+  const val=document.getElementById('storage-meter-val');
+  const hint=document.getElementById('storage-bar-hint');
+  if(!fill||!val)return;
+  const bytes=getProfileBytes();
+  const mb=(bytes/(1024*1024));
+  const pct=Math.min(100,(bytes/_MAX_BYTES)*100);
+  fill.style.width=pct+'%';
+  fill.style.background=pct>=95?'#f44':pct>=80?'#f90':pct>=60?'#fc0':'#4cf';
+  val.innerText=mb.toFixed(1)+' MB / 100 MB';
+  val.style.color=pct>=95?'#f66':pct>=80?'#f90':'#666';
+  if(hint){hint.innerText=pct>=95?'⚠ Profile nearly full!':pct>=80?'Getting close to the limit':pct>=50?'Moderate usage · Plenty of space left':'Plenty of space left';}
+}
+function checkStorageBeforeAdd(extraBytes){
+  const cur=getProfileBytes();
+  if(cur>=_MAX_BYTES){toast('Profile at 100MB limit — remove some media first','e');return false;}
+  if(cur+extraBytes>_MAX_BYTES){const rem=Math.max(0,(_MAX_BYTES-cur)/(1024*1024));toast('Not enough space — only '+rem.toFixed(1)+'MB remaining','e');return false;}
+  if(cur>_WARN_BYTES){const mb=(cur/(1024*1024));toast('Profile is '+mb.toFixed(1)+'MB / 100MB — almost full!','e');}
+  return true;
+}
 const _FBSave=async(uid,state)=>{
   function strip(links){return(links||[]).map(l=>{const c={...l};delete c._unlocked;if(c.items)c.items=strip(c.items);return c;});}
-  const s={...JSON.parse(JSON.stringify(state)),links:strip(state.links)};
-  if(new Blob([JSON.stringify(s)]).size>_MAX_BYTES){toast('Profile too large — remove some media','e');return;}
-  return Promise.all([_db.ref('users/'+uid).set(s),_db.ref('pub/'+s.publicId).set(s)]).catch(e=>{console.warn(e);toast('Save failed','e');});
+  /* Shallow copy only — no deep clone needed, strip just removes _unlocked */
+  const s={...state,links:strip(state.links||[])};
+  /* Use fast getProfileBytes() instead of new Blob(JSON.stringify()) — no large copy */
+  const approxBytes=getProfileBytes();
+  if(approxBytes>_MAX_BYTES){const mb=Math.round(approxBytes/(1024*1024));toast('Profile too large ('+mb+'MB) — max 100MB. Remove some media.','e');return;}
+  if(approxBytes>_WARN_BYTES){const mb=(approxBytes/(1024*1024)).toFixed(1);toast('\u26a0 Profile: '+mb+'MB / 100MB \u2014 nearing limit!','e');}  return Promise.all([_db.ref('users/'+uid).set(s),_db.ref('pub/'+s.publicId).set(s)]).catch(e=>{console.warn(e);toast('Save failed — check connection','e');});
 };
 const _FBLoad=async uid=>{const s=await _db.ref('users/'+uid).once('value');return s.exists()?s.val():null;};
 const _FBLoadPub=async pid=>{const s=await _db.ref('pub/'+pid).once('value');return s.exists()?s.val():null;};
@@ -820,17 +1033,16 @@ const _revealingEnvs=new Set();
     window._pub=true;window._edit=false;window._pubReady=true;
     bootApp(); /* safe: function declaration is hoisted — always defined */
     _FBVisit(pid).catch(()=>{});
-    /* Stale-while-revalidate: show cache instantly, re-render if owner updated profile */
+    /* Stale-while-revalidate: show lite cache instantly, update full data silently */
     if(window._pubRestPromise){
       window._pubRestPromise.then(d=>{
         if(!d||!d.publicId)return;
-        try{localStorage.setItem('vexa_pub_'+pid,JSON.stringify(d));}catch(_e){}
-        /* Compare fresh vs what we rendered — if different, silently re-render */
-        if(JSON.stringify(d)!==JSON.stringify(window.S)){
-          window.S=d;
-          if(!window.S.links)window.S.links=[];
-          render();
-        }
+        saveLiteCache(pid,d);/* Save lite version for next instant load */
+        window._pubFullData=d;/* Store full data reference for on-demand album loading */
+        /* Silently update window.S with FULL data so album items are available when opened */
+        window.S=d;
+        if(!window.S.links)window.S.links=[];
+        /* Don't re-render — covers already show from lite cache, items now in memory */
       }).catch(()=>{});
     }
     return;
@@ -848,7 +1060,7 @@ const _revealingEnvs=new Set();
   }
 
   if(d&&d.publicId){
-    try{localStorage.setItem('vexa_pub_'+pid,JSON.stringify(d));}catch(_e){}
+    saveLiteCache(pid,d);/* Store lite cache for next visit */
     window.S=d;if(!window.S.links)window.S.links=[];
     window._pub=true;window._edit=false;window._pubReady=true;
     bootApp();_FBVisit(pid).catch(()=>{});
@@ -894,12 +1106,12 @@ let _pendLocLabel='',_pendLocPw=null,_pendLocGrpIdx=-1;
 let _crop={scale:1,minScale:1,maxScale:4,ox:0,oy:0,dragging:false,lastX:0,lastY:0,stageSize:280};
 let _pinchStart=null,_selectedAlbTheme='snap',_editAlbTheme='snap';
 let _pendAlbCover=null,_editAlbCover=null;
-let _carIdx=0,_floatIdx=0,_flipIdx=0;
+let _carIdx=0,_floatIdx=0,_flipIdx=0,_carN=1,_carRadius=140;
 let _pendPhotoBtnImg=null,_egGrpStyle='list',_newGrpStyle='list';
 
-function hideLs(){const l=document.getElementById('ls');l.classList.add('out');setTimeout(()=>l.classList.add('hidden'),300);}
+function hideLs(){const l=document.getElementById('ls');l.classList.add('out');setTimeout(()=>l.classList.add('hidden'),300);const sk=document.getElementById('pub-skeleton');if(sk)sk.classList.remove('on');}
 function escHtml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-function save(){if(!window._uid||window._pub)return;clearTimeout(_saveTimer);_saveTimer=setTimeout(async()=>{try{await _FBSave(window._uid,window.S);}catch(e){console.warn(e);}},800);}
+function save(){if(!window._uid||window._pub)return;clearTimeout(_saveTimer);_saveTimer=setTimeout(async()=>{try{await _FBSave(window._uid,window.S);}catch(e){console.warn(e);}updateStorageMeter();},800);}
 function toast(msg,type){const t=document.getElementById('toast');t.innerText=msg;t.className=type||'s';t.style.display='block';clearTimeout(t._t);t._t=setTimeout(()=>t.style.display='none',2500);}
 window.triggerUpload=id=>document.getElementById(id).click();
 function resizeImg(file,maxW,quality,cb){const r=new FileReader();r.onload=ev=>{const img=new Image();img.onload=()=>{const ratio=Math.min(maxW/img.width,maxW/img.height,1),w=Math.round(img.width*ratio),h=Math.round(img.height*ratio),cv=document.createElement('canvas');cv.width=w;cv.height=h;cv.getContext('2d').drawImage(img,0,0,w,h);cb(cv.toDataURL('image/jpeg',quality));};img.onerror=()=>cb(ev.target.result);img.src=ev.target.result;};r.readAsDataURL(file);}
@@ -1116,7 +1328,8 @@ function buildAlbumCard(l,i){
   const addBtn=window._edit?`<button class="album-add-btn" onclick="openAddToGroup(${i})">+ ADD MEDIA</button>`:'';
   let coverHtml;
   if(l.coverUrl){
-    coverHtml=`<div class="album-cover-wrap" onclick="openAlbumViewer(${i})"><img class="album-cover-img" src="${l.coverUrl}" loading="lazy" alt=""><div class="album-cover-overlay"><div class="album-tap-badge">TAP HERE</div><div style="font-size:.68rem;color:rgba(255,255,255,.5);letter-spacing:1px;">${items.length} ITEMS</div></div></div>`;
+    /* eager loading + decoding async for instant cover display on QR scan */
+    coverHtml=`<div class="album-cover-wrap" onclick="openAlbumViewer(${i})"><img class="album-cover-img" src="${l.coverUrl}" loading="eager" decoding="async" fetchpriority="high" alt="" onload="this.classList.add('loaded')"><div class="album-cover-overlay"><div class="album-tap-badge">TAP HERE</div><div style="font-size:.68rem;color:rgba(255,255,255,.5);letter-spacing:1px;">${items.length} ITEMS</div></div></div>`;
   }else{
     coverHtml=`<div class="album-no-cover" onclick="openAlbumViewer(${i})"><div style="text-align:center;color:#333;"><div style="font-size:36px;margin-bottom:8px;">&#128193;</div><div style="font-size:.78rem;letter-spacing:1px;">NO COVER &mdash; TAP TO OPEN</div><div style="font-size:.68rem;margin-top:4px;color:#2a2a2a;">${items.length} items</div></div></div>`;
   }
@@ -1350,25 +1563,85 @@ window.openAddToGroup=gi=>{
 window.openAddLink=()=>{addToGrpIdx=-1;document.getElementById('lmod-title').innerText='Add to Profile';ALL_TABS.forEach(x=>{const el=document.getElementById('tab-'+x);if(el)el.classList.remove('hidden');});setTab('link');document.getElementById('ltitle').value='';document.getElementById('lurl').value='';document.getElementById('url-hint').innerText='';document.getElementById('lmod').classList.remove('hidden');};
 window.selectAlbTheme=function(t){_selectedAlbTheme=t;['snap','carousel','floating','flipbook'].forEach(k=>{const el=document.getElementById('albt-'+k);if(el)el.classList.toggle('selected',k===t);});};
 window.selectEditAlbTheme=function(t){_editAlbTheme=t;['snap','carousel','floating','flipbook'].forEach(k=>{const el=document.getElementById('ealbt-'+k);if(el)el.classList.toggle('selected',k===t);});};
-window.onAlbCoverPick=function(inp,prevId){const f=inp.files[0];inp.value='';if(!f)return;resizeImg(f,900,.82,d64=>{if(prevId==='alb-cover-prev')_pendAlbCover=d64;else _editAlbCover=d64;const prev=document.getElementById(prevId);if(prev){prev.src=d64;prev.style.display='block';}const box=document.getElementById(prevId==='alb-cover-prev'?'alb-cover-box':'alb-cover-box2');if(box)box.style.display='none';toast('Cover ready \u2713','s');});};
+window.onAlbCoverPick=function(inp,prevId){
+  const f=inp.files[0];inp.value='';if(!f)return;
+  showProcessing('Uploading cover\u2026','');
+  resizeImgToBlob(f,900,.85)
+    .then(blob=>uploadToStorage(blob,window._uid,p=>setProcessingProgress(p,'Cover: '+p+'%'),'image/jpeg'))
+    .then(result=>{
+      if(prevId==='alb-cover-prev')_pendAlbCover=result.url;
+      else _editAlbCover=result.url;
+      const prev=document.getElementById(prevId);
+      if(prev){prev.src=result.url;prev.style.display='block';}
+      const box=document.getElementById(prevId==='alb-cover-prev'?'alb-cover-box':'alb-cover-box2');
+      if(box)box.style.display='none';
+      hideProcessing();toast('Cover ready \u2713','s');
+    })
+    .catch(err=>{hideProcessing();toast('Upload failed: '+err.message,'e');});
+};
 
 /* ===== MEDIA PICK ===== */
-window.onImgPick=inp=>{const f=inp.files[0];inp.value='';if(!f)return;resizeImg(f,900,.82,d64=>{pendMedia={type:'image',url:d64};document.getElementById('imgprev').src=d64;document.getElementById('imgprev').style.display='block';document.getElementById('imgbox').style.display='none';});};
-window.onVidPick=inp=>{const f=inp.files[0];inp.value='';if(!f)return;if(f.size>_MAX_VID){toast('Video too large! Max 10MB. Please compress first.','e');return;}toast('Reading video\u2026','s');const r=new FileReader();r.onload=e=>{pendMedia={type:'video',url:e.target.result};document.getElementById('vidprev').src=e.target.result;document.getElementById('vidprev').style.display='block';document.getElementById('vidbox').style.display='none';toast('Video ready \u2713','s');};r.readAsDataURL(f);};
+window.onImgPick=inp=>{
+  const files=Array.from(inp.files);inp.value='';if(!files.length)return;
+  if(addToGrpIdx>=0&&window.S.links[addToGrpIdx]&&window.S.links[addToGrpIdx].type==='album'){
+    onAlbumMediaPick_direct(files);return;
+  }
+  const f=files[0];
+  showProcessing('Uploading image\u2026','');
+  resizeImgToBlob(f,900,.85)
+    .then(blob=>uploadToStorage(blob,window._uid,p=>setProcessingProgress(p,'Uploading: '+p+'%'),'image/jpeg'))
+    .then(result=>{
+      pendMedia={type:'image',url:result.url,storagePath:result.storagePath};
+      const ip=document.getElementById('imgprev');if(ip){ip.src=result.url;ip.style.display='block';}
+      const ib=document.getElementById('imgbox');if(ib)ib.style.display='none';
+      hideProcessing();toast('Image ready \u2713','s');
+    })
+    .catch(err=>{hideProcessing();toast('Upload failed: '+err.message,'e');});
+};
+window.onVidPick=inp=>{
+  const files=Array.from(inp.files);inp.value='';if(!files.length)return;
+  if(addToGrpIdx>=0&&window.S.links[addToGrpIdx]&&window.S.links[addToGrpIdx].type==='album'){
+    onAlbumMediaPick_direct(files);return;
+  }
+  const f=files[0];
+  if(f.size>_MAX_VIDEO_MB*1024*1024){toast('Video too large \u2014 max '+_MAX_VIDEO_MB+'MB','e');return;}
+  showProcessing('Uploading video\u2026','Please wait \u2014 do not close the app');
+  uploadToStorage(f,window._uid,p=>{setProcessingProgress(p,'Uploading: '+p+'%');},f.type)
+    .then(result=>{
+      pendMedia={type:'video',url:result.url,storagePath:result.storagePath};
+      const vp=document.getElementById('vidprev');
+      if(vp){vp.src=result.url;vp.style.display='block';}
+      const vb=document.getElementById('vidbox');if(vb)vb.style.display='none';
+      hideProcessing();toast('Video ready \u2713','s');
+    })
+    .catch(err=>{hideProcessing();toast('Upload failed: '+err.message,'e');});
+};
 let _pendPbStyle='full';
 window.setPbStyle=function(s){if(s!=='full'&&s!=='small')s='full';_pendPbStyle=s;['full','small'].forEach(k=>{const el=document.getElementById('pbs-'+k);if(el)el.classList.toggle('selected',k===s);});};
 window.onPhotoBtnPick=inp=>{const f=inp.files[0];inp.value='';if(!f)return;resizeImg(f,900,.82,d64=>{_pendPhotoBtnImg=d64;const prev=document.getElementById('photobtn-prev');if(prev){prev.src=d64;prev.style.display='block';}const box=document.getElementById('photobtnbox');if(box)box.style.display='none';toast('Image ready \u2713','s');});};
-window.onAlbumMediaPick=inp=>{
-  const files=Array.from(inp.files);inp.value='';if(!files.length)return;
+function onAlbumMediaPick_direct(filesIn){
+  let files=Array.from(filesIn);
   const gi=addToGrpIdx>=0?addToGrpIdx:-1;if(gi<0||!window.S.links[gi]||window.S.links[gi].type!=='album'){toast('Select an album first','e');return;}
   const alb=window.S.links[gi];if(!alb.items)alb.items=[];
-  const remaining=50-alb.items.length;if(remaining<=0){toast('Album is full (50 items max)','e');return;}
-  const toProcess=files.slice(0,remaining);toast('Adding '+toProcess.length+' item(s)\u2026','s');let done=0;
-  toProcess.forEach(f=>{
-    if(f.type.startsWith('image/')){resizeImg(f,1200,.85,d64=>{alb.items.push({type:'image',url:d64,title:'Photo'});done++;if(done===toProcess.length){save();renderLinks();closeModals();toast('Added '+toProcess.length+' item(s) \u2713','s');}});}
-    else if(f.type.startsWith('video/')){if(f.size>_MAX_VID){done++;toast('Skipped video > 10MB','e');return;}const r=new FileReader();r.onload=ev=>{alb.items.push({type:'video',url:ev.target.result,title:'Video'});done++;if(done===toProcess.length){save();renderLinks();closeModals();toast('Added '+toProcess.length+' item(s) \u2713','s');}};r.readAsDataURL(f);}
-    else done++;
-  });
+  if(!files.length)return;
+  /* ── Size checks ── */
+  const oversized=files.filter(f=>f.type.startsWith('video/')&&f.size>_MAX_VIDEO_MB*1024*1024);
+  if(oversized.length){toast(oversized.length+' video(s) exceed '+_MAX_VIDEO_MB+'MB — skipped','e');files=files.filter(f=>!(f.type.startsWith('video/')&&f.size>_MAX_VIDEO_MB*1024*1024));}
+  if(!files.length)return;
+  if(getProfileBytes()>=_MAX_BYTES){toast('Profile at 100MB limit — remove some media first','e');return;}
+  showProcessing('Adding '+files.length+' file(s)\u2026','Do not close or navigate away');
+  processMediaFiles(
+    files,
+    item=>alb.items.push(item),
+    (added,skipped)=>{
+      renderLinks();closeModals();openAlbumViewer(gi);
+      toast(added+' file(s) added\u2713'+(skipped>0?' \u2014 '+skipped+' skipped (storage full)':''),'s');
+    }
+  ).catch(err=>{hideProcessing();toast('Error: '+err.message,'e');});
+}
+window.onAlbumMediaPick=inp=>{
+  const files=Array.from(inp.files);inp.value='';if(!files.length)return;
+  onAlbumMediaPick_direct(files);
 };
 
 /* ===== ADD ITEM ===== */
@@ -1436,18 +1709,178 @@ window.openEditAlbum=gi=>{
 };
 window.saveAlbumEdit=function(){const a=window.S.links[_albumGi];if(!a)return;a.name=document.getElementById('ealb-name').value.trim()||a.name;a.albumTheme=_editAlbTheme;if(_editAlbCover)a.coverUrl=_editAlbCover;const pwOn=document.getElementById('ealb-pw-on').checked,pw=document.getElementById('ealb-pw').value.trim();a.password=pwOn&&pw?pw:null;save();renderLinks();closeModals();toast('Updated \u2713','s');_editAlbCover=null;};
 
+let _avEditMode=false;
+/* ── Processing overlay helpers — prevents browser from appearing frozen ── */
+function showProcessing(msg,sub){const ov=document.getElementById('proc-overlay');if(!ov)return;document.getElementById('proc-msg').innerText=msg||'Processing\u2026';document.getElementById('proc-sub').innerText=sub||'Please wait \u2014 do not close the app';document.getElementById('proc-bar-fill').style.width='0%';ov.classList.remove('hidden');}
+function setProcessingProgress(pct,msg){const f=document.getElementById('proc-bar-fill');if(f)f.style.width=Math.min(100,pct)+'%';const m=document.getElementById('proc-msg');if(m&&msg)m.innerText=msg;}
+function hideProcessing(){const ov=document.getElementById('proc-overlay');if(ov)ov.classList.add('hidden');}
+function readFileAsync(file,onProgress){return new Promise((resolve,reject)=>{const r=new FileReader();if(onProgress){r.onprogress=e=>{if(e.lengthComputable)onProgress(Math.round(e.loaded/e.total*100));};}r.onload=e=>resolve(e.target.result);r.onerror=()=>reject(new Error('read failed'));r.readAsDataURL(file);});}
+function resizeImgAsync(file,maxPx,q){return new Promise(res=>resizeImg(file,maxPx,q,res));}
+/* Sequential processor — uploads to Firebase Storage (no base64, no RAM crash, real progress) */
+async function processMediaFiles(files,onItem,onDone){
+  const total=files.length;
+  let added=0,skipped=0;
+
+  for(let i=0;i<total;i++){
+    const f=files[i];
+    const basePct=Math.round((i/total)*90);
+    setProcessingProgress(basePct,'Uploading '+(i+1)+' / '+total+'\u2026');
+
+    try{
+      let result;
+      if(f.type.startsWith('image/')){
+        /* Resize → Blob (no base64 in memory) → upload to Storage */
+        const blob=await resizeImgToBlob(f,1200,.85);
+        result=await uploadToStorage(blob,window._uid,
+          p=>setProcessingProgress(basePct+Math.round(p*(90/total)/100),'Image '+(i+1)+': '+p+'%'),
+          'image/jpeg');
+        onItem({type:'image',url:result.url,storagePath:result.storagePath,title:'Photo'});
+      }else if(f.type.startsWith('video/')){
+        /* Upload video directly to Storage */
+        result=await uploadToStorage(f,window._uid,
+          p=>setProcessingProgress(basePct+Math.round(p*(90/total)/100),'Video '+(i+1)+': '+p+'%'),
+          f.type);
+        onItem({type:'video',url:result.url,storagePath:result.storagePath,title:'Video'});
+      }
+      added++;
+    }catch(err){
+      console.warn('Upload failed for',f.name,err);
+      skipped++;
+    }
+
+    await new Promise(r=>setTimeout(r,8));
+  }
+
+  /* Final RTDB save — tiny now (just URLs + metadata, no base64) → completes in <1s */
+  setProcessingProgress(93,'Saving\u2026');
+  if(window._uid&&!window._pub){
+    try{await saveWithTimeout(window._uid,window.S);}
+    catch(err){hideProcessing();toast('Save failed \u2014 check connection','e');return;}
+  }
+  setProcessingProgress(100,'Done \u2713');
+  await new Promise(r=>setTimeout(r,350));
+  hideProcessing();
+  onDone(added,skipped);
+}
 /* ===== ALBUM VIEWER ===== */
 window.openAlbumViewer=function(gi){
   _albumGi=gi;const alb=window.S.links[gi];if(!alb)return;
+  _avEditMode=false;
   document.getElementById('av-title').innerText=alb.name||'Album';
   document.getElementById('album-viewer').classList.add('on');
-  const mode=alb.albumTheme||'snap';renderAlbumContent(mode);
-};
-window.closeAlbumViewer=function(){document.getElementById('album-viewer').classList.remove('on');};
+  const tog=document.getElementById('av-edit-toggle'),bar=document.getElementById('av-edit-bar');
+  if(window._edit){tog.classList.remove('hidden');tog.innerText='\u270E Edit';}
+  else{tog.classList.add('hidden');}
+  bar.classList.add('hidden');bar.innerHTML='';
+  const mode=alb.albumTheme||'snap';
 
-function mediaEl(it,style){
-  if(it.type==='video')return `<video src="${it.url}" playsinline preload="none" ${style} autoplay muted loop></video>`;
-  return `<img src="${it.url}" loading="lazy" alt="" ${style}>`;
+  /* Public profile from lite cache: items may be empty — load full data on demand */
+  if(window._pub&&(!alb.items||alb.items.length===0)){
+    const cont=document.getElementById('av-content');
+    cont.innerHTML='<div style="height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;"><div style="width:40px;height:40px;border:3px solid rgba(255,255,255,.08);border-top-color:#4cf;border-radius:50%;animation:procSpin 1s linear infinite;"></div><div style="font-size:.78rem;color:#333;letter-spacing:2px;">LOADING\u2026</div></div>';
+    const pid=new URLSearchParams(location.search).get('id');
+    /* Use already-in-flight full data promise if available */
+    const dataPromise=window._pubFullData
+      ?Promise.resolve(window._pubFullData)
+      :(pid?_FBLoadPub(pid):Promise.resolve(null));
+    dataPromise.then(fullData=>{
+      if(fullData&&fullData.links&&fullData.links[gi]){
+        window.S.links[gi]=fullData.links[gi];
+        window._pubFullData=fullData;/* cache for other albums */
+        renderAlbumContent(mode);
+      }else{
+        cont.innerHTML='<div style="height:100%;display:flex;align-items:center;justify-content:center;color:#333;font-size:.9rem;">No media found</div>';
+      }
+    }).catch(()=>{
+      cont.innerHTML='<div style="height:100%;display:flex;align-items:center;justify-content:center;color:#555;font-size:.85rem;">Failed to load — check connection</div>';
+    });
+    return;
+  }
+  renderAlbumContent(mode);
+};
+window.closeAlbumViewer=function(){document.getElementById('album-viewer').classList.remove('on');_avEditMode=false;};
+
+window.toggleAlbumEditMode=function(){
+  _avEditMode=!_avEditMode;
+  const tog=document.getElementById('av-edit-toggle'),bar=document.getElementById('av-edit-bar');
+  tog.innerText=_avEditMode?'\u2713 Done':'\u270E Edit';
+  tog.classList.toggle('active',_avEditMode);
+  if(_avEditMode){bar.classList.remove('hidden');renderAvEditBar();}
+  else{
+    bar.classList.add('hidden');bar.innerHTML='';
+    /* Save changes + re-render profile cards so item count on album cover updates immediately */
+    save();
+    renderLinks();
+    toast('Saved \u2713','s');
+  }
+};
+
+function renderAvEditBar(){
+  const bar=document.getElementById('av-edit-bar');if(!bar)return;
+  const alb=window.S.links[_albumGi];const items=(alb&&alb.items)||[];
+  bar.innerHTML='';
+  /* Add button */
+  const addEl=document.createElement('div');addEl.className='av-edit-add';addEl.title='Add media';addEl.innerHTML='+';addEl.onclick=()=>triggerUpload('av-add-input');bar.appendChild(addEl);
+  /* Thumbnails with delete + drag-to-reorder */
+  items.forEach((it,idx)=>{
+    const th=document.createElement('div');th.className='av-edit-thumb';th.draggable=true;th.dataset.idx=idx;
+    if(it.type==='video'){th.innerHTML=`<video src="${it.url}" preload="metadata" style="width:100%;height:100%;object-fit:cover;display:block;" muted></video>`;}
+    else{th.innerHTML=`<img src="${it.url}" loading="lazy" alt="">`;}
+    /* delete — removes immediately from memory; saved on Done; cleans up Storage file */
+    const del=document.createElement('div');del.className='av-edit-del';del.innerHTML='&#x2715;';del.onclick=e=>{
+      e.stopPropagation();
+      const item=alb.items[idx];
+      /* Clean up Storage file if it was uploaded to Storage (has storagePath) */
+      if(item&&item.storagePath)deleteFromStorage(item.storagePath);
+      alb.items.splice(idx,1);
+      const mode=alb.albumTheme||'snap';
+      renderAlbumContent(mode);
+      renderAvEditBar();
+      /* No save() here — saved when Done is pressed */
+    };th.appendChild(del);
+    /* drag reorder — updates memory; saved on Done */
+    th.addEventListener('dragstart',e=>{e.dataTransfer.setData('text/plain',idx);th.style.opacity='.4';});
+    th.addEventListener('dragend',()=>{th.style.opacity='1';});
+    th.addEventListener('dragover',e=>{e.preventDefault();th.classList.add('drag-over');});
+    th.addEventListener('dragleave',()=>th.classList.remove('drag-over'));
+    th.addEventListener('drop',e=>{
+      e.preventDefault();th.classList.remove('drag-over');
+      const from=parseInt(e.dataTransfer.getData('text/plain'));const to=idx;
+      if(from===to)return;
+      const arr=alb.items;arr.splice(to,0,...arr.splice(from,1));
+      const mode=alb.albumTheme||'snap';renderAlbumContent(mode);renderAvEditBar();
+      /* No save() here — saved when Done is pressed */
+    });
+    bar.appendChild(th);
+  });
+}
+
+window.onAvAddPick=function(inp){
+  let files=Array.from(inp.files);inp.value='';if(!files.length)return;
+  const alb=window.S.links[_albumGi];if(!alb)return;if(!alb.items)alb.items=[];
+  /* ── Size checks ── */
+  const oversized=files.filter(f=>f.type.startsWith('video/')&&f.size>_MAX_VIDEO_MB*1024*1024);
+  if(oversized.length){toast(oversized.length+' video(s) over '+_MAX_VIDEO_MB+'MB — skipped','e');files=files.filter(f=>!(f.type.startsWith('video/')&&f.size>_MAX_VIDEO_MB*1024*1024));}
+  if(!files.length)return;
+  if(getProfileBytes()>=_MAX_BYTES){toast('Profile at 100MB limit — remove some media first','e');return;}
+  showProcessing('Adding '+files.length+' file(s)\u2026','Do not close or navigate away');
+  processMediaFiles(
+    files,
+    item=>alb.items.push(item),
+    (added,skipped)=>{
+      const mode=alb.albumTheme||'snap';
+      renderAlbumContent(mode);
+      renderLinks();
+      if(_avEditMode)renderAvEditBar();
+      toast(added+' added \u2713'+(skipped>0?' \u2014 '+skipped+' skipped':''),'s');
+    }
+  ).catch(err=>{hideProcessing();toast('Error: '+err.message,'e');});
+};
+
+function mediaEl(it,style,eager){
+  /* eager=true forces immediate load — needed for 3D carousel on Safari */
+  if(it.type==='video')return `<video src="${it.url}" playsinline preload="${eager?'metadata':'none'}" ${style} ${eager?'autoplay':''} muted loop></video>`;
+  return `<img src="${it.url}" loading="${eager?'eager':'lazy'}" decoding="${eager?'async':'auto'}" alt="" ${style}>`;
 }
 
 function renderAlbumContent(mode){
@@ -1459,30 +1892,120 @@ function renderAlbumContent(mode){
   else if(mode==='flipbook')buildFlipbook(items,cont);
 }
 
-/* SNAP */
+/* SWIPE HELPER — يرجع +1 (يمين/next) أو -1 (شمال/prev) */
+function addSwipe(el,onNext,onPrev){
+  let sx=0,sy=0;
+  el.addEventListener('touchstart',e=>{sx=e.touches[0].clientX;sy=e.touches[0].clientY;},{passive:true});
+  el.addEventListener('touchend',e=>{
+    const dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;
+    if(Math.abs(dx)>Math.abs(dy)&&Math.abs(dx)>40){if(dx<0)onNext();else onPrev();}
+  },{passive:true});
+}
+
+/* SNAP — first 3 load immediately, rest load lazily as user scrolls */
 function buildSnap(items,cont){
-  cont.innerHTML=`<div class="snap-track">${items.map(it=>`<div class="snap-item">${mediaEl(it,'style="width:100%;max-height:60vh;object-fit:cover;display:block;"')}</div>`).join('')}</div>`;
-  // Auto-play videos in view
+  const sizeBadge=window._edit?`<div style="padding:8px 16px 4px;text-align:center;"><div class="anim-size-badge">&#128247; Best: 1200&#215;900px &middot; Landscape 16:9</div></div>`:'';
+  /* Build HTML: first 3 eager, rest use data-src for lazy IntersectionObserver */
+  const itemsHtml=items.map((it,idx)=>{
+    if(it.type==='video'){
+      return `<div class="snap-item">${mediaEl(it,'style="width:100%;max-height:60vh;object-fit:cover;display:block;"',idx<2)}</div>`;
+    }
+    if(idx<3){
+      /* Load immediately */
+      return `<div class="snap-item"><img src="${it.url}" loading="eager" decoding="async" style="width:100%;max-height:60vh;object-fit:cover;display:block;" alt=""></div>`;
+    }
+    /* Lazy: placeholder until visible */
+    return `<div class="snap-item"><div class="snap-lazy" data-src="${it.url}" style="width:100%;min-height:200px;background:#111;display:flex;align-items:center;justify-content:center;"><div style="width:32px;height:32px;border:2px solid rgba(255,255,255,.06);border-top-color:rgba(255,255,255,.2);border-radius:50%;animation:procSpin 1s linear infinite;"></div></div></div>`;
+  }).join('');
+  cont.innerHTML=`<div style="display:flex;flex-direction:column;height:100%;">${sizeBadge}<div class="snap-track" id="snap-track-${_albumGi}">${itemsHtml}</div></div>`;
+  /* IntersectionObserver: swap placeholder → real image when visible */
+  const lazies=cont.querySelectorAll('.snap-lazy');
+  if(lazies.length&&('IntersectionObserver' in window)){
+    const io=new IntersectionObserver((entries)=>{
+      entries.forEach(entry=>{
+        if(entry.isIntersecting){
+          const el=entry.target;const src=el.dataset.src;
+          if(!src)return;
+          const img=document.createElement('img');
+          img.src=src;img.loading='lazy';img.decoding='async';
+          img.style.cssText='width:100%;max-height:60vh;object-fit:cover;display:none;';
+          img.onload=()=>{img.style.display='block';el.parentNode.replaceChild(img,el);};
+          el.innerHTML='';el.appendChild(img);
+          io.unobserve(el);
+        }
+      });
+    },{rootMargin:'400px'});/* start loading 400px before visible */
+    lazies.forEach(el=>io.observe(el));
+  }else{
+    /* Fallback: load all */
+    lazies.forEach(el=>{const img=document.createElement('img');img.src=el.dataset.src;img.style.cssText='width:100%;max-height:60vh;object-fit:cover;display:block;';el.parentNode.replaceChild(img,el);});
+  }
   const vids=cont.querySelectorAll('video');vids.forEach(v=>{v.muted=true;v.play().catch(()=>{});});
 }
 
-/* CAROUSEL — tap to rotate */
+/* CAROUSEL — tap أو swipe للتنقل */
 function buildCarousel(items,cont){
-  _carIdx=0;const n=items.length,angle=360/n,radius=Math.max(120,n*32);
-  let html=`<div class="carousel-wrap"><div class="carousel-scene" id="car-scene" onclick="carNext()"><div class="carousel-rotor" id="car-rotor">`;
-  items.forEach((it,i)=>html+=`<div class="car-card" style="transform:rotateY(${i*angle}deg) translateZ(${radius}px);">${mediaEl(it,'style="width:100%;height:100%;object-fit:cover;display:block;"')}</div>`);
-  html+=`</div></div><div class="carousel-idx" id="car-idx">1 / ${n}</div><div class="carousel-hint">Tap to rotate</div></div>`;
-  cont.innerHTML=html;applyCarRot(n);
+  _carIdx=0;const n=items.length;
+  /* ── Responsive card dimensions ── */
+  const vw=Math.min(window.innerWidth,500);
+  const vh=window.innerHeight;
+  const cardW=Math.min(200,Math.floor(vw*0.58));
+  const cardH=Math.min(260,Math.floor(vh*0.48));
+  /* ── Radius calculation ── */
+  let radius;
+  if(n<=1){radius=0;}
+  else if(n===2){radius=Math.max(140,Math.round(cardW*0.7));}
+  else{
+    /* Ensure cards don't overlap: circumference must fit all cards with gap */
+    const minCircumference=(cardW+24)*n;
+    const calcRadius=Math.round(minCircumference/(2*Math.PI));
+    radius=Math.max(140,calcRadius);
+  }
+  /* ── Perspective: bigger = less dramatic but cleaner look ── */
+  const perspective=Math.max(900,radius*5);
+  /* ── Size badge ── */
+  const sizeBadge=window._edit?`<div class="anim-size-badge">&#128247; Best: 900&#215;1200px &middot; Portrait</div>`:'';
+  /* ── Build HTML ── */
+  let html=`<div class="carousel-wrap">${sizeBadge}<div class="carousel-scene" id="car-scene" style="width:${cardW}px;height:${cardH}px;perspective:${perspective}px;"><div class="carousel-rotor" id="car-rotor" style="width:${cardW}px;height:${cardH}px;">`;
+  items.forEach((it,i)=>{
+    const ang=i*(360/n);
+    html+=`<div class="car-card" style="width:${cardW}px;height:${cardH}px;transform:rotateY(${ang}deg) translateZ(${radius}px);">${mediaEl(it,`style="width:100%;height:100%;object-fit:cover;display:block;border-radius:14px;"`,true)}</div>`;
+  });
+  html+=`</div></div><div class="carousel-idx" id="car-idx">1 / ${n}</div><div class="carousel-hint">&#10094; Swipe or tap &#10095;</div></div>`;
+  cont.innerHTML=html;
+  _carRadius=radius;_carN=n;
+  applyCarRot();
   autoPlayVisible(cont);
+  const scene=document.getElementById('car-scene');
+  if(scene){
+    scene.addEventListener('click',e=>{
+      const rect=scene.getBoundingClientRect();
+      e.clientX-rect.left>rect.width/2?carNext():carPrev();
+    });
+    addSwipe(scene,carNext,carPrev);
+  }
 }
-window.carNext=function(){const alb=window.S.links[_albumGi];const n=(alb&&alb.items||[]).length;if(!n)return;_carIdx=(_carIdx+1)%n;applyCarRot(n);const el=document.getElementById('car-idx');if(el)el.innerText=(_carIdx+1)+' / '+n;};
-function applyCarRot(n){const r=document.getElementById('car-rotor');if(!r)return;const angle=360/(n||1);r.style.transform=`rotateY(${-_carIdx*angle}deg)`;}
+window.carNext=function(){const alb=window.S.links[_albumGi];const n=(alb&&alb.items||[]).length;if(!n)return;_carIdx=(_carIdx+1)%n;_carN=n;applyCarRot();const el=document.getElementById('car-idx');if(el)el.innerText=(_carIdx+1)+' / '+n;};
+window.carPrev=function(){const alb=window.S.links[_albumGi];const n=(alb&&alb.items||[]).length;if(!n)return;_carIdx=(_carIdx-1+n)%n;_carN=n;applyCarRot();const el=document.getElementById('car-idx');if(el)el.innerText=(_carIdx+1)+' / '+n;};
+/* لما نضغط يمين → الأسطوانة تلف يمين (سالب) عشان الكرت التالي يجي للأمام */
+function applyCarRot(){const r=document.getElementById('car-rotor');if(!r)return;const n=_carN||1;const angle=360/n;r.style.transform=`rotateY(${-_carIdx*angle}deg)`;}
 
-/* FLOATING — deck of cards, tap to reveal next */
+/* FLOATING — swipe أو tap للتنقل */
 function buildFloating(items,cont){
   _floatIdx=0;
-  cont.innerHTML=`<div class="float-deck-wrap"><div class="float-deck" id="float-deck" onclick="floatNext()"></div><div class="float-idx" id="float-idx">1 / ${items.length}</div><div class="float-hint">Tap card to reveal next</div></div>`;
+  const fw=Math.min(280,Math.floor(window.innerWidth*0.78));
+  const fh=Math.min(360,Math.floor(window.innerHeight*0.68));
+  const sizeBadge=window._edit?`<div class="anim-size-badge">&#128247; Best: 900&#215;1200px &middot; Portrait 3:4</div>`:'';
+  cont.innerHTML=`<div class="float-deck-wrap">${sizeBadge}<div class="float-deck" id="float-deck" style="width:${fw}px;height:${fh}px;"></div><div class="float-idx" id="float-idx">1 / ${items.length}</div><div class="float-hint">Swipe left &#10140; next &nbsp;| Swipe right &#10140; prev</div></div>`;
   updateFloatDeck(items);
+  const deck=document.getElementById('float-deck');
+  if(deck){
+    deck.addEventListener('click',e=>{
+      const rect=deck.getBoundingClientRect();const isRight=e.clientX-rect.left>rect.width/2;
+      isRight?floatNext():floatPrev();
+    });
+    addSwipe(deck,floatNext,floatPrev);
+  }
 }
 function updateFloatDeck(items){
   const deck=document.getElementById('float-deck');if(!deck)return;
@@ -1501,17 +2024,24 @@ window.floatNext=function(){const alb=window.S.links[_albumGi];const items=(alb&
   if(topCard){topCard.classList.add('fly-out');setTimeout(()=>{_floatIdx=(_floatIdx+1)%n;updateFloatDeck(items);const el=document.getElementById('float-idx');if(el)el.innerText=(_floatIdx+1)+' / '+n;},400);}
   else{_floatIdx=(_floatIdx+1)%n;updateFloatDeck(items);const el=document.getElementById('float-idx');if(el)el.innerText=(_floatIdx+1)+' / '+n;}
 };
+window.floatPrev=function(){const alb=window.S.links[_albumGi];const items=(alb&&alb.items)||[];const n=items.length;if(!n)return;
+  _floatIdx=(_floatIdx-1+n)%n;updateFloatDeck(items);const el=document.getElementById('float-idx');if(el)el.innerText=(_floatIdx+1)+' / '+n;
+};
 
-/* FLIPBOOK — tap left/right half to navigate */
+/* FLIPBOOK — tap أو swipe يمين/شمال */
 function buildFlipbook(items,cont){
   _flipIdx=0;const n=items.length;
-  cont.innerHTML=`<div class="flipbook-wrap"><div class="flipbook-scene" id="flip-scene"></div><div class="flip-idx" id="flip-idx">1 / ${n}</div><div class="flip-hint">Tap right side → next &nbsp;|&nbsp; Tap left side → prev</div></div>`;
+  const fbw=Math.min(260,Math.floor(window.innerWidth*0.78));
+  const fbh=Math.min(340,Math.floor(window.innerHeight*0.64));
+  const sizeBadge=window._edit?`<div class="anim-size-badge">&#128247; Best: 900&#215;1200px &middot; Portrait 3:4</div>`:'';
+  cont.innerHTML=`<div class="flipbook-wrap">${sizeBadge}<div class="flipbook-scene" id="flip-scene" style="width:${fbw}px;height:${fbh}px;"></div><div class="flip-idx" id="flip-idx">1 / ${n}</div><div class="flip-hint">Swipe left &#10140; next &nbsp;| Swipe right &#10140; prev</div></div>`;
   renderFlipPage(items);
   const scene=document.getElementById('flip-scene');
   scene.addEventListener('click',function(e){
     const rect=scene.getBoundingClientRect();const isRight=e.clientX-rect.left>rect.width/2;
     isRight?flipGo(1,items):flipGo(-1,items);
   });
+  addSwipe(scene,()=>flipGo(1,items),()=>flipGo(-1,items));
 }
 function renderFlipPage(items){
   const scene=document.getElementById('flip-scene');if(!scene)return;
@@ -1543,20 +2073,39 @@ window.askResetAnalytics=()=>askConfirm('Reset all analytics?',async()=>{if(!win
 
 /* ===== QR ===== */
 function profileUrl(){return location.origin+location.pathname+'?id='+window.S.publicId;}
-window.openQR=function(){const url=profileUrl();document.getElementById('qlink').innerText=url;document.getElementById('qrs').classList.add('on');if(!qrInst){const tryQR=()=>{if(typeof QRCode!=='undefined'){qrInst=new QRCode(document.getElementById('qrcode'),{text:url,width:200,height:200,correctLevel:QRCode.CorrectLevel.H});}else setTimeout(tryQR,200);};tryQR();}if(window.S?.publicId)_FBAnalytics(window.S.publicId).then(renderAnalytics).catch(()=>{});};
+window.openQR=function(){const url=profileUrl();document.getElementById('qlink').innerText=url;document.getElementById('qrs').classList.add('on');if(!qrInst){const tryQR=()=>{if(typeof QRCode!=='undefined'){qrInst=new QRCode(document.getElementById('qrcode'),{text:url,width:200,height:200,correctLevel:QRCode.CorrectLevel.H});}else setTimeout(tryQR,200);};tryQR();}if(window.S?.publicId)_FBAnalytics(window.S.publicId).then(renderAnalytics).catch(()=>{});setTimeout(updateStorageMeter,200);};
 window.closeQR=()=>document.getElementById('qrs').classList.remove('on');
 window.copyLink=function(){const url=profileUrl();if(navigator.clipboard)navigator.clipboard.writeText(url).then(()=>toast('Copied!','s')).catch(()=>fbCopy(url));else fbCopy(url);};
 function fbCopy(t){const ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);toast('Copied!','s');}
 window.downloadQR=function(){const url=profileUrl(),size=1200,tmp=document.createElement('div');tmp.style.cssText='position:fixed;left:-9999px;top:-9999px;';document.body.appendChild(tmp);try{new QRCode(tmp,{text:url,width:size,height:size,correctLevel:QRCode.CorrectLevel.H});setTimeout(()=>{const img=tmp.querySelector('img')||tmp.querySelector('canvas');if(!img){toast('QR not ready','e');document.body.removeChild(tmp);return;}let src;if(img.tagName==='CANVAS'){src=img.toDataURL('image/png');}else{const cv=document.createElement('canvas');cv.width=size;cv.height=size;const ctx=cv.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,size,size);ctx.drawImage(img,0,0,size,size);src=cv.toDataURL('image/png');}const a=document.createElement('a');a.href=src;a.download='VEXA-QR.png';a.click();document.body.removeChild(tmp);toast('Downloaded \u2713','s');},300);}catch(e){document.body.removeChild(tmp);toast('Download failed','e');}};
 
 /* ===== MODALS ===== */
-window.openDesign=()=>document.getElementById('dmod').classList.remove('hidden');
+window.openDesign=()=>{document.getElementById('dmod').classList.remove('hidden');};
+
 window.closeModals=function(){['dmod','lmod','emod','egmod','ealbmod'].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.add('hidden');});addToGrpIdx=-1;};
 window.bgClose=(e,id)=>{if(e.target.id===id)closeModals();};
 window.applyColors=function(){window.S.colors={bg:document.getElementById('cbg').value,card:document.getElementById('ccard').value,name:document.getElementById('cname').value,bio:document.getElementById('cbio').value,iconColor:document.getElementById('ciconcolor').value,labelColor:document.getElementById('clabelcolor').value};render();save();};
 window.applyBlur=v=>{v=parseInt(v);document.documentElement.style.setProperty('--bg-blur',v+'px');document.getElementById('blur-val').innerText=v+'px';window.S.bgBlur=v;save();};
 window.setLinkStyle=function(style){if(!window.S)return;window.S.linkStyle=style;document.getElementById('lo-list').classList.toggle('on',style==='list');document.getElementById('lo-grid').classList.toggle('on',style==='grid');save();renderLinks();};
-window.onBgPick=inp=>{const f=inp.files[0];inp.value='';if(!f)return;resizeImg(f,1200,.78,d64=>{window.S.bgImage=d64;window.S.bgBlur=window.S.bgBlur||0;document.body.classList.remove('no-bgimg');document.body.style.backgroundImage='url('+d64+')';document.getElementById('rmbg').style.display='block';document.getElementById('blur-section').style.display='block';document.getElementById('bgblur').value=window.S.bgBlur;document.getElementById('blur-val').innerText=window.S.bgBlur+'px';document.documentElement.style.setProperty('--bg-blur',window.S.bgBlur+'px');save();toast('Background updated \u2713','s');});};
+window.onBgPick=inp=>{
+  const f=inp.files[0];inp.value='';if(!f)return;
+  showProcessing('Uploading background\u2026','');
+  resizeImgToBlob(f,1400,.82)
+    .then(blob=>uploadToStorage(blob,window._uid,p=>setProcessingProgress(p,'Background: '+p+'%'),'image/jpeg'))
+    .then(result=>{
+      window.S.bgImage=result.url;window.S.bgImagePath=result.storagePath;
+      window.S.bgBlur=window.S.bgBlur||0;
+      document.body.classList.remove('no-bgimg');
+      document.body.style.backgroundImage='url('+result.url+')';
+      document.getElementById('rmbg').style.display='block';
+      document.getElementById('blur-section').style.display='block';
+      document.getElementById('bgblur').value=window.S.bgBlur;
+      document.getElementById('blur-val').innerText=window.S.bgBlur+'px';
+      document.documentElement.style.setProperty('--bg-blur',window.S.bgBlur+'px');
+      hideProcessing();save();toast('Background updated \u2713','s');
+    })
+    .catch(err=>{hideProcessing();toast('Upload failed: '+err.message,'e');});
+};
 window.removeBg=()=>{window.S.bgImage='';window.S.bgBlur=0;document.body.classList.add('no-bgimg');document.body.style.backgroundImage='none';document.documentElement.style.setProperty('--bg-blur','0px');document.getElementById('rmbg').style.display='none';document.getElementById('blur-section').style.display='none';save();toast('Background removed','s');};
 
 /* THEMES */
@@ -1595,7 +2144,18 @@ window.saveCrop=function(){
   const img=document.getElementById('crop-img'),ratio=size/_crop.stageSize;
   const dW=img.naturalWidth*_crop.scale*ratio,dH=img.naturalHeight*_crop.scale*ratio;
   ctx.drawImage(img,size/2+_crop.ox*ratio-dW/2,size/2+_crop.oy*ratio-dH/2,dW,dH);
-  window.S.avatar=cv.toDataURL('image/jpeg',.9);document.getElementById('avimg').src=window.S.avatar;save();closeCrop();toast('Photo updated \u2713','s');
+  closeCrop();
+  showProcessing('Uploading photo\u2026','');
+  new Promise((res,rej)=>cv.toBlob(b=>b?res(b):rej(new Error('toBlob failed')),'image/jpeg',.9))
+    .then(blob=>uploadToStorage(blob,window._uid,p=>setProcessingProgress(p,'Photo: '+p+'%'),'image/jpeg'))
+    .then(result=>{
+      /* Delete old avatar from Storage if it was a Storage file */
+      if(window.S.avatarPath)deleteFromStorage(window.S.avatarPath);
+      window.S.avatar=result.url;window.S.avatarPath=result.storagePath;
+      document.getElementById('avimg').src=result.url;
+      hideProcessing();save();toast('Photo updated \u2713','s');
+    })
+    .catch(err=>{hideProcessing();toast('Upload failed: '+err.message,'e');});
 };
 window.openLightbox=function(gi,ii){const src=ii<0?(window.S.links[gi]||{}).url||'':((window.S.links[gi]?.items||[])[ii]||{}).url||'';if(!src)return;document.getElementById('lb-img').src=src;document.getElementById('lightbox').classList.add('on');document.body.style.overflow='hidden';};
 window.closeLightbox=()=>{document.getElementById('lightbox').classList.remove('on');document.body.style.overflow='';setTimeout(()=>document.getElementById('lb-img').src='',300);};
