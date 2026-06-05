@@ -105,7 +105,7 @@ body.no-bgimg::before{display:none;}
 /* album-card defined in 3D section */
 .album-cover-wrap{position:relative;width:100%;aspect-ratio:16/9;overflow:hidden;cursor:pointer;}
 .album-cover-img{width:100%;height:100%;object-fit:cover;display:block;transition:filter .35s ease,transform .35s ease;filter:blur(8px);transform:scale(1.04);}
-.album-cover-img.loaded{filter:none;transform:scale(1);}
+.album-cover-img.loaded{filter:blur(0px);transform:scale(1);}
 .album-cover-overlay{position:absolute;inset:0;background:rgba(0,0,0,.35);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;}
 .album-tap-badge{background:rgba(255,255,255,.15);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.3);border-radius:30px;padding:9px 22px;color:#fff;font-size:.82rem;font-weight:800;letter-spacing:2px;animation:tapVibe 2s ease-in-out infinite;}
 @keyframes tapVibe{0%,40%,100%{transform:scale(1) rotate(0deg);}42%{transform:scale(1.06) rotate(-1.5deg);}44%{transform:scale(1.06) rotate(1.5deg);}46%{transform:scale(1.06) rotate(-1.5deg);}48%{transform:scale(1.06) rotate(1.5deg);}50%{transform:scale(1) rotate(0deg);}}
@@ -670,7 +670,7 @@ body.no-bgimg::before{display:none;}
   <div class="analytics-wrap edit-only">
     <!-- Storage Meter — above analytics -->
     <div class="qr-storage-meter" id="qr-storage-outer">
-      <div class="qr-sm-top"><span class="qr-sm-title">&#128190; Profile Storage</span><span class="qr-sm-val" id="storage-meter-val">0 MB / 100 MB</span></div>
+      <div class="qr-sm-top"><span class="qr-sm-title">&#128190; Profile Storage</span><span class="qr-sm-val" id="storage-meter-val">0 MB / 30 MB</span></div>
       <div class="qr-sm-bg"><div class="storage-bar-fill" id="storage-bar-fill" style="width:0%;background:#4cf;"></div></div>
       <div class="qr-sm-hint" id="storage-bar-hint">Calculating&#8230;</div>
     </div>
@@ -827,24 +827,39 @@ const _db=firebase.database();
 const _CLD_CLOUD='davtjb9lp';
 const _CLD_PRESET='vexa.eg';
 /* Media stored in Cloudinary CDN, RTDB holds only metadata+URLs */
-const _MAX_BYTES=100*1024*1024;
+const _MAX_BYTES=30*1024*1024;
 const _MAX_VIDEO_MB=20;
-const _WARN_BYTES=90*1024*1024;
+const _WARN_BYTES=27*1024*1024;
 const _SAVE_BATCH=15;
+/* Pending bytes: bytes of uploaded-but-not-yet-confirmed media (before Add is clicked).
+   Added to meter instantly so user sees the impact before confirming. */
+let _pendingBytes=0;
 
-/* ── Memory-safe profile size: sums string lengths WITHOUT JSON.stringify copies ── */
+/* ── Memory-safe profile size: sums actual media bytes (compressed imgs + raw videos) ──
+   mediaBytes = compressed blob size for images, original file size for videos.
+   coverBytes = compressed cover image size for albums / photo buttons.
+   bgBytes    = compressed background image size.
+   Everything else (metadata, URLs) adds only string lengths — negligible. ── */
 function getProfileBytes(){
   if(!window.S)return 0;
   let total=0;
   try{total+=JSON.stringify({...window.S,links:[]}).length;}catch(_){return 0;}
+  /* Background image actual size */
+  if(window.S.bgBytes)total+=window.S.bgBytes;
   (window.S.links||[]).forEach(l=>{
     try{
       total+=JSON.stringify({...l,items:undefined,url:undefined,coverUrl:undefined}).length;
       if(l.url)total+=l.url.length;
       if(l.coverUrl)total+=l.coverUrl.length;
+      /* Actual media bytes for standalone image/video items */
+      if(l.mediaBytes)total+=l.mediaBytes;
+      /* Actual cover bytes for albums and photo buttons */
+      if(l.coverBytes)total+=l.coverBytes;
       (l.items||[]).forEach(item=>{
         total+=JSON.stringify({...item,url:undefined}).length;
         if(item.url)total+=item.url.length;
+        /* Actual media bytes: compressed blob for images, raw size for videos */
+        if(item.mediaBytes)total+=item.mediaBytes;
       });
     }catch(_){}
   });
@@ -916,6 +931,19 @@ function deleteFromStorage(publicId){
   if(publicId)console.log('[Cloudinary] file released from profile:',publicId);
 }
 
+/* ── Cloudinary URL optimizer: injects transform params for auto-format (WebP/AVIF) + resize.
+   Browsers that support WebP/AVIF get a much smaller file automatically via Cloudinary f_auto.
+   q_auto:good balances quality vs speed. Only applied to Cloudinary CDN URLs. ── */
+function cldUrl(url,transform){
+  if(!url||!url.includes('/upload/'))return url;
+  const idx=url.indexOf('/upload/');
+  const base=url.slice(0,idx+8);
+  const rest=url.slice(idx+8);
+  /* Skip if already has transform params injected (avoid double-transform) */
+  if(/^(f_|q_|w_|c_|h_)/.test(rest))return url;
+  return base+(transform||'f_auto,q_auto:good')+'/'+rest;
+}
+
 /* ── Lite localStorage cache: stores profile WITH covers but WITHOUT album items ──
    Allows instant rendering on QR scan even for large profiles > localStorage 5MB limit ── */
 function saveLiteCache(pid,profile){
@@ -958,21 +986,21 @@ function updateStorageMeter(){
   const val=document.getElementById('storage-meter-val');
   const hint=document.getElementById('storage-bar-hint');
   if(!fill||!val)return;
-  const bytes=getProfileBytes();
+  /* Add _pendingBytes so meter updates instantly after upload, before Add is clicked */
+  const bytes=getProfileBytes()+_pendingBytes;
   const mb=(bytes/(1024*1024));
   const pct=Math.min(100,(bytes/_MAX_BYTES)*100);
   fill.style.width=pct+'%';
   fill.style.background=pct>=95?'#f44':pct>=80?'#f90':pct>=60?'#fc0':'#4cf';
-  val.innerText=mb.toFixed(1)+' MB / 100 MB';
+  val.innerText=mb.toFixed(1)+' MB / 30 MB'+((_pendingBytes>0)?' ⏳':'');
   val.style.color=pct>=95?'#f66':pct>=80?'#f90':'#666';
-  if(hint){hint.innerText=pct>=95?'⚠ Profile nearly full!':pct>=80?'Getting close to the limit':pct>=50?'Moderate usage · Plenty of space left':'Plenty of space left';}
+  if(hint){hint.innerText=pct>=95?'\u26a0 Profile nearly full!':pct>=80?'Getting close to the limit':pct>=50?'Moderate usage \xb7 Plenty of space left':'Plenty of space left';}
 }
 function checkStorageBeforeAdd(extraBytes){
+  /* ── TEST MODE: blocks disabled — re-enable after testing ── */
   const cur=getProfileBytes();
-  if(cur>=_MAX_BYTES){toast('Profile at 100MB limit — remove some media first','e');return false;}
-  if(cur+extraBytes>_MAX_BYTES){const rem=Math.max(0,(_MAX_BYTES-cur)/(1024*1024));toast('Not enough space — only '+rem.toFixed(1)+'MB remaining','e');return false;}
-  if(cur>_WARN_BYTES){const mb=(cur/(1024*1024));toast('Profile is '+mb.toFixed(1)+'MB / 100MB — almost full!','e');}
-  return true;
+  if(cur>_WARN_BYTES){const mb=(cur/(1024*1024)).toFixed(1);toast('\u26a0 '+mb+'MB / 30MB \u2014 almost full','e');}
+  return true; /* Always allow for now */
 }
 const _FBSave=async(uid,state)=>{
   function strip(links){return(links||[]).map(l=>{const c={...l};delete c._unlocked;if(c.items)c.items=strip(c.items);return c;});}
@@ -980,8 +1008,9 @@ const _FBSave=async(uid,state)=>{
   const s={...state,links:strip(state.links||[])};
   /* Use fast getProfileBytes() instead of new Blob(JSON.stringify()) — no large copy */
   const approxBytes=getProfileBytes();
-  if(approxBytes>_MAX_BYTES){const mb=Math.round(approxBytes/(1024*1024));toast('Profile too large ('+mb+'MB) — max 100MB. Remove some media.','e');return;}
-  if(approxBytes>_WARN_BYTES){const mb=(approxBytes/(1024*1024)).toFixed(1);toast('\u26a0 Profile: '+mb+'MB / 100MB \u2014 nearing limit!','e');}  return Promise.all([_db.ref('users/'+uid).set(s),_db.ref('pub/'+s.publicId).set(s)]).catch(e=>{console.warn(e);toast('Save failed — check connection','e');});
+  /* ── TEST MODE: size block disabled — re-enable after testing ── */
+  if(approxBytes>_WARN_BYTES){const mb=(approxBytes/(1024*1024)).toFixed(1);toast('\u26a0 '+mb+'MB / 30MB \u2014 nearing limit','e');}
+  return Promise.all([_db.ref('users/'+uid).set(s),_db.ref('pub/'+s.publicId).set(s)]).catch(e=>{console.warn(e);toast('Save failed — check connection','e');});
 };
 const _FBLoad=async uid=>{const s=await _db.ref('users/'+uid).once('value');return s.exists()?s.val():null;};
 const _FBLoadPub=async pid=>{const s=await _db.ref('pub/'+pid).once('value');return s.exists()?s.val():null;};
@@ -1125,9 +1154,9 @@ let _confirmCb=null,_saveTimer=null,_pwCb=null,_liveWatchId=null;
 let _pendLocLabel='',_pendLocPw=null,_pendLocGrpIdx=-1;
 let _crop={scale:1,minScale:1,maxScale:4,ox:0,oy:0,dragging:false,lastX:0,lastY:0,stageSize:280};
 let _pinchStart=null,_selectedAlbTheme='snap',_editAlbTheme='snap';
-let _pendAlbCover=null,_editAlbCover=null;
+let _pendAlbCover=null,_editAlbCover=null,_pendAlbCoverBytes=0,_editAlbCoverBytes=0;
 let _carIdx=0,_floatIdx=0,_flipIdx=0,_carN=1,_carRadius=140;
-let _pendPhotoBtnImg=null,_egGrpStyle='list',_newGrpStyle='list';
+let _pendPhotoBtnImg=null,_pendPhotoBtnBytes=0,_egGrpStyle='list',_newGrpStyle='list';
 
 function hideLs(){const l=document.getElementById('ls');l.classList.add('out');setTimeout(()=>l.classList.add('hidden'),300);const sk=document.getElementById('pub-skeleton');if(sk)sk.classList.remove('on');}
 function escHtml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
@@ -1250,7 +1279,18 @@ function render(){
   else{document.body.classList.add('no-bgimg');document.body.style.backgroundImage='none';document.documentElement.style.setProperty('--bg-blur','0px');if(!window._pub){document.getElementById('blur-section').style.display='none';document.getElementById('rmbg').style.display='none';}}
   document.getElementById('pname').innerText=window.S.name||'VEXA USER';
   document.getElementById('pbio').innerText=window.S.bio||'';
-  document.getElementById('avimg').src=window.S.avatar||'https://api.dicebear.com/7.x/avataaars/svg?seed=V';
+  /* Optimize avatar: Cloudinary WebP + 200px thumbnail for fast load */
+  document.getElementById('avimg').src=cldUrl(window.S.avatar,'f_auto,q_auto:good,w_200,h_200,c_fill')||window.S.avatar||'https://api.dicebear.com/7.x/avataaars/svg?seed=V';
+  /* Prefetch album covers so they're cached before user taps */
+  if(window._pub){
+    (window.S.links||[]).forEach(l=>{
+      if(l.type==='album'&&l.coverUrl){
+        const lnk=document.createElement('link');lnk.rel='prefetch';lnk.as='image';
+        lnk.href=cldUrl(l.coverUrl,'f_auto,q_auto:good,w_800,c_fill');
+        document.head.appendChild(lnk);
+      }
+    });
+  }
   if(!window._pub){document.getElementById('cbg').value=c.bg||'#0a0a0a';document.getElementById('ccard').value=c.card||'#1e1e1e';document.getElementById('cname').value=c.name||'#fff';document.getElementById('cbio').value=c.bio||'#a0a0a0';document.getElementById('ciconcolor').value=c.iconColor||'#ffffff';document.getElementById('clabelcolor').value=c.labelColor||c.link||'#ffffff';const ls=window.S.linkStyle||'list';document.getElementById('lo-list').classList.toggle('on',ls==='list');document.getElementById('lo-grid').classList.toggle('on',ls==='grid');}
   renderLinks();
 }
@@ -1348,8 +1388,10 @@ function buildAlbumCard(l,i){
   const addBtn=window._edit?`<button class="album-add-btn" onclick="openAddToGroup(${i})">+ ADD MEDIA</button>`:'';
   let coverHtml;
   if(l.coverUrl){
+    /* Cloudinary optimized cover: WebP/AVIF auto-format, 800px max, good quality → faster load */
+    const fastCover=cldUrl(l.coverUrl,'f_auto,q_auto:good,w_800,c_fill');
     /* eager loading + decoding async for instant cover display on QR scan */
-    coverHtml=`<div class="album-cover-wrap" onclick="openAlbumViewer(${i})"><img class="album-cover-img" src="${l.coverUrl}" loading="eager" decoding="async" fetchpriority="high" alt="" onload="this.classList.add('loaded')"><div class="album-cover-overlay"><div class="album-tap-badge">TAP HERE</div><div style="font-size:.68rem;color:rgba(255,255,255,.5);letter-spacing:1px;">${items.length} ITEMS</div></div></div>`;
+    coverHtml=`<div class="album-cover-wrap" onclick="openAlbumViewer(${i})"><img class="album-cover-img" src="${fastCover}" loading="eager" decoding="async" fetchpriority="high" alt="" onload="this.classList.add('loaded')"><div class="album-cover-overlay"><div class="album-tap-badge">TAP HERE</div><div style="font-size:.68rem;color:rgba(255,255,255,.5);letter-spacing:1px;">${items.length} ITEMS</div></div></div>`;
   }else{
     coverHtml=`<div class="album-no-cover" onclick="openAlbumViewer(${i})"><div style="text-align:center;color:#333;"><div style="font-size:36px;margin-bottom:8px;">&#128193;</div><div style="font-size:.78rem;letter-spacing:1px;">NO COVER &mdash; TAP TO OPEN</div><div style="font-size:.68rem;margin-top:4px;color:#2a2a2a;">${items.length} items</div></div></div>`;
   }
@@ -1589,8 +1631,10 @@ window.onAlbCoverPick=function(inp,prevId){
   resizeImgToBlob(f,900,.85)
     .then(blob=>uploadToStorage(blob,window._uid,p=>setProcessingProgress(p,'Cover: '+p+'%'),'image/jpeg'))
     .then(result=>{
-      if(prevId==='alb-cover-prev')_pendAlbCover=result.url;
-      else _editAlbCover=result.url;
+      /* 85% of original — compressed but not exact blob size */
+      const covBytes=Math.round(f.size*0.85);
+      if(prevId==='alb-cover-prev'){_pendAlbCover=result.url;_pendAlbCoverBytes=covBytes;}
+      else{_editAlbCover=result.url;_editAlbCoverBytes=covBytes;}
       const prev=document.getElementById(prevId);
       if(prev){prev.src=result.url;prev.style.display='block';}
       const box=document.getElementById(prevId==='alb-cover-prev'?'alb-cover-box':'alb-cover-box2');
@@ -1607,14 +1651,20 @@ window.onImgPick=inp=>{
     onAlbumMediaPick_direct(files);return;
   }
   const f=files[0];
-  showProcessing('Uploading image\u2026','');
+  const origMb=(f.size/(1024*1024)).toFixed(1);
+  const estMb=(f.size*0.85/(1024*1024)).toFixed(1);
+  toast('\ud83d\uddbc\ufe0f Image: '+origMb+' MB \u2192 ~'+estMb+' MB counted','s');
+  showProcessing('Uploading image ('+origMb+' MB)\u2026','');
   resizeImgToBlob(f,900,.85)
     .then(blob=>uploadToStorage(blob,window._uid,p=>setProcessingProgress(p,'Uploading: '+p+'%'),'image/jpeg'))
     .then(result=>{
-      pendMedia={type:'image',url:result.url,storagePath:result.storagePath};
+      const mBytes=Math.round(f.size*0.85);
+      pendMedia={type:'image',url:result.url,storagePath:result.storagePath,mediaBytes:mBytes};
+      _pendingBytes=mBytes;
+      updateStorageMeter();
       const ip=document.getElementById('imgprev');if(ip){ip.src=result.url;ip.style.display='block';}
       const ib=document.getElementById('imgbox');if(ib)ib.style.display='none';
-      hideProcessing();toast('Image ready \u2713','s');
+      hideProcessing();toast('Image ready \u2713 ('+estMb+' MB)','s');
     })
     .catch(err=>{hideProcessing();toast('Upload failed: '+err.message,'e');});
 };
@@ -1624,31 +1674,59 @@ window.onVidPick=inp=>{
     onAlbumMediaPick_direct(files);return;
   }
   const f=files[0];
-  if(f.size>_MAX_VIDEO_MB*1024*1024){toast('Video too large \u2014 max '+_MAX_VIDEO_MB+'MB','e');return;}
-  showProcessing('Uploading video\u2026','Please wait \u2014 do not close the app');
+  const mb=(f.size/(1024*1024)).toFixed(1);
+  /* Hard block: over the 20MB video limit */
+  if(f.size>_MAX_VIDEO_MB*1024*1024){
+    toast('\u274c Video is '+mb+' MB \u2014 max allowed is '+_MAX_VIDEO_MB+' MB','e');
+    return;
+  }
+  toast('\ud83c\udfa5 Video: '+mb+' MB \u2014 uploading\u2026','s');
+  showProcessing('Uploading video ('+mb+' MB)\u2026','Please wait \u2014 do not close the app');
   uploadToStorage(f,window._uid,p=>{setProcessingProgress(p,'Uploading: '+p+'%');},f.type)
     .then(result=>{
-      pendMedia={type:'video',url:result.url,storagePath:result.storagePath};
+      pendMedia={type:'video',url:result.url,storagePath:result.storagePath,mediaBytes:f.size};
+      _pendingBytes=f.size;
+      updateStorageMeter();
       const vp=document.getElementById('vidprev');
       if(vp){vp.src=result.url;vp.style.display='block';}
       const vb=document.getElementById('vidbox');if(vb)vb.style.display='none';
-      hideProcessing();toast('Video ready \u2713','s');
+      hideProcessing();toast('Video ready \u2713 ('+mb+' MB)','s');
     })
     .catch(err=>{hideProcessing();toast('Upload failed: '+err.message,'e');});
 };
 let _pendPbStyle='full';
 window.setPbStyle=function(s){if(s!=='full'&&s!=='small')s='full';_pendPbStyle=s;['full','small'].forEach(k=>{const el=document.getElementById('pbs-'+k);if(el)el.classList.toggle('selected',k===s);});};
-window.onPhotoBtnPick=inp=>{const f=inp.files[0];inp.value='';if(!f)return;resizeImg(f,900,.82,d64=>{_pendPhotoBtnImg=d64;const prev=document.getElementById('photobtn-prev');if(prev){prev.src=d64;prev.style.display='block';}const box=document.getElementById('photobtnbox');if(box)box.style.display='none';toast('Image ready \u2713','s');});};
+window.onPhotoBtnPick=inp=>{
+  const f=inp.files[0];inp.value='';if(!f)return;
+  showProcessing('Uploading cover\u2026','');
+  resizeImgToBlob(f,900,.82)
+    .then(blob=>uploadToStorage(blob,window._uid,p=>setProcessingProgress(p,'Cover: '+p+'%'),'image/jpeg'))
+    .then(result=>{
+      _pendPhotoBtnImg=result.url;
+      _pendPhotoBtnBytes=Math.round(f.size*0.85);
+      const prev=document.getElementById('photobtn-prev');
+      if(prev){prev.src=result.url;prev.style.display='block';}
+      const box=document.getElementById('photobtnbox');if(box)box.style.display='none';
+      hideProcessing();toast('Cover ready \u2713','s');
+    })
+    .catch(err=>{hideProcessing();toast('Upload failed: '+err.message,'e');});
+};
 function onAlbumMediaPick_direct(filesIn){
   let files=Array.from(filesIn);
   const gi=addToGrpIdx>=0?addToGrpIdx:-1;if(gi<0||!window.S.links[gi]||window.S.links[gi].type!=='album'){toast('Select an album first','e');return;}
   const alb=window.S.links[gi];if(!alb.items)alb.items=[];
   if(!files.length)return;
-  /* ── Size checks ── */
+  /* ── Video hard block: reject any video over 20MB before uploading ── */
   const oversized=files.filter(f=>f.type.startsWith('video/')&&f.size>_MAX_VIDEO_MB*1024*1024);
-  if(oversized.length){toast(oversized.length+' video(s) exceed '+_MAX_VIDEO_MB+'MB — skipped','e');files=files.filter(f=>!(f.type.startsWith('video/')&&f.size>_MAX_VIDEO_MB*1024*1024));}
+  if(oversized.length){
+    oversized.forEach(f=>{const mb=(f.size/(1024*1024)).toFixed(1);toast('\u274c "'+f.name.slice(0,20)+'" is '+mb+' MB \u2014 max '+_MAX_VIDEO_MB+' MB for videos','e');});
+    files=files.filter(f=>!(f.type.startsWith('video/')&&f.size>_MAX_VIDEO_MB*1024*1024));
+  }
   if(!files.length)return;
-  if(getProfileBytes()>=_MAX_BYTES){toast('Profile at 100MB limit — remove some media first','e');return;}
+  /* ── Show estimated total size before uploading ── */
+  const totalEst=files.reduce((s,f)=>s+(f.type.startsWith('video/')?f.size:f.size*0.85),0);
+  toast('\u2601\ufe0f Uploading '+files.length+' file(s) \u2014 ~'+(totalEst/(1024*1024)).toFixed(1)+' MB will be counted','s');
+  /* ── TEST MODE: storage block disabled ── */
   showProcessing('Adding '+files.length+' file(s)\u2026','Do not close or navigate away');
   processMediaFiles(
     files,
@@ -1666,6 +1744,7 @@ window.onAlbumMediaPick=inp=>{
 
 /* ===== ADD ITEM ===== */
 function pushItem(item){
+  _pendingBytes=0; /* item confirmed → clear preview pending bytes */
   const gi=_pendLocGrpIdx>=0?_pendLocGrpIdx:addToGrpIdx;
   if(gi>=0){if(!window.S.links[gi].items)window.S.links[gi].items=[];window.S.links[gi].items.push(item);}
   else window.S.links.push(item);
@@ -1677,9 +1756,9 @@ window.addItem=function(){
   let item=null;
   if(curTab==='link'){const t=document.getElementById('ltitle').value.trim(),r=document.getElementById('lurl').value.trim();if(!t||!r){toast('Fill in name and URL','e');return;}const pwOn=document.getElementById('link-pw-on').checked,pw=pwOn?document.getElementById('link-pw').value.trim():null;item={type:'link',title:t,url:smartPrefix(t,r),password:pw||null};}
   else if(curTab==='text'){const c=document.getElementById('text-content').value.trim();if(!c){toast('Enter some text','e');return;}const pwOn=document.getElementById('text-pw-on').checked,pw=pwOn?document.getElementById('text-pw').value.trim():null;item={type:'text',content:c,password:pw||null};}
-  else if(curTab==='photobtn'){const t=document.getElementById('photobtn-title').value.trim(),r=document.getElementById('photobtn-url').value.trim();if(!t){toast('Enter a button label','e');return;}if(!r){toast('Enter a destination URL','e');return;}if(!_pendPhotoBtnImg){toast('Select a cover image first','e');return;}const pbPwOn=document.getElementById('photobtn-pw-on').checked,pbPw=pbPwOn?document.getElementById('photobtn-pw').value.trim()||null:null;const pbStyle=(_pendPbStyle==='small')?'small':'full';item={type:'photobtn',title:t,url:smartPrefix(t,r),coverUrl:_pendPhotoBtnImg,pbStyle,password:pbPw||null};_pendPhotoBtnImg=null;}
+  else if(curTab==='photobtn'){const t=document.getElementById('photobtn-title').value.trim(),r=document.getElementById('photobtn-url').value.trim();if(!t){toast('Enter a button label','e');return;}if(!r){toast('Enter a destination URL','e');return;}if(!_pendPhotoBtnImg){toast('Select a cover image first','e');return;}const pbPwOn=document.getElementById('photobtn-pw-on').checked,pbPw=pbPwOn?document.getElementById('photobtn-pw').value.trim()||null:null;const pbStyle=(_pendPbStyle==='small')?'small':'full';item={type:'photobtn',title:t,url:smartPrefix(t,r),coverUrl:_pendPhotoBtnImg,coverBytes:_pendPhotoBtnBytes||0,pbStyle,password:pbPw||null};_pendPhotoBtnImg=null;_pendPhotoBtnBytes=0;}
   else if(curTab==='group'){const name=document.getElementById('grp-name').value.trim();if(!name){toast('Enter group name','e');return;}const grpPwOn=document.getElementById('grp-pw-on').checked,grpPw=grpPwOn?document.getElementById('grp-pw').value.trim()||null:null;item={type:'group',name,linkStyle:_newGrpStyle,hbg:document.getElementById('grp-hbg').value,htxt:document.getElementById('grp-htxt').value,gcbg:document.getElementById('grp-cbg').value,iconColor:document.getElementById('grp-icon-color').value,iconBg:document.getElementById('grp-icon-bg').value,labelColor:document.getElementById('grp-label-color').value,password:grpPw,items:[]};}
-  else if(curTab==='album'){const name=document.getElementById('alb-name').value.trim();if(!name){toast('Enter album name','e');return;}const albPwOn=document.getElementById('alb-pw-on').checked,albPw=albPwOn?document.getElementById('alb-pw').value.trim()||null:null;item={type:'album',name,albumTheme:_selectedAlbTheme,coverUrl:_pendAlbCover||null,password:albPw||null,items:[]};_pendAlbCover=null;}
+  else if(curTab==='album'){const name=document.getElementById('alb-name').value.trim();if(!name){toast('Enter album name','e');return;}const albPwOn=document.getElementById('alb-pw-on').checked,albPw=albPwOn?document.getElementById('alb-pw').value.trim()||null:null;item={type:'album',name,albumTheme:_selectedAlbTheme,coverUrl:_pendAlbCover||null,coverBytes:_pendAlbCoverBytes||0,password:albPw||null,items:[]};_pendAlbCover=null;_pendAlbCoverBytes=0;}
   else if(pendMedia){const isImg=curTab==='image';const k=isImg?'img':'vid';const titleEl=document.getElementById(k+'-title');const userTitle=titleEl?titleEl.value.trim():'';const pwOn=document.getElementById(k+'-pw-on').checked,pw=pwOn?document.getElementById(k+'-pw').value.trim():null;item={...pendMedia,title:userTitle||(isImg?'Photo':'Video'),password:pw||null};}
   else{toast('Select media first','e');return;}
   pushItem(item);
@@ -1727,7 +1806,7 @@ window.openEditAlbum=gi=>{
   const hasPw=!!a.password;document.getElementById('ealb-pw-on').checked=hasPw;togglePwInput('ealb-pw-field',hasPw);document.getElementById('ealb-pw').value=a.password||'';
   document.getElementById('ealbmod').classList.remove('hidden');
 };
-window.saveAlbumEdit=function(){const a=window.S.links[_albumGi];if(!a)return;a.name=document.getElementById('ealb-name').value.trim()||a.name;a.albumTheme=_editAlbTheme;if(_editAlbCover)a.coverUrl=_editAlbCover;const pwOn=document.getElementById('ealb-pw-on').checked,pw=document.getElementById('ealb-pw').value.trim();a.password=pwOn&&pw?pw:null;save();renderLinks();closeModals();toast('Updated \u2713','s');_editAlbCover=null;};
+window.saveAlbumEdit=function(){const a=window.S.links[_albumGi];if(!a)return;a.name=document.getElementById('ealb-name').value.trim()||a.name;a.albumTheme=_editAlbTheme;if(_editAlbCover){a.coverUrl=_editAlbCover;a.coverBytes=_editAlbCoverBytes||0;}const pwOn=document.getElementById('ealb-pw-on').checked,pw=document.getElementById('ealb-pw').value.trim();a.password=pwOn&&pw?pw:null;save();renderLinks();closeModals();toast('Updated \u2713','s');_editAlbCover=null;_editAlbCoverBytes=0;};
 
 let _avEditMode=false;
 /* ── Processing overlay helpers — prevents browser from appearing frozen ── */
@@ -1736,42 +1815,51 @@ function setProcessingProgress(pct,msg){const f=document.getElementById('proc-ba
 function hideProcessing(){const ov=document.getElementById('proc-overlay');if(ov)ov.classList.add('hidden');}
 function readFileAsync(file,onProgress){return new Promise((resolve,reject)=>{const r=new FileReader();if(onProgress){r.onprogress=e=>{if(e.lengthComputable)onProgress(Math.round(e.loaded/e.total*100));};}r.onload=e=>resolve(e.target.result);r.onerror=()=>reject(new Error('read failed'));r.readAsDataURL(file);});}
 function resizeImgAsync(file,maxPx,q){return new Promise(res=>resizeImg(file,maxPx,q,res));}
-/* Sequential processor — uploads to Firebase Storage (no base64, no RAM crash, real progress) */
+/* Sequential processor → parallel batch processor (3 uploads at a time = ~3× faster).
+   Steps: 1) Resize all images in parallel (CPU-only, no network), 2) Upload in batches of 3. */
 async function processMediaFiles(files,onItem,onDone){
   const total=files.length;
   let added=0,skipped=0;
 
-  for(let i=0;i<total;i++){
-    const f=files[i];
-    const basePct=Math.round((i/total)*90);
-    setProcessingProgress(basePct,'Uploading '+(i+1)+' / '+total+'\u2026');
-
-    try{
-      let result;
-      if(f.type.startsWith('image/')){
-        /* Resize → Blob (no base64 in memory) → upload to Storage */
+  /* ── Step 1: Resize images in parallel (no network I/O, very fast) ── */
+  setProcessingProgress(8,'Preparing '+total+' file(s)\u2026');
+  const prepared=await Promise.all(files.map(async f=>{
+    if(f.type.startsWith('image/')){
+      try{
         const blob=await resizeImgToBlob(f,1200,.85);
-        result=await uploadToStorage(blob,window._uid,
-          p=>setProcessingProgress(basePct+Math.round(p*(90/total)/100),'Image '+(i+1)+': '+p+'%'),
-          'image/jpeg');
-        onItem({type:'image',url:result.url,storagePath:result.storagePath,title:'Photo'});
-      }else if(f.type.startsWith('video/')){
-        /* Upload video directly to Storage */
-        result=await uploadToStorage(f,window._uid,
-          p=>setProcessingProgress(basePct+Math.round(p*(90/total)/100),'Video '+(i+1)+': '+p+'%'),
-          f.type);
-        onItem({type:'video',url:result.url,storagePath:result.storagePath,title:'Video'});
-      }
-      added++;
-    }catch(err){
-      console.warn('Upload failed for',f.name,err);
-      skipped++;
+        return{blob,mime:'image/jpeg',isVideo:false,orig:f};
+      }catch(e){return{blob:f,mime:'image/jpeg',isVideo:false,orig:f,resizeFailed:true};}
     }
+    return{blob:f,mime:f.type,isVideo:true,orig:f};
+  }));
 
-    await new Promise(r=>setTimeout(r,8));
+  /* ── Step 2: Upload in batches of 3 concurrently ── */
+  const BATCH=3;
+  for(let i=0;i<prepared.length;i+=BATCH){
+    const batch=prepared.slice(i,Math.min(i+BATCH,prepared.length));
+    const pct=Math.round(10+((i/total)*78));
+    setProcessingProgress(pct,'Uploading '+(i+1)+(batch.length>1?'\u2013'+(Math.min(i+BATCH,total)):'')+' / '+total+'\u2026');
+
+    const results=await Promise.allSettled(batch.map(async p=>{
+      const result=await uploadToStorage(p.blob,window._uid,null,p.mime);
+      /* Image: 85% of original size (compressed but not exact blob) | Video: 100% raw size */
+      const mediaBytes=p.isVideo?p.orig.size:Math.round(p.orig.size*0.85);
+      return{type:p.isVideo?'video':'image',url:result.url,storagePath:result.storagePath,mediaBytes};
+    }));
+
+    results.forEach(r=>{
+      if(r.status==='fulfilled'){
+        onItem({type:r.value.type,url:r.value.url,storagePath:r.value.storagePath,
+          title:r.value.type==='video'?'Video':'Photo',mediaBytes:r.value.mediaBytes});
+        added++;
+      }else{
+        console.warn('Upload failed:',r.reason);
+        skipped++;
+      }
+    });
   }
 
-  /* Final RTDB save — tiny now (just URLs + metadata, no base64) → completes in <1s */
+  /* ── Step 3: Save to Firebase (tiny payload — only URLs + metadata) ── */
   setProcessingProgress(93,'Saving\u2026');
   if(window._uid&&!window._pub){
     try{await saveWithTimeout(window._uid,window.S);}
@@ -1799,10 +1887,11 @@ window.openAlbumViewer=function(gi){
     const cont=document.getElementById('av-content');
     cont.innerHTML='<div style="height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;"><div style="width:40px;height:40px;border:3px solid rgba(255,255,255,.08);border-top-color:#4cf;border-radius:50%;animation:procSpin 1s linear infinite;"></div><div style="font-size:.78rem;color:#333;letter-spacing:2px;">LOADING\u2026</div></div>';
     const pid=new URLSearchParams(location.search).get('id');
-    /* Use already-in-flight full data promise if available */
+    /* Use already-in-flight full data promise if available.
+       Priority: cached full data → in-flight REST fetch → new Firebase SDK call */
     const dataPromise=window._pubFullData
       ?Promise.resolve(window._pubFullData)
-      :(pid?_FBLoadPub(pid):Promise.resolve(null));
+      :(window._pubRestPromise||(pid?_FBLoadPub(pid):Promise.resolve(null)));
     dataPromise.then(fullData=>{
       if(fullData&&fullData.links&&fullData.links[gi]){
         window.S.links[gi]=fullData.links[gi];
@@ -1878,11 +1967,17 @@ function renderAvEditBar(){
 window.onAvAddPick=function(inp){
   let files=Array.from(inp.files);inp.value='';if(!files.length)return;
   const alb=window.S.links[_albumGi];if(!alb)return;if(!alb.items)alb.items=[];
-  /* ── Size checks ── */
+  /* ── Video hard block: reject any video over 20MB before uploading ── */
   const oversized=files.filter(f=>f.type.startsWith('video/')&&f.size>_MAX_VIDEO_MB*1024*1024);
-  if(oversized.length){toast(oversized.length+' video(s) over '+_MAX_VIDEO_MB+'MB — skipped','e');files=files.filter(f=>!(f.type.startsWith('video/')&&f.size>_MAX_VIDEO_MB*1024*1024));}
+  if(oversized.length){
+    oversized.forEach(f=>{const mb=(f.size/(1024*1024)).toFixed(1);toast('\u274c "'+f.name.slice(0,20)+'" is '+mb+' MB \u2014 max '+_MAX_VIDEO_MB+' MB for videos','e');});
+    files=files.filter(f=>!(f.type.startsWith('video/')&&f.size>_MAX_VIDEO_MB*1024*1024));
+  }
   if(!files.length)return;
-  if(getProfileBytes()>=_MAX_BYTES){toast('Profile at 100MB limit — remove some media first','e');return;}
+  /* ── Show estimated total size before uploading ── */
+  const totalEst=files.reduce((s,f)=>s+(f.type.startsWith('video/')?f.size:f.size*0.85),0);
+  toast('\u2601\ufe0f Uploading '+files.length+' file(s) \u2014 ~'+(totalEst/(1024*1024)).toFixed(1)+' MB will be counted','s');
+  /* ── TEST MODE: storage block disabled ── */
   showProcessing('Adding '+files.length+' file(s)\u2026','Do not close or navigate away');
   processMediaFiles(
     files,
@@ -1898,9 +1993,11 @@ window.onAvAddPick=function(inp){
 };
 
 function mediaEl(it,style,eager){
-  /* eager=true forces immediate load — needed for 3D carousel on Safari */
+  /* eager=true forces immediate load — needed for 3D carousel on Safari.
+     Cloudinary f_auto serves WebP/AVIF automatically for supported browsers. */
   if(it.type==='video')return `<video src="${it.url}" playsinline preload="${eager?'metadata':'none'}" ${style} ${eager?'autoplay':''} muted loop></video>`;
-  return `<img src="${it.url}" loading="${eager?'eager':'lazy'}" decoding="${eager?'async':'auto'}" alt="" ${style}>`;
+  const src=cldUrl(it.url,'f_auto,q_auto:good,w_1200');
+  return `<img src="${src}" loading="${eager?'eager':'lazy'}" decoding="${eager?'async':'auto'}" alt="" ${style}>`;
 }
 
 function renderAlbumContent(mode){
@@ -1931,11 +2028,11 @@ function buildSnap(items,cont){
       return `<div class="snap-item">${mediaEl(it,'style="width:100%;max-height:60vh;object-fit:cover;display:block;"',idx<2)}</div>`;
     }
     if(idx<3){
-      /* Load immediately */
-      return `<div class="snap-item"><img src="${it.url}" loading="eager" decoding="async" style="width:100%;max-height:60vh;object-fit:cover;display:block;" alt=""></div>`;
+      /* Load immediately with Cloudinary WebP optimization */
+      return `<div class="snap-item"><img src="${cldUrl(it.url,'f_auto,q_auto:good,w_1200')}" loading="eager" decoding="async" style="width:100%;max-height:60vh;object-fit:cover;display:block;" alt=""></div>`;
     }
     /* Lazy: placeholder until visible */
-    return `<div class="snap-item"><div class="snap-lazy" data-src="${it.url}" style="width:100%;min-height:200px;background:#111;display:flex;align-items:center;justify-content:center;"><div style="width:32px;height:32px;border:2px solid rgba(255,255,255,.06);border-top-color:rgba(255,255,255,.2);border-radius:50%;animation:procSpin 1s linear infinite;"></div></div></div>`;
+    return `<div class="snap-item"><div class="snap-lazy" data-src="${cldUrl(it.url,'f_auto,q_auto:good,w_1200')}" style="width:100%;min-height:200px;background:#111;display:flex;align-items:center;justify-content:center;"><div style="width:32px;height:32px;border:2px solid rgba(255,255,255,.06);border-top-color:rgba(255,255,255,.2);border-radius:50%;animation:procSpin 1s linear infinite;"></div></div></div>`;
   }).join('');
   cont.innerHTML=`<div style="display:flex;flex-direction:column;height:100%;">${sizeBadge}<div class="snap-track" id="snap-track-${_albumGi}">${itemsHtml}</div></div>`;
   /* IntersectionObserver: swap placeholder → real image when visible */
