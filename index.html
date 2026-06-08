@@ -827,9 +827,9 @@ const _db=firebase.database();
 const _CLD_CLOUD='davtjb9lp';
 const _CLD_PRESET='vexa.eg';
 /* Media stored in Cloudinary CDN, RTDB holds only metadata+URLs */
-const _MAX_BYTES=30*1024*1024;
+let _MAX_BYTES=30*1024*1024;     /* overridden per-user by config/{uid}/maxBytes from admin */
 const _MAX_VIDEO_MB=20;
-const _WARN_BYTES=27*1024*1024;
+let _WARN_BYTES=27*1024*1024;    /* auto-updated when _MAX_BYTES changes */
 const _SAVE_BATCH=15;
 /* Pending bytes: bytes of uploaded-but-not-yet-confirmed media (before Add is clicked).
    Added to meter instantly so user sees the impact before confirming. */
@@ -1142,7 +1142,33 @@ _auth.onAuthStateChanged(async user=>{
   }
 
   /* Normal auth */
-  if(user){window._uid=user.uid;const d=await _FBLoad(user.uid);if(d){window.S=d;if(!window.S.links)window.S.links=[];}window._pub=false;window._edit=true;bootApp();}
+  if(user){
+    window._uid=user.uid;
+    /* Load profile and admin config in parallel */
+    const [d,cfgSnap]=await Promise.all([
+      _FBLoad(user.uid),
+      _db.ref('config/'+user.uid).once('value').catch(()=>null)
+    ]);
+    /* Apply admin-set limits and features if available */
+    if(cfgSnap&&cfgSnap.exists()){
+      const cfg=cfgSnap.val();
+      /* Override storage limit with admin-configured value */
+      if(cfg.maxBytes&&cfg.maxBytes>0){
+        _MAX_BYTES=cfg.maxBytes;
+        _WARN_BYTES=Math.round(cfg.maxBytes*0.9);
+      }
+      /* Store features for use throughout the app */
+      window._userFeatures=cfg.features||{};
+      /* Suspended account — show message and block */
+      if(cfg.suspended){
+        hideLs();
+        document.body.innerHTML='<div style="display:flex;align-items:center;justify-content:center;min-height:100vh;background:#060606;color:#666;font-family:monospace;text-align:center;padding:20px;"><div><div style="font-size:2rem;margin-bottom:16px;">⛔</div><div style="font-size:1.1rem;color:#e8e8e8;margin-bottom:8px;">Account Suspended</div><div>Contact support for more information.</div></div></div>';
+        return;
+      }
+    }else{window._userFeatures={};}
+    if(d){window.S=d;if(!window.S.links)window.S.links=[];}
+    window._pub=false;window._edit=true;bootApp();
+  }
   else{hideLs();document.getElementById('auth').classList.remove('hidden');}
 });
 
