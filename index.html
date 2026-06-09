@@ -369,7 +369,42 @@ body.no-bgimg::before{display:none;}
 .photo-btn-arrow{margin-left:auto;width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .img-hint{font-size:.65rem;color:#2a2a2a;text-align:center;margin-top:-6px;margin-bottom:6px;letter-spacing:.5px;}
 
-/* ====== ENVELOPE (Password Text) ====== */
+/* ====== AUDIO PLAYER (Background Sound) ====== */
+.audio-fab{position:fixed;bottom:22px;right:22px;z-index:999;width:46px;height:46px;border-radius:50%;background:rgba(20,20,20,.92);border:1px solid rgba(255,255,255,.15);backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,.5);transition:transform .2s,opacity .2s;font-size:1.2rem;color:#fff;}
+.audio-fab:hover{transform:scale(1.1);}
+.audio-fab.muted{opacity:.5;}
+.audio-upload-card{background:rgba(255,255,255,.04);border:1px dashed rgba(255,255,255,.15);border-radius:12px;padding:14px;margin-bottom:10px;}
+.audio-upload-row{display:flex;align-items:center;gap:10px;}
+.audio-playing-indicator{display:flex;align-items:center;gap:6px;font-size:.78rem;color:#4caf50;}
+.audio-wave{display:flex;align-items:flex-end;gap:2px;height:14px;}
+.audio-wave span{display:block;width:3px;background:#4caf50;border-radius:2px;animation:audioWave 1s ease-in-out infinite;}
+.audio-wave span:nth-child(2){animation-delay:.15s;}
+.audio-wave span:nth-child(3){animation-delay:.3s;}
+@keyframes audioWave{0%,100%{height:4px;}50%{height:14px;}}
+
+/* ====== PDF CARD ====== */
+.pdf-card{background:var(--card);border:1px solid var(--glass);border-radius:16px;overflow:hidden;position:relative;}
+.pdf-card-header{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.06);}
+.pdf-icon{width:38px;height:38px;background:rgba(255,80,80,.12);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;}
+.pdf-title{font-weight:600;font-size:.95rem;}
+.pdf-meta{color:#666;font-size:.75rem;margin-top:2px;}
+.pdf-open-btn{margin-left:auto;padding:7px 14px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:8px;color:#fff;font-size:.8rem;cursor:pointer;transition:background .2s;}
+.pdf-open-btn:hover{background:rgba(255,255,255,.14);}
+.pdf-preview{width:100%;height:320px;border:none;background:#111;}
+
+/* ====== PREMIUM DIVIDER ====== */
+.premium-tab-divider{display:flex;align-items:center;gap:8px;padding:6px 2px;color:#c8a054;font-size:.65rem;letter-spacing:.12em;font-weight:700;text-transform:uppercase;flex-shrink:0;}
+.premium-tab-divider::before{content:'✦';}
+
+/* ====== AUDIO SETTINGS (in QR panel) ====== */
+.sound-section{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:14px;margin-top:10px;}
+.sound-section-title{font-size:.75rem;font-weight:600;color:#c8a054;letter-spacing:.08em;margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+
+/* ====== TP-PDF tab content ====== */
+#tp-pdf .upload-pdf-box{display:flex;flex-direction:column;align-items:center;gap:8px;padding:24px;background:rgba(255,80,80,.05);border:2px dashed rgba(255,80,80,.2);border-radius:12px;cursor:pointer;margin-bottom:10px;text-align:center;}
+#tp-pdf .upload-pdf-box:hover{background:rgba(255,80,80,.08);}
+#tp-pdf .pdf-icon-big{font-size:2rem;margin-bottom:4px;}
+#tp-pdf .pdf-ready{background:rgba(255,80,80,.1);border:1px solid rgba(255,80,80,.3);border-radius:10px;padding:12px;display:flex;align-items:center;gap:10px;margin-bottom:10px;font-size:.85rem;}
 @keyframes envShake{0%,88%,100%{transform:rotate(0deg);}90%{transform:rotate(-1.8deg);}92%{transform:rotate(1.8deg);}94%{transform:rotate(-1deg);}96%{transform:rotate(1deg);}98%{transform:rotate(0deg);}}
 @keyframes envFlapUp{0%{transform:rotateX(0deg);}100%{transform:rotateX(-170deg);}}
 @keyframes envPaperRise{0%{transform:translateY(45%) scaleY(.9);opacity:0;}30%{opacity:1;}100%{transform:translateY(-52%) scaleY(1);opacity:1;}}
@@ -674,6 +709,33 @@ body.no-bgimg::before{display:none;}
       <div class="qr-sm-bg"><div class="storage-bar-fill" id="storage-bar-fill" style="width:0%;background:#4cf;"></div></div>
       <div class="qr-sm-hint" id="storage-bar-hint">Calculating&#8230;</div>
     </div>
+
+    <!-- ✦ BACKGROUND SOUND SETTINGS -->
+    <div class="sound-section">
+      <div class="sound-section-title">&#127925; Background Sound</div>
+      <div style="font-size:.75rem;color:#555;margin-bottom:10px;">Plays automatically when visitor opens your profile</div>
+      <div id="sound-upload-area">
+        <div id="sound-no-file">
+          <div class="upbox" style="margin-bottom:8px;" onclick="triggerUpload('sound-input')">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+            Select audio file (MP3, AAC, OGG)
+          </div>
+        </div>
+        <div id="sound-has-file" style="display:none;">
+          <div class="audio-upload-card">
+            <div class="audio-upload-row">
+              <div class="audio-playing-indicator">
+                <div class="audio-wave"><span></span><span></span><span></span></div>
+                <span id="sound-filename" style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></span>
+              </div>
+              <button onclick="removeBgSound()" style="margin-left:auto;background:none;border:none;color:#f44;cursor:pointer;font-size:.8rem;padding:4px 8px;">Remove</button>
+            </div>
+          </div>
+        </div>
+        <input type="file" id="sound-input" accept="audio/mpeg,audio/mp3,audio/aac,audio/ogg,audio/wav" style="display:none;" onchange="onSoundPick(this)">
+      </div>
+      <div style="font-size:.7rem;color:#444;margin-top:6px;">&#128276; Max 10 MB · Loops automatically · Visitor can mute</div>
+    </div>
     <div class="an-header"><div class="an-title">Analytics</div><button class="an-reset-btn" onclick="askResetAnalytics()">RESET</button></div><div class="an-top-row"><div class="an-stat"><div class="an-num" id="an-visits">-</div><div class="an-lbl">Views</div></div><div class="an-stat"><div class="an-num" id="an-today">-</div><div class="an-lbl">Today</div></div><div class="an-stat"><div class="an-num" id="an-clicks-total">-</div><div class="an-lbl">Taps</div></div></div><div style="height:1px;background:rgba(255,255,255,.06);"></div><div class="an-clicks-title" style="font-size:.68rem;letter-spacing:2px;text-transform:uppercase;color:#444;font-weight:700;margin-bottom:6px;">Most Tapped</div><div id="an-clicks-list"><div class="an-empty">Loading&#8230;</div></div></div>
 </div>
 
@@ -715,6 +777,8 @@ body.no-bgimg::before{display:none;}
     <div class="ttab" id="tab-location" onclick="setTab('location')">&#128205; Location</div>
     <div class="ttab" id="tab-group" onclick="setTab('group')">&#128193; Group</div>
     <div class="ttab" id="tab-album" onclick="setTab('album')">&#128193; Album</div>
+    <div class="premium-tab-divider">Premium</div>
+    <div class="ttab" id="tab-pdf" onclick="setTab('pdf')">&#128196; PDF</div>
   </div>
   <div id="tp-link"><input type="text" id="ltitle" class="mi" placeholder="Name (e.g. Instagram)" oninput="updateUrlHint()"><input type="text" id="lurl" class="mi" placeholder="Number, email, or URL&#8230;" oninput="updateUrlHint()"><div class="url-hint" id="url-hint"></div><p class="clabel">Password (optional)</p><div class="pw-row"><label class="pw-toggle"><input type="checkbox" id="link-pw-on" onchange="togglePwInput('link-pw-field',this.checked)"><span class="pw-track"></span><span class="pw-thumb"></span></label><span class="pw-lbl">Protect with password</span></div><div id="link-pw-field" style="display:none;"><input type="text" id="link-pw" class="mi" placeholder="Set password&#8230;"></div></div>
   <div id="tp-text" class="hidden"><textarea id="text-content" class="mi" rows="5" placeholder="Write your text, note, or message&#8230;"></textarea><p class="clabel">Password (optional)</p><div class="pw-row"><label class="pw-toggle"><input type="checkbox" id="text-pw-on" onchange="togglePwInput('text-pw-field',this.checked)"><span class="pw-track"></span><span class="pw-thumb"></span></label><span class="pw-lbl">Lock in envelope &#128140;</span></div><div id="text-pw-field" style="display:none;"><input type="text" id="text-pw" class="mi" placeholder="Set password&#8230;"></div></div>
@@ -755,6 +819,27 @@ body.no-bgimg::before{display:none;}
     <div class="pw-row"><label class="pw-toggle"><input type="checkbox" id="alb-pw-on" onchange="togglePwInput('alb-pw-field',this.checked)"><span class="pw-track"></span><span class="pw-thumb"></span></label><span class="pw-lbl">Lock album with password</span></div>
     <div id="alb-pw-field" style="display:none;"><input type="text" id="alb-pw" class="mi" placeholder="Set password&#8230;"></div>
   </div>
+
+  <!-- ✦ PDF TAB -->
+  <div id="tp-pdf" class="hidden">
+    <div id="pdf-upload-box" class="upload-pdf-box" onclick="triggerUpload('pdf-file-input')">
+      <div class="pdf-icon-big">📄</div>
+      <div style="font-size:.88rem;color:#aaa;">Tap to select PDF file</div>
+      <div style="font-size:.73rem;color:#555;margin-top:2px;">Max 10 MB · Opens in browser</div>
+    </div>
+    <div id="pdf-ready" class="pdf-ready" style="display:none;">
+      <span style="font-size:1.3rem;">📄</span>
+      <div style="flex:1;">
+        <div id="pdf-ready-name" style="font-weight:600;font-size:.85rem;"></div>
+        <div style="color:#666;font-size:.73rem;margin-top:2px;">Ready to add</div>
+      </div>
+      <button style="background:none;border:none;color:#666;cursor:pointer;font-size:1rem;" onclick="clearPdf()">✕</button>
+    </div>
+    <input type="text" id="pdf-title" class="mi" placeholder="PDF title (e.g. Menu, Catalogue…)">
+    <input type="file" id="pdf-file-input" accept="application/pdf" style="display:none;" onchange="onPdfPick(this)">
+    <div style="color:#555;font-size:.73rem;margin-top:-8px;margin-bottom:12px;">The PDF will open in the visitor's browser</div>
+  </div>
+
   <button class="abtn msbtn" onclick="addItem()">Add to Profile</button>
   <button class="mcan" onclick="closeModals()">Cancel</button>
 </div></div>
@@ -1152,20 +1237,22 @@ _auth.onAuthStateChanged(async user=>{
     /* Apply admin-set limits and features if available */
     if(cfgSnap&&cfgSnap.exists()){
       const cfg=cfgSnap.val();
-      /* Override storage limit with admin-configured value */
-      if(cfg.maxBytes&&cfg.maxBytes>0){
-        _MAX_BYTES=cfg.maxBytes;
-        _WARN_BYTES=Math.round(cfg.maxBytes*0.9);
-      }
-      /* Store features for use throughout the app */
+      if(cfg.maxBytes&&cfg.maxBytes>0){_MAX_BYTES=cfg.maxBytes;_WARN_BYTES=Math.round(cfg.maxBytes*0.9);}
       window._userFeatures=cfg.features||{};
-      /* Suspended account — show message and block */
       if(cfg.suspended){
         hideLs();
         document.body.innerHTML='<div style="display:flex;align-items:center;justify-content:center;min-height:100vh;background:#060606;color:#666;font-family:monospace;text-align:center;padding:20px;"><div><div style="font-size:2rem;margin-bottom:16px;">⛔</div><div style="font-size:1.1rem;color:#e8e8e8;margin-bottom:8px;">Account Suspended</div><div>Contact support for more information.</div></div></div>';
         return;
       }
     }else{window._userFeatures={};}
+    /* Real-time listener: picks up admin changes (storage limit, suspend) without re-login */
+    _db.ref('config/'+user.uid).on('value',snap=>{
+      if(!snap.exists())return;
+      const cfg=snap.val();
+      if(cfg.maxBytes&&cfg.maxBytes>0){_MAX_BYTES=cfg.maxBytes;_WARN_BYTES=Math.round(cfg.maxBytes*0.9);updateStorageMeter();}
+      window._userFeatures=cfg.features||{};
+      if(cfg.suspended){_auth.signOut();location.reload();}
+    });
     if(d){window.S=d;if(!window.S.links)window.S.links=[];}
     window._pub=false;window._edit=true;bootApp();
   }
@@ -1210,6 +1297,16 @@ function bootApp(){
   render();document.getElementById('app').classList.remove('hidden');
   if(window._pub){try{const _authEl=document.getElementById('auth');if(_authEl)_authEl.remove();}catch(_){}}
   if(!window._pub&&window.S)setTimeout(resumeLiveTracking,800);
+  /* ── Refresh sound UI state ── */
+  if(!window._pub&&window.S){
+    const hasSound=window.S.bgAudio&&window.S.bgAudio.url;
+    const noF=document.getElementById('sound-no-file');
+    const hasF=document.getElementById('sound-has-file');
+    const fn=document.getElementById('sound-filename');
+    if(noF)noF.style.display=hasSound?'none':'block';
+    if(hasF)hasF.style.display=hasSound?'block':'none';
+    if(fn&&hasSound)fn.textContent=window.S.bgAudio.name||'Audio file';
+  }
 };
 
 /* ===== AUTH ===== */
@@ -1319,6 +1416,31 @@ function render(){
   }
   if(!window._pub){document.getElementById('cbg').value=c.bg||'#0a0a0a';document.getElementById('ccard').value=c.card||'#1e1e1e';document.getElementById('cname').value=c.name||'#fff';document.getElementById('cbio').value=c.bio||'#a0a0a0';document.getElementById('ciconcolor').value=c.iconColor||'#ffffff';document.getElementById('clabelcolor').value=c.labelColor||c.link||'#ffffff';const ls=window.S.linkStyle||'list';document.getElementById('lo-list').classList.toggle('on',ls==='list');document.getElementById('lo-grid').classList.toggle('on',ls==='grid');}
   renderLinks();
+  /* ── Background audio: autoplay on first touch/click (required by browsers) ── */
+  if(window._pub && window.S.bgAudio && window.S.bgAudio.url){
+    let _bgAudio=null,_muted=false;
+    const tryPlay=()=>{
+      if(_bgAudio)return;
+      _bgAudio=new Audio(window.S.bgAudio.url);
+      _bgAudio.loop=true;_bgAudio.volume=0.55;
+      _bgAudio.play().catch(()=>{});
+      /* floating mute button */
+      const fab=document.createElement('button');
+      fab.className='audio-fab';fab.id='audio-fab';
+      fab.innerHTML='🔊';fab.title='Mute / Unmute';
+      fab.onclick=()=>{
+        _muted=!_muted;
+        _bgAudio.muted=_muted;
+        fab.innerHTML=_muted?'🔇':'🔊';
+        fab.classList.toggle('muted',_muted);
+      };
+      document.body.appendChild(fab);
+      document.removeEventListener('touchstart',tryPlay);
+      document.removeEventListener('click',tryPlay);
+    };
+    document.addEventListener('touchstart',tryPlay,{once:true,passive:true});
+    document.addEventListener('click',tryPlay,{once:true});
+  }
 }
 
 /* ===== BUILD ITEMS ===== */
@@ -1327,6 +1449,19 @@ function buildItem(l,gi,ii,forceStyle,grpDefs){
   const editBtn=window._edit?`<div class="item-actions"><button class="dotsbtn" onclick="openCtx(event,this,${gi},${ii})">&#8942;</button></div>`:'';
   const locked=l.password&&!l._unlocked;
   const lockBadge=l.password?`<div class="lock-badge"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Protected</div>`:'';
+  if(l.type==='pdf'){
+    return `<div class="item-wrap pdf-card" style="margin-bottom:12px;">
+      ${editBtn}
+      <div class="pdf-card-header">
+        <div class="pdf-icon">📄</div>
+        <div>
+          <div class="pdf-title">${escH(l.title||'PDF')}</div>
+          <div class="pdf-meta">PDF Document</div>
+        </div>
+        <button class="pdf-open-btn" onclick="window.open('${escH(l.url)}','_blank')">Open PDF ↗</button>
+      </div>
+    </div>`;
+  }
   if(l.type==='text'){
     if(locked){
       const flapClr=l.envFlap||'#2a1f14';
@@ -1636,7 +1771,7 @@ function slocSet(lat,lng){document.getElementById('sloc-lat').value=lat.toFixed(
 window.confirmStaticLoc=function(){const lat=parseFloat(document.getElementById('sloc-lat').value),lng=parseFloat(document.getElementById('sloc-lng').value);if(isNaN(lat)||isNaN(lng)){toast('Paste a valid Google Maps link first','e');return;}const item=getLocDraft();item.lat=lat;item.lng=lng;closeStaticLocModal();pushItem(item);};
 
 /* ===== TABS ===== */
-const ALL_TABS=['link','text','photobtn','image','video','location','group','album'];
+const ALL_TABS=['link','text','photobtn','image','video','location','group','album','pdf'];
 window.setTab=function(t){curTab=t;pendMedia=null;_pendPhotoBtnImg=null;_pendPbStyle='full';['full','small'].forEach(k=>{const el=document.getElementById('pbs-'+k);if(el)el.classList.toggle('selected',k==='full');});ALL_TABS.forEach(x=>{const tab=document.getElementById('tab-'+x),tp=document.getElementById('tp-'+x);if(tab)tab.classList.toggle('on',x===t);if(tp)tp.classList.toggle('hidden',x!==t);});const imgprev=document.getElementById('imgprev'),vidprev=document.getElementById('vidprev'),pbprev=document.getElementById('photobtn-prev');if(imgprev)imgprev.style.display='none';if(vidprev)vidprev.style.display='none';if(pbprev)pbprev.style.display='none';const imgbox=document.getElementById('imgbox'),vidbox=document.getElementById('vidbox'),pbbox=document.getElementById('photobtnbox');if(imgbox)imgbox.style.display='flex';if(vidbox)vidbox.style.display='flex';if(pbbox)pbbox.style.display='flex';};
 window.openAddToGroup=gi=>{
   addToGrpIdx=gi;const isAlb=window.S.links[gi]&&window.S.links[gi].type==='album';
@@ -1721,6 +1856,30 @@ window.onVidPick=inp=>{
     .catch(err=>{hideProcessing();toast('Upload failed: '+err.message,'e');});
 };
 let _pendPbStyle='full';
+let _pendPdf=null; /* {url, storagePath, name, mediaBytes} */
+
+/* ── PDF upload ── */
+window.onPdfPick=function(inp){
+  const f=inp.files[0];inp.value='';if(!f)return;
+  const mb=(f.size/(1024*1024)).toFixed(1);
+  if(f.size>10*1024*1024){toast('PDF too large — max 10 MB (this one is '+mb+' MB)','e');return;}
+  toast('📄 PDF: '+mb+' MB — uploading…','s');
+  showProcessing('Uploading PDF ('+mb+' MB)…','');
+  uploadToStorage(f,window._uid,p=>setProcessingProgress(p,'PDF: '+p+'%'),f.type)
+    .then(result=>{
+      _pendPdf={url:result.url,storagePath:result.storagePath,name:f.name,mediaBytes:Math.round(f.size*0.95)};
+      document.getElementById('pdf-upload-box').style.display='none';
+      const rd=document.getElementById('pdf-ready');rd.style.display='flex';
+      document.getElementById('pdf-ready-name').textContent=f.name;
+      hideProcessing();toast('PDF ready ✓','s');
+    })
+    .catch(err=>{hideProcessing();toast('Upload failed: '+err.message,'e');});
+};
+window.clearPdf=function(){
+  _pendPdf=null;
+  document.getElementById('pdf-upload-box').style.display='flex';
+  document.getElementById('pdf-ready').style.display='none';
+};
 window.setPbStyle=function(s){if(s!=='full'&&s!=='small')s='full';_pendPbStyle=s;['full','small'].forEach(k=>{const el=document.getElementById('pbs-'+k);if(el)el.classList.toggle('selected',k===s);});};
 window.onPhotoBtnPick=inp=>{
   const f=inp.files[0];inp.value='';if(!f)return;
@@ -1785,6 +1944,12 @@ window.addItem=function(){
   else if(curTab==='photobtn'){const t=document.getElementById('photobtn-title').value.trim(),r=document.getElementById('photobtn-url').value.trim();if(!t){toast('Enter a button label','e');return;}if(!r){toast('Enter a destination URL','e');return;}if(!_pendPhotoBtnImg){toast('Select a cover image first','e');return;}const pbPwOn=document.getElementById('photobtn-pw-on').checked,pbPw=pbPwOn?document.getElementById('photobtn-pw').value.trim()||null:null;const pbStyle=(_pendPbStyle==='small')?'small':'full';item={type:'photobtn',title:t,url:smartPrefix(t,r),coverUrl:_pendPhotoBtnImg,coverBytes:_pendPhotoBtnBytes||0,pbStyle,password:pbPw||null};_pendPhotoBtnImg=null;_pendPhotoBtnBytes=0;}
   else if(curTab==='group'){const name=document.getElementById('grp-name').value.trim();if(!name){toast('Enter group name','e');return;}const grpPwOn=document.getElementById('grp-pw-on').checked,grpPw=grpPwOn?document.getElementById('grp-pw').value.trim()||null:null;item={type:'group',name,linkStyle:_newGrpStyle,hbg:document.getElementById('grp-hbg').value,htxt:document.getElementById('grp-htxt').value,gcbg:document.getElementById('grp-cbg').value,iconColor:document.getElementById('grp-icon-color').value,iconBg:document.getElementById('grp-icon-bg').value,labelColor:document.getElementById('grp-label-color').value,password:grpPw,items:[]};}
   else if(curTab==='album'){const name=document.getElementById('alb-name').value.trim();if(!name){toast('Enter album name','e');return;}const albPwOn=document.getElementById('alb-pw-on').checked,albPw=albPwOn?document.getElementById('alb-pw').value.trim()||null:null;item={type:'album',name,albumTheme:_selectedAlbTheme,coverUrl:_pendAlbCover||null,coverBytes:_pendAlbCoverBytes||0,password:albPw||null,items:[]};_pendAlbCover=null;_pendAlbCoverBytes=0;}
+  else if(curTab==='pdf'){
+    if(!_pendPdf){toast('Upload a PDF first','e');return;}
+    const title=document.getElementById('pdf-title').value.trim()||_pendPdf.name||'PDF';
+    item={type:'pdf',title,url:_pendPdf.url,storagePath:_pendPdf.storagePath,mediaBytes:_pendPdf.mediaBytes||0};
+    _pendPdf=null;document.getElementById('pdf-upload-box').style.display='flex';document.getElementById('pdf-ready').style.display='none';
+  }
   else if(pendMedia){const isImg=curTab==='image';const k=isImg?'img':'vid';const titleEl=document.getElementById(k+'-title');const userTitle=titleEl?titleEl.value.trim():'';const pwOn=document.getElementById(k+'-pw-on').checked,pw=pwOn?document.getElementById(k+'-pw').value.trim():null;item={...pendMedia,title:userTitle||(isImg?'Photo':'Video'),password:pw||null};}
   else{toast('Select media first','e');return;}
   pushItem(item);
@@ -1841,6 +2006,35 @@ function setProcessingProgress(pct,msg){const f=document.getElementById('proc-ba
 function hideProcessing(){const ov=document.getElementById('proc-overlay');if(ov)ov.classList.add('hidden');}
 function readFileAsync(file,onProgress){return new Promise((resolve,reject)=>{const r=new FileReader();if(onProgress){r.onprogress=e=>{if(e.lengthComputable)onProgress(Math.round(e.loaded/e.total*100));};}r.onload=e=>resolve(e.target.result);r.onerror=()=>reject(new Error('read failed'));r.readAsDataURL(file);});}
 function resizeImgAsync(file,maxPx,q){return new Promise(res=>resizeImg(file,maxPx,q,res));}
+/* ── Background Sound Upload (in QR panel) ── */
+window.onSoundPick=function(inp){
+  const f=inp.files[0];inp.value='';if(!f)return;
+  const mb=(f.size/(1024*1024)).toFixed(1);
+  if(f.size>10*1024*1024){toast('Audio too large — max 10 MB (this is '+mb+' MB)','e');return;}
+  toast('🎵 Audio: '+mb+' MB — uploading…','s');
+  showProcessing('Uploading audio…','');
+  uploadToStorage(f,window._uid,p=>setProcessingProgress(p,'Audio: '+p+'%'),f.type)
+    .then(result=>{
+      if(!window.S.bgAudio)window.S.bgAudio={};
+      window.S.bgAudio.url=result.url;window.S.bgAudio.storagePath=result.storagePath;
+      window.S.bgAudio.name=f.name;
+      save();
+      document.getElementById('sound-no-file').style.display='none';
+      document.getElementById('sound-has-file').style.display='block';
+      document.getElementById('sound-filename').textContent=f.name;
+      hideProcessing();toast('Sound set ✓','s');
+    })
+    .catch(err=>{hideProcessing();toast('Upload failed: '+err.message,'e');});
+};
+window.removeBgSound=function(){
+  if(!confirm('Remove background sound?'))return;
+  if(window.S.bgAudio&&window.S.bgAudio.storagePath)
+    deleteFromStorage(window.S.bgAudio.storagePath).catch(()=>{});
+  window.S.bgAudio=null;save();
+  document.getElementById('sound-no-file').style.display='block';
+  document.getElementById('sound-has-file').style.display='none';
+  toast('Sound removed','s');
+};
 /* Sequential processor → parallel batch processor (3 uploads at a time = ~3× faster).
    Steps: 1) Resize all images in parallel (CPU-only, no network), 2) Upload in batches of 3. */
 async function processMediaFiles(files,onItem,onDone){
