@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -979,7 +979,7 @@ function uploadToStorage(fileOrBlob,uid,onProgress,mimeType){
   return new Promise((resolve,reject)=>{
     if(!uid){reject(new Error('Not authenticated'));return;}
     const mt=mimeType||(fileOrBlob.type)||'image/jpeg';
-    const resourceType=mt.startsWith('video/')?'video':'image';
+    const resourceType=mt.startsWith('video/')?'video':mt.startsWith('image/')?'image':'raw';
     const fd=new FormData();
     fd.append('file',fileOrBlob);
     fd.append('upload_preset',_CLD_PRESET);
@@ -1455,10 +1455,10 @@ function buildItem(l,gi,ii,forceStyle,grpDefs){
       <div class="pdf-card-header">
         <div class="pdf-icon">📄</div>
         <div>
-          <div class="pdf-title">${escH(l.title||'PDF')}</div>
+          <div class="pdf-title">${escHtml(l.title||'PDF')}</div>
           <div class="pdf-meta">PDF Document</div>
         </div>
-        <button class="pdf-open-btn" onclick="window.open('${escH(l.url)}','_blank')">Open PDF ↗</button>
+        <button class="pdf-open-btn" onclick="window.open('${escHtml(l.url)}','_blank')">Open PDF ↗</button>
       </div>
     </div>`;
   }
