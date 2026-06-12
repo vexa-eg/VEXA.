@@ -1458,7 +1458,7 @@ function buildItem(l,gi,ii,forceStyle,grpDefs){
           <div class="pdf-title">${escHtml(l.title||'PDF')}</div>
           <div class="pdf-meta">PDF Document</div>
         </div>
-        <button class="pdf-open-btn" onclick="window.open('${escHtml(l.url)}','_blank')">Open PDF ↗</button>
+        <a href="${escHtml(l.url)}" target="_blank" rel="noopener noreferrer" class="pdf-open-btn">Open PDF ↗</a>
       </div>
     </div>`;
   }
@@ -2029,7 +2029,7 @@ window.onSoundPick=function(inp){
 window.removeBgSound=function(){
   if(!confirm('Remove background sound?'))return;
   if(window.S.bgAudio&&window.S.bgAudio.storagePath)
-    deleteFromStorage(window.S.bgAudio.storagePath).catch(()=>{});
+    deleteFromStorage(window.S.bgAudio.storagePath);
   window.S.bgAudio=null;save();
   document.getElementById('sound-no-file').style.display='block';
   document.getElementById('sound-has-file').style.display='none';
