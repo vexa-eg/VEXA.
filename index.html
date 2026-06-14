@@ -1450,7 +1450,7 @@ function buildItem(l,gi,ii,forceStyle,grpDefs){
   const locked=l.password&&!l._unlocked;
   const lockBadge=l.password?`<div class="lock-badge"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Protected</div>`:'';
   if(l.type==='pdf'){
-    const pdfViewUrl='https://docs.google.com/viewer?url='+encodeURIComponent(l.url);
+    const trk=window._pub&&window.S?`onclick="window._FBClick('${window.S.publicId}','${(l.title||'PDF').replace(/'/g,"\\'")}').catch(()=>{})"` :'';
     return `<div class="item-wrap pdf-card" style="margin-bottom:12px;">
       ${editBtn}
       <div class="pdf-card-header">
@@ -1459,7 +1459,7 @@ function buildItem(l,gi,ii,forceStyle,grpDefs){
           <div class="pdf-title">${escHtml(l.title||'PDF')}</div>
           <div class="pdf-meta">PDF Document</div>
         </div>
-        <a href="${pdfViewUrl}" target="_blank" rel="noopener noreferrer" class="pdf-open-btn">Open PDF ↗</a>
+        <a href="${escHtml(l.url)}" target="_blank" rel="noopener noreferrer" class="pdf-open-btn" ${trk}>Open PDF ↗</a>
       </div>
     </div>`;
   }
