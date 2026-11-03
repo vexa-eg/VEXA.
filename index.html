@@ -889,10 +889,8 @@ body.no-bgimg::before{display:none;}
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js" crossorigin="anonymous"></script>
-<!-- firebase-auth: loaded ONLY for auth/admin pages, NOT for public profiles.
-     Skipping it on public pages saves ~150KB download + 2-4s Auth init (network call to Google).
-     document.write() is safe here — this is a synchronous inline script during HTML parsing. -->
-<script>if(!new URLSearchParams(location.search).get('id')){document.write('\x3Cscript src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"\x3E\x3C\/script\x3E');}</script>
+<!-- Firebase Auth is also loaded on public profiles to allow anonymous analytics writes. -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js" crossorigin="anonymous"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js" crossorigin="anonymous"></script>
 <!-- Cloudinary CDN preconnect for fast uploads -->
 <link rel="preconnect" href="https://api.cloudinary.com" crossorigin>
@@ -900,12 +898,20 @@ body.no-bgimg::before{display:none;}
 <script>
 /* ===== FIREBASE ===== */
 firebase.initializeApp({apiKey:"AIzaSyBDM5mBSTW8g3VlGusFWFdgN14hpqi3-zs",authDomain:"vexa-1234.firebaseapp.com",databaseURL:"https://vexa-1234-default-rtdb.firebaseio.com",projectId:"vexa-1234",storageBucket:"vexa-1234.firebasestorage.app",messagingSenderId:"362188399240",appId:"1:362188399240:web:fd6c50ae6ed3647bc8753d"});
-/* _auth: full object for admin pages, safe stub for public profiles (auth SDK not loaded) */
-const _auth=typeof firebase.auth==='function'?firebase.auth():{
-  onAuthStateChanged:function(){},
-  signOut:async function(){},
-  confirmPasswordReset:async function(c,p){return firebase.auth().confirmPasswordReset(c,p);}
-};
+/* Firebase Auth is loaded on all pages; public profile analytics uses anonymous auth. */
+const _auth=firebase.auth();
+let _analyticsAuthPromise=null;
+async function _ensureAnalyticsAuth(){
+  if(_auth.currentUser)return _auth.currentUser;
+  if(!_analyticsAuthPromise){
+    _analyticsAuthPromise=_auth.signInAnonymously().then(r=>r.user).catch(e=>{
+      _analyticsAuthPromise=null;
+      console.warn('Anonymous analytics auth failed:',e);
+      throw e;
+    });
+  }
+  return _analyticsAuthPromise;
+}
 const _db=firebase.database();
 /* Firebase Storage — only available on owner pages (auth SDK loaded), null on public QR pages */
 /* ── Cloudinary config (no SDK needed — plain HTTP upload) ── */
@@ -1099,8 +1105,28 @@ const _FBSave=async(uid,state)=>{
 };
 const _FBLoad=async uid=>{const s=await _db.ref('users/'+uid).once('value');return s.exists()?s.val():null;};
 const _FBLoadPub=async pid=>{const s=await _db.ref('pub/'+pid).once('value');return s.exists()?s.val():null;};
-const _FBVisit=async pid=>{const td=new Date().toISOString().slice(0,10).replace(/-/g,'');const tr=_db.ref('analytics/'+pid+'/visits/total'),dr=_db.ref('analytics/'+pid+'/visits/'+td);const[ts,td2]=await Promise.all([tr.once('value'),dr.once('value')]);await Promise.all([tr.set((ts.val()||0)+1),dr.set((td2.val()||0)+1)]);};
-const _FBClick=async(pid,title)=>{const key=title.replace(/[.#$[\]/]/g,'_').slice(0,60);const r=_db.ref('analytics/'+pid+'/clicks/'+key),s=await r.once('value');await r.set({title,count:(s.exists()?s.val().count:0)+1});};
+/* Analytics: anonymous visitor auth + atomic Firebase transactions.
+   One page view per tab per profile every 30 minutes (reloads won't inflate counts). */
+const _FBVisit=async pid=>{
+  await _ensureAnalyticsAuth();
+  const sessionKey='vexa_view_'+pid,now=Date.now(),last=Number(sessionStorage.getItem(sessionKey)||0);
+  if(last&&now-last<30*60*1000)return false;
+  sessionStorage.setItem(sessionKey,String(now));
+  const d=new Date(),td=[d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('');
+  const base=_db.ref('analytics/'+pid+'/visits');
+  await Promise.all([
+    base.child('total').transaction(v=>(Number(v)||0)+1),
+    base.child(td).transaction(v=>(Number(v)||0)+1)
+  ]);
+  return true;
+};
+const _FBClick=async(pid,title)=>{
+  await _ensureAnalyticsAuth();
+  const clean=String(title||'Link').replace(/[.#$\[\]/]/g,'_').slice(0,60)||'Link';
+  const key=clean+'_'+btoa(unescape(encodeURIComponent(clean))).replace(/[^a-zA-Z0-9]/g,'').slice(0,8);
+  const r=_db.ref('analytics/'+pid+'/clicks/'+key);
+  await r.transaction(v=>({title:clean,count:(Number(v&&v.count)||0)+1}));
+};
 const _FBAnalytics=async pid=>{const s=await _db.ref('analytics/'+pid).once('value');return s.exists()?s.val():null;};
 const _FBResetAnalytics=async pid=>{await _db.ref('analytics/'+pid).set(null);};
 const NF='<div style="height:100vh;display:flex;align-items:center;justify-content:center;flex-direction:column;background:#000;gap:14px;"><div style="font-family:Bebas Neue,sans-serif;font-size:3.5rem;letter-spacing:8px;background:linear-gradient(180deg,#fff,#888);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">VEXA</div><p style="color:#444;font-size:.9rem;">Profile not found</p></div>';
@@ -2399,7 +2425,7 @@ function autoPlayVisible(cont){setTimeout(()=>{const vids=cont?cont.querySelecto
 /* ===== ANALYTICS ===== */
 function renderAnalytics(data){
   if(!data){['an-visits','an-today','an-clicks-total'].forEach(id=>document.getElementById(id).innerText='0');document.getElementById('an-clicks-list').innerHTML='<div class="an-empty">No data yet</div>';return;}
-  const v=data.visits||{},total=v.total||0,today=new Date().toISOString().slice(0,10).replace(/-/g,'');
+  const v=data.visits||{},total=v.total||0,d=new Date(),today=[d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('');
   document.getElementById('an-visits').innerText=total>999?(total/1000).toFixed(1)+'K':total;
   document.getElementById('an-today').innerText=v[today]||0;
   const clicks=data.clicks||{},arr=Object.values(clicks).sort((a,b)=>b.count-a.count),tc=arr.reduce((s,c)=>s+c.count,0);
